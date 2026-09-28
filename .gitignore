@@ -1,0 +1,42 @@
+# ---- Secrets: never commit these ----
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+keystore/
+secrets/
+*mnemonic*
+*seed*
+
+# ---- Python ----
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# ---- Node / frontends ----
+node_modules/
+.next/
+dist/
+
+# ---- Foundry ----
+out/
+cache/
+broadcast/*/31337/
+broadcast/**/dry-run/
+
+# ---- ESP-IDF / firmware ----
+build/
+sdkconfig.old
+managed_components/
+
+# ---- Bitcoin regtest data ----
+regtest/
+*.dat
+
+# ---- OS / editors ----
+.DS_Store
+.vscode/
+.idea/
