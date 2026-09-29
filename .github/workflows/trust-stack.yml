@@ -1,0 +1,67 @@
+name: Trust stack
+
+# Runs on every push: tests, coverage, static analysis, and the full demo on a
+# fresh local chain. The demo's stage table appears on the run's summary page,
+# so anyone can see it working without installing anything.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      exists: ${{ steps.check.outputs.exists }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: check
+        run: |
+          if ls trust-stack/src/*.sol >/dev/null 2>&1; then echo "exists=true" >> "$GITHUB_OUTPUT"
+          else echo "exists=false" >> "$GITHUB_OUTPUT"; echo "No contracts in trust-stack/src yet: the trust stack starts in week 5." >> "$GITHUB_STEP_SUMMARY"; fi
+
+  test:
+    needs: check
+    if: needs.check.outputs.exists == 'true'
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: trust-stack } }
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: recursive }
+      - uses: foundry-rs/foundry-toolchain@v1
+      - run: forge build
+      - name: Unit, fuzz and invariant tests
+        run: forge test -vv
+      - name: Coverage
+        run: |
+          forge coverage --report summary --no-match-coverage "(script|test)" | tee coverage.txt
+          { echo "## Coverage"; echo; echo '```'; cat coverage.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+  slither:
+    needs: check
+    if: needs.check.outputs.exists == 'true'
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: trust-stack } }
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: recursive }
+      - uses: foundry-rs/foundry-toolchain@v1
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install slither-analyzer
+      - name: Slither (fails on high-severity findings)
+        run: slither . --filter-paths "lib|test|script" --fail-high
+
+  demo:
+    needs: check
+    if: needs.check.outputs.exists == 'true'
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: trust-stack } }
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: recursive }
+      - uses: foundry-rs/foundry-toolchain@v1
+      - name: Run the demo on a fresh local chain
+        run: ./scripts/demo.sh

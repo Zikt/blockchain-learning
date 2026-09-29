@@ -1,0 +1,14 @@
+{
+  "name": "blockchain-learning",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "lts" },
+    "ghcr.io/devcontainers/features/python:1": { "version": "3.12" }
+  },
+  "postCreateCommand": "git submodule update --init --recursive && curl -L https://getfoundry.sh/install | bash && $HOME/.foundry/bin/foundryup && sudo apt-get update && sudo apt-get install -y jq && pip install eth-account ecdsa python-bitcoinlib slither-analyzer",
+  "remoteEnv": { "PATH": "${containerEnv:PATH}:/home/vscode/.foundry/bin" },
+  "customizations": {
+    "vscode": { "extensions": ["NomicFoundation.hardhat-solidity", "ms-python.python"] }
+  },
+  "postAttachCommand": "echo 'Run the demo: cd trust-stack && make demo'"
+}

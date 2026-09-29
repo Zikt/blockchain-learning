@@ -1,0 +1,31 @@
+name: Demo site
+
+# Publishes the live demo site (Explore, Market, Trace, Admin) to GitHub Pages
+# whenever trust-stack/app/site/ changes. See trust-stack/app/README.md.
+# Put a static build there (index.html + assets + config.json) in week 11.
+# One-time setup: repo Settings → Pages → Source: GitHub Actions.
+
+on:
+  push:
+    branches: [main]
+    paths: ["trust-stack/app/site/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: { name: github-pages, url: "${{ steps.deploy.outputs.page_url }}" }
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check there's a site to publish
+        run: test -f trust-stack/app/site/index.html || { echo "No trust-stack/app/site/index.html yet."; exit 1; }
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: trust-stack/app/site }
+      - id: deploy
+        uses: actions/deploy-pages@v4

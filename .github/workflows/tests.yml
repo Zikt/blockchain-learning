@@ -1,0 +1,27 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  trust-stack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Check for the Foundry project
+        id: check
+        run: |
+          if [ -f trust-stack/foundry.toml ]; then echo "exists=true" >> "$GITHUB_OUTPUT"; else echo "exists=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: foundry-rs/foundry-toolchain@v1
+        if: steps.check.outputs.exists == 'true'
+      - name: forge test
+        if: steps.check.outputs.exists == 'true'
+        working-directory: trust-stack
+        run: forge test -vv
+      - name: Nothing to test yet
+        if: steps.check.outputs.exists != 'true'
+        run: echo "trust-stack/ has no Foundry project yet (starts in week 5)."

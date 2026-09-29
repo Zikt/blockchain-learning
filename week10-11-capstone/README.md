@@ -1,4 +1,8 @@
-# Weeks 10–11: Capstone, tamper-evident cold-chain provenance
+<!-- NAV:START -->
+[↑ Overview](../README.md) · [← Week 09](../week09-amm-and-capstone-spec/) · [Week 12 →](../week12-agent-wallet/)
+<!-- NAV:END -->
+
+# Weeks 10–11: Capstone, a four-part trust stack
 
 ## Week 10: Capstone I: the device signs, the contract verifies
 
@@ -9,41 +13,49 @@
 **Ship:** ESP32 firmware that signs Merkle roots of readings, and a tested SensorRegistry contract
 
 ### Plan
-
-- [ ] Learn (30 min): Browse the Trezor firmware repo: the crypto folder and the security docs  
+- [ ] Learn (15 min): Browse the Trezor firmware repo: the crypto folder and the security docs  
   [trezor-firmware](https://github.com/trezor/trezor-firmware)
-- [ ] Learn (30 min): SGX.Fail: skim the list of TEE attacks  
+- [ ] Learn (15 min): SGX.Fail: skim the list of TEE attacks  
   [sgx.fail](https://sgx.fail/)
-- [ ] Learn (30 min): OpenZeppelin ECDSA and MessageHashUtils docs  
+- [ ] Learn (15 min): OpenZeppelin ECDSA and MessageHashUtils docs  
   [OZ ECDSA](https://docs.openzeppelin.com/contracts/5.x/api/utils#ECDSA)
-- [ ] Learn (30 min): Study how OpenTimestamps anchors many hashes with one transaction  
+- [ ] Learn (15 min): Study how OpenTimestamps anchors many hashes with one transaction  
   [opentimestamps.org](https://opentimestamps.org/)
-- [ ] Build (150 min): On an ESP32, generate a key with micro-ecc or trezor-crypto, hash a sensor reading with keccak256, and print r, s, v and the address  
+- [ ] Build (150 min): Capstone A: on an ESP32, generate a key with micro-ecc or trezor-crypto, hash a sensor reading with keccak256, and print r, s, v and the address. If the board fights you, start with a Python device simulator and swap the board in later  
   [micro-ecc](https://github.com/kmackay/micro-ecc) · [ESP-IDF](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/)
-- [ ] Build (120 min): Batch readings on the device or a gateway: build a Merkle tree and sign the root instead of each reading  
+- [ ] Build (90 min): Batch readings on the device or a gateway: build a Merkle tree and sign the root instead of each reading  
   [OZ MerkleProof](https://docs.openzeppelin.com/contracts/5.x/api/utils#MerkleProof)
-- [ ] Build (180 min): Write SensorRegistry: register device addresses, accept a signed Merkle root only if ecrecover matches. Test with vm.sign, then with a real ESP32 signature
+- [ ] Build (165 min): Capstone A: ProvenanceAnchor.sol as a trace registry. createBatch(product, policyId); recordEvent(batchId, stage, dataRoot) only by an actor with the right role credential and in the right order; accept sensor Merkle roots only from registered devices (ecrecover). Test with vm.sign, then with a real ESP32 signature
 - [ ] Write (30 min): Log: what this proves (the device signed it) and what it doesn't (the reading is true)
+- [ ] Explain (45 min): Explainer #5: write "Teaching a sensor to sign its own data" in blog/ (600–900 words, weeks 9–10). Optional: record a 5-minute video teaching it and link it in the post
+- [ ] Capstone (30 min): Replace the provenance mock in the integration test: create a batch, record its events and a signed sensor root, list it, pay, release. Update demo.sh
+- [ ] Capstone (30 min): Firmware checks: run make vectors, make your ESP32 reproduce test_vectors.json byte for byte, and add firmware/tools/Vectors.t.sol.example to test/ so CI proves tampered and unregistered readings are rejected. Demo stage 5 uses sample_readings.json, so it runs without hardware
 
-## Week 11: Capstone II: anchor, verify, ship
+## Week 11: Capstone II: connect all four parts and ship
 
 **Dates:** 7 Dec – 13 Dec 2026 · **Planned time:** 10 h
 
-**Goal:** Deploy to an L2 testnet, let anyone check a single reading, and publish the project. This week is the mid-December deadline.
+**Goal:** Deploy the whole trust stack to an L2 testnet, prove it works end to end with one test, and publish it.
 
-**Ship:** The finished capstone: public repo, deployed contract, verification dashboard, README, demo video and write-up
+**Ship:** All four parts on an L2 testnet, one end-to-end test passing, and a README with an architecture diagram, demo video and post
 
 ### Plan
-
-- [ ] Build (120 min): Contract: anchor signed roots from registered devices on an L2 testnet, with tests  
-  [OZ MerkleProof](https://docs.openzeppelin.com/contracts/5.x/api/utils#MerkleProof) · [Base docs](https://docs.base.org/)
-- [ ] Build (150 min): Dashboard: paste any reading, show its Merkle proof and the anchoring transaction
-- [ ] Build (60 min): Optional if time is short: a small anomaly detector that flags temperature excursions before signing
-- [ ] Build (60 min): Security pass: Slither, your Project 4 checklist, and invariant tests  
+- [ ] Build (90 min): Deploy all four parts to an L2 testnet such as Base Sepolia: TestUSD, Marketplace, CredentialRegistry and ProvenanceAnchor. Verify each contract on the explorer  
+  [Base docs (Base Sepolia testnet)](https://docs.base.org/)
+- [ ] Build (150 min): End-to-end flow in the integration test and demo.sh: a credentialed farmer creates a batch, a transporter records pickup and delivery with the ESP32's signed readings, the batch is checked against its policy, and the buyer's TestUSD in escrow is released only if the batch is compliant; otherwise the buyer is refunded
+- [ ] Build (15 min): Capstone C demo: a script that sends a TestUSD payment with a receipt event and prints its cost and time next to the bank and mobile-money figures from week 9
+- [ ] Build (45 min): Security pass on all four contracts: Slither, your Project 4 checklist, and invariant tests  
   [Slither](https://github.com/crytic/slither)
-- [ ] Write (60 min): Argue blockchain vs. shared database for this use case, and be willing to conclude it isn't needed
-- [ ] Write (120 min): README, a 3-minute demo video, and a short post on what you built
+- [ ] Write (45 min): For each of the four parts, argue honestly whether a blockchain beats a shared database, and say so where it doesn't
+- [ ] Write (90 min): README with an architecture diagram, a 5-minute demo video of the full flow, and the capstone post
 - [ ] Write (30 min): Log: what you'd change with another month
+- [ ] AI (15 min): GenAI provenance: read the C2PA overview, then add a paragraph to your capstone README on how the same sign-and-anchor pattern could prove where a photo or AI-generated output came from  
+  [C2PA](https://c2pa.org/)
+- [ ] Capstone (45 min): Compliance check: anyone can mark a batch non-compliant by submitting a signed reading outside the policy range with its Merkle proof, and a missing step or wrong role also fails. Test one compliant batch and one failing batch
+- [ ] Capstone (30 min): Demo site v1, open to everyone with no login: Explore (sample batches), Market (listings) and Trace (enter a batch id or scan its QR code to see the journey, who signed each step, the readings summary and compliance status), reading from your deployed contracts. Build it in trust-stack/app/site/ following trust-stack/app/README.md
+- [ ] Capstone (30 min): Deploy for real: forge script with your keystore account to Base Sepolia, verify on Basescan, record addresses and read-only checks in deployments/base-sepolia.json (copy the example), and run make smoke until every check is green  
+  [Base docs](https://docs.base.org/)
+- [ ] Capstone (15 min): Make it public: put the trace page in trust-stack/app/site/ so it publishes to GitHub Pages, then check the README's Trust stack badge, Codespaces button and DEMO.md all work from a logged-out browser
 
 ---
 

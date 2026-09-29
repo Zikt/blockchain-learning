@@ -1,0 +1,18 @@
+{
+ "checked": [],
+ "hours": {
+  "week01-toy-chain": 0.0,
+  "week02-bitcoin": 0.0,
+  "week03-consensus-sim": 0.0,
+  "week04-first-contracts": 0.0,
+  "week05-erc20": 0.0,
+  "week06-escrow-nft": 0.0,
+  "week07-dapp-and-security": 0.0,
+  "week08-audit": 0.0,
+  "week09-amm-and-capstone-spec": 0.0,
+  "week10-11-capstone": 0.0,
+  "week12-agent-wallet": 0.0
+ },
+ "total_tasks": 159,
+ "updated": "2026-09-29"
+}

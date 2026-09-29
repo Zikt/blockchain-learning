@@ -40,3 +40,9 @@ regtest/
 .DS_Store
 .vscode/
 .idea/
+
+# ---- Videos (upload to YouTube/Loom and link instead) ----
+*.mp4
+*.mov
+*.mkv
+*.webm
