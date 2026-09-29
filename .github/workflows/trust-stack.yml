@@ -3,6 +3,8 @@ name: Trust stack
 # Runs on every push: tests, coverage, static analysis, and the full demo on a
 # fresh local chain. The demo's stage table appears on the run's summary page,
 # so anyone can see it working without installing anything.
+# Tool versions come from toolchain.env and requirements-dev.txt, the same ones
+# the Docker image uses. The docker job checks the Docker route still works.
 
 on:
   push:
@@ -15,8 +17,16 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       exists: ${{ steps.check.outputs.exists }}
+      foundry: ${{ steps.versions.outputs.foundry }}
     steps:
       - uses: actions/checkout@v4
+      - id: versions
+        name: Read pinned versions (toolchain.env)
+        run: |
+          . ./toolchain.env
+          echo "foundry=$FOUNDRY_VERSION" >> "$GITHUB_OUTPUT"
+          grep -q "solc_version = \"$SOLC_VERSION\"" trust-stack/foundry.toml \
+            || { echo "::error::solc_version in trust-stack/foundry.toml must match SOLC_VERSION=$SOLC_VERSION in toolchain.env"; exit 1; }
       - id: check
         run: |
           if ls trust-stack/src/*.sol >/dev/null 2>&1; then echo "exists=true" >> "$GITHUB_OUTPUT"
@@ -31,6 +41,7 @@ jobs:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
       - uses: foundry-rs/foundry-toolchain@v1
+        with: { version: "${{ needs.check.outputs.foundry }}" }
       - run: forge build
       - name: Unit, fuzz and invariant tests
         run: forge test -vv
@@ -48,9 +59,10 @@ jobs:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
       - uses: foundry-rs/foundry-toolchain@v1
+        with: { version: "${{ needs.check.outputs.foundry }}" }
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
-      - run: pip install slither-analyzer
+      - run: pip install -r ../requirements-dev.txt
       - name: Slither (fails on high-severity findings)
         run: slither . --filter-paths "lib|test|script" --fail-high
 
@@ -63,5 +75,28 @@ jobs:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
       - uses: foundry-rs/foundry-toolchain@v1
+        with: { version: "${{ needs.check.outputs.foundry }}" }
       - name: Run the demo on a fresh local chain
         run: ./scripts/demo.sh
+
+  docker:
+    # Builds the pinned image and runs the tests and demo inside it, exactly
+    # as a visitor would with make docker-demo. Cached, so usually quick.
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: recursive }
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          tags: blockchain-learning
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Tests and demo inside the image
+        run: |
+          RUN="docker run --rm --user $(id -u):$(id -g) -v $PWD:/repo -w /repo/trust-stack blockchain-learning"
+          if [ "${{ needs.check.outputs.exists }}" = "true" ]; then $RUN make test; fi
+          $RUN make demo

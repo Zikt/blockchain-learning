@@ -6,12 +6,12 @@ The trust stack tells one story: a batch of tomatoes goes from a credentialed fa
 
 ## 1. Watch it (no install)
 
-- **Latest demo run:** open the [Trust stack workflow](https://github.com/zikt/blockchain-learning/actions/workflows/trust-stack.yml), pick the newest run, and read the stage table on its summary page.
-- **Live demo site** (from week 11): https://zikt.github.io/blockchain-learning/. Browse sample batches, market listings and each batch's trace page on Base Sepolia. No login or wallet needed. ([How it works](trust-stack/app/README.md))
+- **Latest demo run:** open the [Trust stack workflow](https://github.com/YOUR-GITHUB-USERNAME/blockchain-learning/actions/workflows/trust-stack.yml), pick the newest run, and read the stage table on its summary page.
+- **Live demo site** (from week 11): https://YOUR-GITHUB-USERNAME.github.io/blockchain-learning/. Browse sample batches, market listings and each batch's trace page on Base Sepolia. No login or wallet needed. ([How it works](trust-stack/app/README.md))
 
 ## 2. Run it in your browser (no install)
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/zikt/blockchain-learning)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/YOUR-GITHUB-USERNAME/blockchain-learning)
 
 Wait for setup to finish (a few minutes the first time), then in the terminal:
 
@@ -22,9 +22,22 @@ make demo
 
 ## 3. Run it on your own computer
 
+**With Docker** (nothing else to install; same pinned tools as CI):
+
 ```bash
-curl -L https://getfoundry.sh/install | bash && foundryup   # installs forge, cast, anvil
-git clone --recursive https://github.com/zikt/blockchain-learning.git
+git clone --recursive https://github.com/YOUR-GITHUB-USERNAME/blockchain-learning.git
+cd blockchain-learning
+docker build -t blockchain-learning .
+docker run --rm -it --user "$(id -u):$(id -g)" -v "$PWD:/repo" blockchain-learning
+```
+
+(Windows PowerShell: `docker run --rm -it -v "${PWD}:/repo" blockchain-learning`.) More in [DOCKER.md](DOCKER.md).
+
+**Or install Foundry directly:**
+
+```bash
+curl -L https://getfoundry.sh/install | bash && foundryup --install v1.5.1   # the version CI uses (toolchain.env)
+git clone --recursive https://github.com/YOUR-GITHUB-USERNAME/blockchain-learning.git
 cd blockchain-learning/trust-stack
 make demo
 ```

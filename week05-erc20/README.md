@@ -11,10 +11,9 @@
 **Ship:** Project 3a: an ERC-20 with unit and fuzz tests, verified on Sepolia Etherscan
 
 ### Plan
-
-- [ ] Learn (45 min): Foundry: getting started, then forge test basics  
+- [ ] Learn (45 min): Foundry: getting started, then forge test basics. Install the pinned version the repo uses: foundryup --install v1.5.1 (see toolchain.env)  
   [Foundry getting started](https://www.getfoundry.sh/introduction/getting-started)
-- [ ] Learn (75 min): Updraft Foundry Fundamentals: the first section  
+- [ ] Learn (60 min): Updraft Foundry Fundamentals: the first section  
   [Foundry Fundamentals](https://updraft.cyfrin.io/courses/foundry)
 - [ ] Build (120 min): Write an ERC-20 by reading the spec only. Test transfer, approve, transferFrom and the failure cases  
   [EIP-20](https://eips.ethereum.org/EIPS/eip-20)
@@ -34,6 +33,8 @@
   [Foundry: scripting](https://www.getfoundry.sh/guides)
 - [ ] Capstone (15 min): Testing setup: run python scripts/set_github_user.py <your-username>, open TESTING.md, and start the rules-to-tests table with TestUSD's tests. Check coverage and Slither pass in CI  
   [Slither](https://github.com/crytic/slither)
+- [ ] Capstone (15 min): Docker check (optional, see DOCKER.md): install Docker Desktop, then from trust-stack/ run make docker-test and make docker-demo. They should match your normal run, and the docker job in the Trust stack run on GitHub should be green  
+  [Docker: get started](https://docs.docker.com/get-started/get-docker/)
 
 ---
 

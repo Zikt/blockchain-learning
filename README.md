@@ -1,7 +1,7 @@
 # Blockchain, learned in public
 
-[![Trust stack](https://github.com/zikt/blockchain-learning/actions/workflows/trust-stack.yml/badge.svg)](https://github.com/zikt/blockchain-learning/actions/workflows/trust-stack.yml)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/zikt/blockchain-learning)
+[![Trust stack](https://github.com/YOUR-GITHUB-USERNAME/blockchain-learning/actions/workflows/trust-stack.yml/badge.svg)](https://github.com/YOUR-GITHUB-USERNAME/blockchain-learning/actions/workflows/trust-stack.yml)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/YOUR-GITHUB-USERNAME/blockchain-learning)
 
 I'm Isaac Thani Moses, a research engineer and founder based in Kigali. This repo is my 12-week journey (September to December 2026) learning blockchain and the cryptography behind it from first principles, with running threads on AI and real-world applications. Everything is built in the open: code, tests, notes and explainers. It ends in a working **trust stack** that follows a batch of produce from farm to buyer, with proof at every step.
 
@@ -9,10 +9,10 @@ I'm Isaac Thani Moses, a research engineer and founder based in Kigali. This rep
 
 | If you want to… | Go to |
 |-----------------|-------|
-| See the finished project working | [Live demo site](https://zikt.github.io/blockchain-learning/) (from week 11): browse sample batches, listings and trace pages with no login. [How it works](trust-stack/app/README.md) |
-| Run the demo yourself, in the browser or locally | [DEMO.md](DEMO.md) |
+| See the finished project working | [Live demo site](https://YOUR-GITHUB-USERNAME.github.io/blockchain-learning/) (from week 11): browse sample batches, listings and trace pages with no login. [How it works](trust-stack/app/README.md) |
+| Run the demo yourself, in the browser, with Docker, or locally | [DEMO.md](DEMO.md) · [DOCKER.md](DOCKER.md) |
 | Understand how the trust stack works | [trust-stack/README.md](trust-stack/README.md): the story, a diagram, the contracts |
-| Check it's tested and secure | [TESTING.md](TESTING.md) and the [latest CI run](https://github.com/zikt/blockchain-learning/actions/workflows/trust-stack.yml) |
+| Check it's tested and secure | [TESTING.md](TESTING.md) and the [latest CI run](https://github.com/YOUR-GITHUB-USERNAME/blockchain-learning/actions/workflows/trust-stack.yml) |
 | Follow the learning, week by week | [Progress](#progress) below, and [LEARNING_LOG.md](LEARNING_LOG.md) |
 | Read the explainers or watch the videos | [blog/](blog/) |
 | Build it yourself | [BOM.md](BOM.md) for hardware and accounts, then [trust-stack/README.md](trust-stack/README.md) |
@@ -38,6 +38,8 @@ blockchain-learning/
 ├── DEMO.md              how to watch or run the demo
 ├── TESTING.md           every rule and security property, and the test that checks it
 ├── BOM.md               hardware and accounts needed to build it
+├── DOCKER.md            the pinned toolchain in Docker: setup, build, run
+├── Dockerfile           one image for local runs, Codespaces and CI (versions in toolchain.env)
 ├── LEARNING_LOG.md      dated notes from each study session
 ├── week01-toy-chain/    one folder per week: code, plus a README with the plan, what I built and learned
 ├── …
@@ -52,8 +54,9 @@ Each folder has a `README.md`, which GitHub shows automatically when you open th
 
 ## Run the demo
 
-- **Watch it:** open the [latest Trust stack run](https://github.com/zikt/blockchain-learning/actions/workflows/trust-stack.yml) and read the stage table on its summary page, or visit the [live demo site](https://zikt.github.io/blockchain-learning/).
+- **Watch it:** open the [latest Trust stack run](https://github.com/YOUR-GITHUB-USERNAME/blockchain-learning/actions/workflows/trust-stack.yml) and read the stage table on its summary page, or visit the [live demo site](https://YOUR-GITHUB-USERNAME.github.io/blockchain-learning/).
 - **Run it in your browser:** click the Codespaces badge above, wait for setup, then `cd trust-stack && make demo`.
+- **Run it with Docker:** `docker build -t blockchain-learning .` then `docker run --rm -it -v "$PWD:/repo" blockchain-learning` (details in [DOCKER.md](DOCKER.md)).
 - **Run it locally:** see [DEMO.md](DEMO.md).
 
 The demo runs as far as the parts built so far; stages still to come show as "not built yet".
@@ -63,7 +66,7 @@ The demo runs as far as the parts built so far; stages still to come show as "no
 This table updates itself from the checklists in each week's README. [progress.json](progress.json) holds the same data for my private study tracker.
 
 <!-- PROGRESS:START -->
-**Overall:** `░░░░░░░░░░` 0/159 tasks (0%) · 0 h logged · updated 2026-09-29
+**Overall:** `░░░░░░░░░░` 0/160 tasks (0%) · 0 h logged · updated 2026-09-29
 
 | Week | Dates | Project | Progress | Time | Status |
 |------|-------|---------|----------|------|--------|
@@ -71,7 +74,7 @@ This table updates itself from the checklists in each week's README. [progress.j
 | 2 | 5 Oct – 11 Oct 2026 | [Bitcoin: UTXOs, raw transactions and mining](week02-bitcoin/) | `░░░░░░░░░░` 0/13 (0%) | 0 h | Not started |
 | 3 | 12 Oct – 18 Oct 2026 | [Consensus, attacks and proof-of-stake](week03-consensus-sim/) | `░░░░░░░░░░` 0/12 (0%) | 0 h | Not started |
 | 4 | 19 Oct – 25 Oct 2026 | [The Ethereum model and Solidity fluency](week04-first-contracts/) | `░░░░░░░░░░` 0/12 (0%) | 0 h | Not started |
-| 5 | 26 Oct – 1 Nov 2026 | [Foundry and your ERC-20](week05-erc20/) | `░░░░░░░░░░` 0/13 (0%) | 0 h | Not started |
+| 5 | 26 Oct – 1 Nov 2026 | [Foundry and your ERC-20](week05-erc20/) | `░░░░░░░░░░` 0/14 (0%) | 0 h | Not started |
 | 6 | 2 Nov – 8 Nov 2026 | [Escrow and an on-chain NFT](week06-escrow-nft/) | `░░░░░░░░░░` 0/19 (0%) | 0 h | Not started |
 | 7 | 9 Nov – 15 Nov 2026 | [A dApp frontend, then start breaking contracts](week07-dapp-and-security/) | `░░░░░░░░░░` 0/13 (0%) | 0 h | Not started |
 | 8 | 16 Nov – 22 Nov 2026 | [Deeper exploits and your own audit](week08-audit/) | `░░░░░░░░░░` 0/11 (0%) | 0 h | Not started |

@@ -16,6 +16,8 @@ make smoke       # read-only checks against the live Base Sepolia deployment
 make vectors     # firmware signing test vectors + sample readings
 ```
 
+The same checks with the pinned toolchain in Docker: `make docker-test`, `make docker-slither` and `make docker-demo` (see [DOCKER.md](DOCKER.md)). CI runs them both ways.
+
 ## Layers
 
 | Layer | What it catches | Where |

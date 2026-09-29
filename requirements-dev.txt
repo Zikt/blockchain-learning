@@ -1,0 +1,6 @@
+# Python tools, pinned. Installed in the Docker image and in CI.
+# Local install without Docker: pip install -r requirements-dev.txt
+eth-account==0.14.0
+ecdsa==0.19.2
+python-bitcoinlib==0.12.2
+slither-analyzer==0.11.6

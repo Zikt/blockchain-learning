@@ -4,6 +4,8 @@ out = "out"
 libs = ["lib"]
 test = "test"
 script = "script"
+# Pinned compiler: keep in step with SOLC_VERSION in ../toolchain.env
+solc_version = "0.8.28"
 # The demo keeps addresses in deployments/ and reads sample sensor data from firmware/.
 fs_permissions = [{ access = "read-write", path = "./deployments" }, { access = "read", path = "./firmware" }]
 

@@ -1,0 +1,5 @@
+# The image only holds tools. Your code is mounted in at run time, so
+# nothing else from the repo is sent to the build.
+*
+!toolchain.env
+!requirements-dev.txt
