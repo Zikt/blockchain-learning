@@ -1,14 +1,25 @@
-name: Demo site
+name: Site
 
-# Publishes the live demo site (Explore, Market, Trace, Admin) to GitHub Pages
-# whenever trust-stack/app/site/ changes. See trust-stack/app/README.md.
-# Put a static build there (index.html + assets + config.json) in week 11.
+# Builds and publishes the GitHub Pages site on every push that touches it:
+#   /            landing page (site/index.html)
+#   /cards/      flashcards and quizzes, built from cards/block*.md, plus the Anki deck
+#   /tracker/    the progress tracker (tracker/index.html)
+#   /demo/       the trust-stack demo site (trust-stack/app/site/, from week 11)
+# Pull requests that change cards/ are checked (and built) but not published.
 # One-time setup: repo Settings → Pages → Source: GitHub Actions.
 
 on:
   push:
     branches: [main]
-    paths: ["trust-stack/app/site/**"]
+    paths:
+      - "cards/**"
+      - "site/**"
+      - "tracker/**"
+      - "trust-stack/app/site/**"
+      - "scripts/build_site.py"
+      - ".github/workflows/pages.yml"
+  pull_request:
+    paths: ["cards/**", "site/**", "scripts/build_site.py"]
   workflow_dispatch:
 
 permissions:
@@ -16,16 +27,37 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install genanki==0.13.1
+      - name: Check the cards and build the site
+        run: python scripts/build_site.py
+      - name: Summary
+        run: |
+          { echo "## Site"; echo; python scripts/build_site.py --check; echo;
+            echo "Anki deck: \`cards/genesis-to-capstone.apkg\` on the site, and in this run's artifacts."; } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: anki-deck
+          path: dist/site/cards/genesis-to-capstone.apkg
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: dist/site }
+
   deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
     runs-on: ubuntu-latest
     environment: { name: github-pages, url: "${{ steps.deploy.outputs.page_url }}" }
     steps:
-      - uses: actions/checkout@v4
-      - name: Check there's a site to publish
-        run: test -f trust-stack/app/site/index.html || { echo "No trust-stack/app/site/index.html yet."; exit 1; }
       - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with: { path: trust-stack/app/site }
       - id: deploy
         uses: actions/deploy-pages@v4

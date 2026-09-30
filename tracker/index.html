@@ -302,6 +302,7 @@ h1{font-family:var(--display);font-stretch:78%;font-weight:800;font-size:clamp(3
     <div class="eyebrow" id="eyebrow">Blockchain learning plan</div>
     <h1>Genesis to Capstone</h1>
     <p class="lede" id="lede"></p>
+    <p class="sub" style="margin:0;font-size:14px">Practise each block with <a href="https://zikt.github.io/blockchain-learning/cards/" target="_blank" rel="noopener">flashcards and quizzes</a>, and see your strengths.</p>
     <div class="trackpick"><span class="k">Plan</span><div class="seg" role="group" aria-label="Choose plan"><button type="button" id="tr12" aria-pressed="true">12 weeks · 10 h/week</button><button type="button" id="tr28" aria-pressed="false">28 weeks · 5 h/week</button></div></div>
   </header>
 
@@ -1408,7 +1409,8 @@ function buildPlan(){
         <div class="wbody">
           <p class="goal">${esc(w.goal)}</p>
           ${w.obj.length ? `<div class="objbox"><div><span class="lab">By the end of this block you can</span><ul>${w.obj.map(o => `<li>${esc(o)}</li>`).join("")}</ul></div>
-            <div><span class="lab">Check yourself (answer in your log on Saturday)</span><ol>${w.checks.map(q => `<li>${esc(q)}</li>`).join("")}</ol></div></div>` : ""}
+            <div><span class="lab">Check yourself (answer in your log on Saturday)</span><ol>${w.checks.map(q => `<li>${esc(q)}</li>`).join("")}</ol></div>
+            ${TR.key === "t12" ? `<div class="practice" style="grid-column:1 / -1"><span class="lab" style="display:inline;margin-right:8px">Practise</span><a href="${CARDS_URL}#quiz?block=${w.n}&kind=pre" target="_blank" rel="noopener">Warm-up quiz</a> · <a href="${CARDS_URL}#practice?block=${w.n}" target="_blank" rel="noopener">Flashcards</a> · <a href="${CARDS_URL}#quiz?block=${w.n}&kind=post" target="_blank" rel="noopener">Final quiz</a></div>` : ""}</div>` : ""}
           <ul class="tasks">
             ${w.tasks.map(t => `<li class="task" data-t="${t.id}">
               <input type="checkbox" id="${t.id}" data-task="${t.id}">
@@ -1561,6 +1563,7 @@ function computeDue(){
     });
   });
 }
+const CARDS_URL = "https://zikt.github.io/blockchain-learning/cards/";
 const OUT_RE = /post|video|demo|write-up|memo|README|SPEC|retrospective|pitch|explainer/i;
 function isOutput(t){ return t.kind === "E" || (t.kind === "W" && OUT_RE.test(t.text)) || (t.kind === "K" && /trace page|demo site|make it public/i.test(t.text)); }
 function dayLabel(d){ return DAYN[(d.getDay() + 6) % 7] + " " + fmt(d); }

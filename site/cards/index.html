@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Blockchain Practice Cards</title>
+<meta name="description" content="Flashcards and quizzes for 12 blocks of blockchain and cryptography, from hashes to a working trust stack.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --ground:#EEF1F4; --surface:#FFFFFF; --surface-2:#F6F8FA; --line:#D6DDE4; --line-2:#E4E9EE;
+  --ink:#131C26; --ink-2:#3C4957; --muted:#667585;
+  --accent:#2451A6; --accent-soft:#E3EAF7; --accent-ink:#FFFFFF;
+  --good:#17785A; --good-soft:#DDF0E8; --warn:#A5610B; --warn-soft:#F8EBD7; --bad:#B3261E; --bad-soft:#F9E3E1;
+  --display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0E141B; --surface:#151D27; --surface-2:#1A2430; --line:#2A3746; --line-2:#223040;
+    --ink:#E3E9EF; --ink-2:#B7C2CE; --muted:#8595A6;
+    --accent:#86A9EC; --accent-soft:#1E2C45; --accent-ink:#0E141B;
+    --good:#5CC79C; --good-soft:#15342A; --warn:#E3A857; --warn-soft:#3A2A14; --bad:#F2A09A; --bad-soft:#3B1D1B;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0E141B; --surface:#151D27; --surface-2:#1A2430; --line:#2A3746; --line-2:#223040;
+  --ink:#E3E9EF; --ink-2:#B7C2CE; --muted:#8595A6;
+  --accent:#86A9EC; --accent-soft:#1E2C45; --accent-ink:#0E141B;
+  --good:#5CC79C; --good-soft:#15342A; --warn:#E3A857; --warn-soft:#3A2A14; --bad:#F2A09A; --bad-soft:#3B1D1B;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:15px/1.55 var(--body);padding:0 16px 64px}
+a{color:var(--accent);text-underline-offset:2px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.wrap{max-width:900px;margin:0 auto}
+.mono{font-family:var(--mono)}
+header{padding:28px 0 12px;display:grid;gap:10px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--display);font-stretch:78%;font-weight:800;font-size:clamp(30px,5.5vw,46px);line-height:1;margin:0}
+.lede{margin:0;color:var(--ink-2);max-width:64ch}
+.toplinks{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px}
+nav.tabs{position:sticky;top:0;z-index:5;background:var(--ground);display:flex;gap:6px;padding:10px 0;border-bottom:1px solid var(--line);margin-bottom:18px;overflow-x:auto}
+nav.tabs a{font-family:var(--mono);font-size:13px;text-decoration:none;color:var(--ink-2);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 12px;white-space:nowrap}
+nav.tabs a[aria-current="page"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.grow{flex:1 1 auto}
+label.f{display:grid;gap:3px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+select,textarea,input[type=file]{font:inherit;font-family:var(--body);font-size:14px;text-transform:none;letter-spacing:0;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:6px 8px}
+textarea{width:100%;min-height:110px;resize:vertical;line-height:1.5}
+.btn{border:1px solid var(--line);background:var(--surface);padding:7px 12px;border-radius:7px;cursor:pointer;font-size:14px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.sub{font-size:13px;color:var(--muted);margin:0}
+h2{font-family:var(--display);font-stretch:85%;font-size:22px;margin:0 0 6px}
+h3{font-family:var(--display);font-stretch:85%;font-size:18px;margin:0 0 4px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.p-strong{background:var(--good-soft);color:var(--good)}
+.p-solid{background:var(--accent-soft);color:var(--accent)}
+.p-shaky{background:var(--warn-soft);color:var(--warn)}
+.p-weak{background:var(--bad-soft);color:var(--bad)}
+.p-none{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.tag{font-family:var(--mono);font-size:11px;color:var(--muted)}
+
+/* Flashcard */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;min-height:260px;display:grid;gap:14px;align-content:start}
+.card .meta{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.card .q{font-size:19px;font-weight:500;line-height:1.45}
+.answer{border-top:1px dashed var(--line);padding-top:14px;display:grid;gap:10px}
+.md p{margin:0 0 8px}.md p:last-child{margin:0}.md ul,.md ol{margin:0 0 8px;padding-left:20px}
+.md code{font-family:var(--mono);font-size:.9em;background:var(--surface-2);padding:1px 5px;border-radius:4px}
+.md pre{background:var(--surface-2);padding:10px;border-radius:8px;overflow-x:auto;font-size:13px}
+.note{font-size:13.5px;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line-2);border-radius:8px;padding:10px 12px}
+.rate{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.rate button{border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:9px 6px;cursor:pointer;display:grid;gap:2px;justify-items:center}
+.rate button b{font-size:14px}
+.rate button span{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.rate .r1 b{color:var(--bad)}.rate .r2 b{color:var(--warn)}.rate .r3 b{color:var(--good)}.rate .r4 b{color:var(--accent)}
+.progress{height:6px;background:var(--line-2);border-radius:3px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent)}
+.kbd{font-family:var(--mono);font-size:11px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 4px;color:var(--muted)}
+
+/* Quiz */
+.opts{display:grid;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:9px;padding:10px 12px;cursor:pointer;display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start}
+.opt .l{font-family:var(--mono);font-weight:600;color:var(--muted)}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt:disabled{cursor:default}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.qblock{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:8px;align-content:start}
+.qblock .t{font-weight:600;font-size:14.5px;line-height:1.3}
+.qblock .row{gap:6px}
+
+/* Strengths */
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:16px}
+.tile{background:var(--surface);padding:12px 14px;display:grid;gap:2px}
+.tile .k{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tile .v{font-family:var(--display);font-stretch:85%;font-weight:700;font-size:24px;font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:8px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.tblwrap{overflow-x:auto}
+.bar{height:8px;background:var(--line-2);border-radius:4px;overflow:hidden;min-width:70px}
+.bar i{display:block;height:100%}
+.list{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.list li{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:8px 10px;background:var(--surface-2);border:1px solid var(--line-2);border-radius:8px;font-size:14px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.stack{display:grid;gap:16px}
+
+/* Browse */
+details.blk{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:10px}
+details.blk>summary{cursor:pointer;padding:12px 16px;font-weight:600;list-style:none;display:flex;gap:10px;align-items:baseline}
+details.blk>summary::-webkit-details-marker{display:none}
+.blkbody{padding:0 16px 16px;display:grid;gap:12px}
+.bitem{border-top:1px solid var(--line-2);padding-top:10px;display:grid;gap:6px;font-size:14.5px}
+.bitem details summary{cursor:pointer;color:var(--accent);font-size:13px}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+footer{margin-top:28px;font-size:12.5px;color:var(--muted)}
+@media (max-width:700px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.cols{grid-template-columns:1fr}.card{padding:16px}.card .q{font-size:17px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Genesis to Capstone · practice</div>
+    <h1>Blockchain practice cards</h1>
+    <p class="lede">Flashcards and quizzes for 12 blocks, from hashes and signatures to a working trust stack. Take the warm-up before a block, learn the key questions as flashcards, then take the final quiz. Strengths shows where you're solid and what to revisit. Your progress stays in this browser.</p>
+    <div class="toplinks" id="toplinks"></div>
+  </header>
+  <nav class="tabs" aria-label="Sections">
+    <a href="#practice" data-tab="practice">Flashcards</a>
+    <a href="#quiz" data-tab="quiz">Quizzes</a>
+    <a href="#strengths" data-tab="strengths">Strengths</a>
+    <a href="#browse" data-tab="browse">All questions</a>
+  </nav>
+  <main id="view"></main>
+  <footer id="foot"></footer>
+</div>
+<script src="cards.js"></script>
+<script>
+(function(){
+"use strict";
+const DATA = window.CARDS || { blocks: [], cards: [], repo: "", anki: false, generated: "" };
+const BLOCKS = DATA.blocks, CARDS = DATA.cards;
+const BYID = Object.fromEntries(CARDS.map(c => [c.id, c]));
+const KEY = CARDS.filter(c => c.type === "key");
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const DAY = 86400000;
+
+/* ---------- Storage (this browser only) ---------- */
+const SKEY = "g2c-practice-v1";
+function fresh(){ return { rev:{}, own:{}, quiz:[] }; }
+function load(){ try { const s = JSON.parse(localStorage.getItem(SKEY) || "null"); return s ? Object.assign(fresh(), s) : fresh(); } catch(e){ return fresh(); } }
+let st = load();
+function save(){ try { localStorage.setItem(SKEY, JSON.stringify(st)); } catch(e){} }
+
+/* ---------- Tiny markdown ---------- */
+function inl(s){
+  return esc(s).replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>")
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+}
+function md(t){
+  return String(t || "").trim().split(/\n\s*\n/).map(p => {
+    const L = p.split("\n");
+    if (p.startsWith("```")) return "<pre><code>" + esc(p.replace(/^```\w*\n?|\n?```$/g, "")) + "</code></pre>";
+    if (L.every(l => /^\s*[-*]\s+/.test(l))) return "<ul>" + L.map(l => "<li>" + inl(l.replace(/^\s*[-*]\s+/, "")) + "</li>").join("") + "</ul>";
+    if (L.every(l => /^\s*\d+[.)]\s+/.test(l))) return "<ol>" + L.map(l => "<li>" + inl(l.replace(/^\s*\d+[.)]\s+/, "")) + "</li>").join("") + "</ol>";
+    return "<p>" + L.map(inl).join("<br>") + "</p>";
+  }).join("");
+}
+
+/* ---------- Scheduling (a simple SM-2 style) ---------- */
+const RATE = { 1:"Again", 2:"Hard", 3:"Good", 4:"Easy" };
+const SCORE = { 1:0.1, 2:0.5, 3:0.85, 4:1 };
+function next(r, g){
+  r = Object.assign({ ease:2.5, ivl:0, reps:0, lapses:0, hist:[] }, r || {});
+  let ivl;
+  if (g === 1){ r.lapses++; r.ease = Math.max(1.3, r.ease - 0.2); ivl = 0; }
+  else if (g === 2){ r.ease = Math.max(1.3, r.ease - 0.15); ivl = r.ivl < 1 ? 1 : Math.max(r.ivl + 1, Math.round(r.ivl * 1.2)); }
+  else if (g === 3){ ivl = r.ivl < 1 ? 1 : r.ivl < 3 ? 3 : Math.round(r.ivl * r.ease); }
+  else { r.ease += 0.15; ivl = r.ivl < 1 ? 4 : Math.round(r.ivl * r.ease * 1.3); }
+  return Object.assign(r, { ivl, reps: r.reps + 1, last: Date.now(), g, due: Date.now() + (ivl ? ivl * DAY : 10 * 60000) });
+}
+function ivlLabel(r, g){ const n = next(JSON.parse(JSON.stringify(r || {})), g); return n.ivl ? (n.ivl >= 30 ? Math.round(n.ivl / 30) + " mo" : n.ivl + " d") : "10 min"; }
+function isDue(c){ const r = st.rev[c.id]; return r && r.due <= Date.now(); }
+function isNew(c){ return !st.rev[c.id]; }
+function cardScore(c){ const r = st.rev[c.id]; return r ? SCORE[r.g] : null; }
+
+/* ---------- Strength ---------- */
+function lastQuiz(block, kind){ const a = st.quiz.filter(q => q.block === block && q.kind === kind); return a.length ? a[a.length - 1] : null; }
+function bestQuiz(block, kind){ const a = st.quiz.filter(q => q.block === block && q.kind === kind); return a.length ? a.reduce((m, q) => q.score / q.total > m.score / m.total ? q : m) : null; }
+function flashStat(block){
+  const cs = KEY.filter(c => c.block === block), seen = cs.filter(c => st.rev[c.id]);
+  return { n: cs.length, seen: seen.length, score: seen.length ? seen.reduce((s, c) => s + cardScore(c), 0) / seen.length : null };
+}
+function strength(block){
+  const fin = lastQuiz(block, "post"), fl = flashStat(block);
+  const parts = [];
+  if (fin) parts.push([fin.score / fin.total, 0.5]);
+  if (fl.score != null) parts.push([fl.score * (0.5 + 0.5 * fl.seen / fl.n), 0.5]);
+  if (!parts.length) return null;
+  return parts.reduce((s, [v, w]) => s + v * w, 0) / parts.reduce((s, [, w]) => s + w, 0);
+}
+function level(v){
+  if (v == null) return ["Not started", "p-none"];
+  if (v >= 0.8) return ["Strong", "p-strong"];
+  if (v >= 0.6) return ["Solid", "p-solid"];
+  if (v >= 0.4) return ["Shaky", "p-shaky"];
+  return ["Needs work", "p-weak"];
+}
+function barColor(v){ return v >= 0.8 ? "var(--good)" : v >= 0.6 ? "var(--accent)" : v >= 0.4 ? "var(--warn)" : "var(--bad)"; }
+function topicStats(){
+  const T = {};
+  const add = (t, b, v) => { const k = b + "|" + t; (T[k] = T[k] || { topic:t, block:b, sum:0, n:0 }); T[k].sum += v; T[k].n++; };
+  BLOCKS.forEach(b => ["pre","post"].forEach(kind => { const q = lastQuiz(b.block, kind); if (q) Object.entries(q.res).forEach(([id, ok]) => { const c = BYID[id]; if (c) add(c.topic, c.block, ok ? 1 : 0); }); }));
+  KEY.forEach(c => { const s = cardScore(c); if (s != null) add(c.topic, c.block, s); });
+  return Object.values(T).map(x => Object.assign(x, { v: x.sum / x.n }));
+}
+function weakCards(){
+  const out = [];
+  KEY.forEach(c => { const r = st.rev[c.id]; if (r && (r.g <= 2 || r.lapses >= 2)) out.push({ c, why: r.lapses ? `forgotten ${r.lapses}×` : "rated " + RATE[r.g].toLowerCase(), w: r.lapses * 2 + (3 - Math.min(r.g, 3)) }); });
+  BLOCKS.forEach(b => ["pre","post"].forEach(kind => { const q = lastQuiz(b.block, kind); if (q) Object.entries(q.res).forEach(([id, ok]) => { if (!ok && BYID[id]) out.push({ c: BYID[id], why: "missed in the " + (kind === "pre" ? "warm-up" : "final quiz"), w: kind === "post" ? 2 : 1 }); }); }));
+  return out.sort((a, b) => b.w - a.w);
+}
+
+/* ---------- Links ---------- */
+const REPO = DATA.repo ? "https://github.com/" + DATA.repo : "";
+function editUrl(c){ return REPO ? `${REPO}/edit/main/${c.file}` : ""; }
+function blockTitle(n){ const b = BLOCKS.find(x => x.block === n); return b ? b.title : "Block " + n; }
+function topicName(t){ return t.replace(/-/g, " "); }
+
+/* ---------- Router ---------- */
+let view = "practice", params = {};
+function route(){
+  const [h, q] = (location.hash.slice(1) || "practice").split("?");
+  view = ["practice","quiz","strengths","browse"].includes(h) ? h : "practice";
+  params = Object.fromEntries(new URLSearchParams(q || ""));
+  document.querySelectorAll("nav.tabs a").forEach(a => a.setAttribute("aria-current", a.dataset.tab === view ? "page" : "false"));
+  render();
+}
+window.addEventListener("hashchange", route);
+function go(h){ if (location.hash === "#" + h) route(); else location.hash = h; }
+
+function render(){
+  const v = $("#view");
+  if (!CARDS.length){ v.innerHTML = `<div class="panel empty">No cards loaded. Run <span class="mono">python scripts/build_site.py</span> to build cards.js.</div>`; return; }
+  if (view === "practice") renderPractice(v);
+  else if (view === "quiz") renderQuiz(v);
+  else if (view === "strengths") renderStrengths(v);
+  else renderBrowse(v);
+  window.scrollTo(0, 0);
+}
+
+/* ---------- Flashcards ---------- */
+let session = null;
+function blockOptions(sel){ return `<option value="">All blocks</option>` + BLOCKS.map(b => `<option value="${b.block}" ${String(sel) === String(b.block) ? "selected" : ""}>Block ${b.block} · ${esc(b.title)}</option>`).join(""); }
+function topicOptions(block, sel){
+  const ts = [...new Set(KEY.filter(c => !block || c.block === +block).map(c => c.topic))];
+  return `<option value="">All topics</option>` + ts.map(t => `<option value="${t}" ${sel === t ? "selected" : ""}>${esc(topicName(t))}</option>`).join("");
+}
+function buildQueue(block, topic, mode){
+  let pool = KEY.filter(c => (!block || c.block === +block) && (!topic || c.topic === topic));
+  if (mode === "weak"){
+    const ids = new Set(weakCards().map(x => x.c.id));
+    return pool.filter(c => ids.has(c.id));
+  }
+  if (mode === "all") return pool.slice();
+  const due = pool.filter(isDue).sort((a, b) => st.rev[a.id].due - st.rev[b.id].due);
+  const nw = pool.filter(isNew).slice(0, 20);
+  return due.concat(nw);
+}
+function renderPractice(v){
+  const block = params.block || "", topic = params.topic || "", mode = params.mode || "due";
+  if (!session || session.key !== [block, topic, mode].join("|")){
+    session = { key: [block, topic, mode].join("|"), q: buildQueue(block, topic, mode), i: 0, shown: false, done: 0, again: [] };
+  }
+  const pool = KEY.filter(c => (!block || c.block === +block) && (!topic || c.topic === topic));
+  const dueN = pool.filter(isDue).length, newN = pool.filter(isNew).length;
+  v.innerHTML = `<div class="stack">
+    <div class="panel row">
+      <label class="f grow">Block<select id="pBlock">${blockOptions(block)}</select></label>
+      <label class="f">Topic<select id="pTopic">${topicOptions(block, topic)}</select></label>
+      <label class="f">Session<select id="pMode">
+        <option value="due" ${mode === "due" ? "selected" : ""}>Due and new (${dueN} due, ${newN} new)</option>
+        <option value="weak" ${mode === "weak" ? "selected" : ""}>Weak spots only</option>
+        <option value="all" ${mode === "all" ? "selected" : ""}>Every card in the selection</option>
+      </select></label>
+    </div>
+    <div id="cardArea"></div></div>`;
+  const upd = () => { go(`practice?${new URLSearchParams(Object.fromEntries(Object.entries({ block: $("#pBlock").value, topic: $("#pTopic").value, mode: $("#pMode").value }).filter(([, x]) => x)))}`); };
+  $("#pBlock").onchange = () => { $("#pTopic").value = ""; upd(); };
+  $("#pTopic").onchange = upd; $("#pMode").onchange = upd;
+  drawCard();
+}
+function drawCard(){
+  const a = $("#cardArea"); if (!a) return;
+  const s = session;
+  if (s.i >= s.q.length){
+    a.innerHTML = `<div class="card"><div class="q">${s.done ? "Session done. Nice work." : "Nothing due right now."}</div>
+      <p class="sub">${s.done ? `You reviewed ${s.done} card${s.done > 1 ? "s" : ""}.` : "Cards come back when they're due. You can practise weak spots or every card any time."}</p>
+      <div class="row"><button class="btn primary" id="again">Practise every card in this selection</button><a class="btn" href="#strengths" style="text-decoration:none">See your strengths</a><a class="btn" href="#quiz" style="text-decoration:none">Take a quiz</a></div></div>`;
+    $("#again").onclick = () => { session = null; go("practice?" + new URLSearchParams(Object.assign({}, params, { mode: "all" }))); };
+    return;
+  }
+  const c = s.q[s.i], r = st.rev[c.id];
+  const own = st.own[c.id] || "";
+  const status = !r ? "New" : isDue(c) ? "Due" : "Review";
+  a.innerHTML = `<div class="card" aria-live="polite">
+    <div class="meta"><span>Block ${c.block} · ${esc(topicName(c.topic))}</span><span>${status} · ${s.i + 1} of ${s.q.length}</span></div>
+    <div class="progress" aria-hidden="true"><i style="width:${s.i / s.q.length * 100}%"></i></div>
+    <div class="q md">${md(c.q)}</div>
+    ${s.shown ? answerHTML(c, own) : `<div class="row"><button class="btn primary" id="show">Show answer</button><span class="sub"><span class="kbd">Space</span> to reveal</span></div>`}
+  </div>`;
+  if (!s.shown){ $("#show").onclick = reveal; return; }
+  const ta = $("#own"); if (ta) ta.oninput = () => { const t = ta.value; if (t.trim()) st.own[c.id] = t; else delete st.own[c.id]; save(); };
+  a.querySelectorAll("[data-g]").forEach(b => b.onclick = () => rate(+b.dataset.g));
+}
+function answerHTML(c, own){
+  const r = st.rev[c.id];
+  const ans = c.answer
+    ? `<div class="md">${md(c.answer)}</div>${c.source ? `<div class="sub">Source: ${inl(c.source)}</div>` : ""}
+       <details><summary class="sub" style="cursor:pointer">Your own notes on this card</summary><textarea id="own" placeholder="Anything you'd add or remember it by">${esc(own)}</textarea></details>`
+    : `<div class="note">There's no answer in the repo for this card yet. Write your own below: putting it in your own words is the best practice there is. It's saved in this browser.${editUrl(c) ? ` If yours is good, <a href="${editUrl(c)}" target="_blank" rel="noopener">suggest it on GitHub</a>.` : ""}</div>
+       <textarea id="own" placeholder="Your answer">${esc(own)}</textarea>`;
+  return `<div class="answer">${ans}
+    <div class="sub">How well did you know it?</div>
+    <div class="rate">${[1,2,3,4].map(g => `<button class="r${g}" data-g="${g}"><b>${RATE[g]}</b><span>${ivlLabel(r, g)} · <span class="kbd">${g}</span></span></button>`).join("")}</div>
+  </div>`;
+}
+function reveal(){ session.shown = true; drawCard(); }
+function rate(g){
+  const c = session.q[session.i];
+  st.rev[c.id] = next(st.rev[c.id], g);
+  const h = st.rev[c.id].hist || (st.rev[c.id].hist = []); h.push([Date.now(), g]); if (h.length > 20) h.shift();
+  save();
+  session.done++;
+  if (g === 1 && !session.again.includes(c.id)){ session.again.push(c.id); session.q.push(c); }
+  session.i++; session.shown = false; drawCard();
+}
+document.addEventListener("keydown", e => {
+  if (view !== "practice" || !session || e.target.matches("textarea,select,input")) return;
+  if ((e.key === " " || e.key === "Enter") && !session.shown && session.i < session.q.length){ e.preventDefault(); reveal(); }
+  else if (session.shown && ["1","2","3","4"].includes(e.key)) rate(+e.key);
+});
+
+/* ---------- Quizzes ---------- */
+let quiz = null;
+function renderQuiz(v){
+  if (params.block && params.kind){
+    const b = +params.block, kind = params.kind;
+    if (!quiz || quiz.block !== b || quiz.kind !== kind) quiz = { block: b, kind, qs: shuffle(CARDS.filter(c => c.block === b && c.type === kind)), i: 0, res: {}, picked: null };
+    return drawQuiz(v);
+  }
+  quiz = null;
+  v.innerHTML = `<div class="stack"><div class="panel"><h2>Quizzes</h2>
+    <p class="sub">Each block has an optional <b>warm-up</b> to take before you study it (your baseline) and a <b>final quiz</b> to take after. The final quiz counts toward your strength for the block. Retake as often as you like; the latest score counts.</p></div>
+    <div class="qgrid">${BLOCKS.map(b => {
+      const pre = lastQuiz(b.block, "pre"), post = lastQuiz(b.block, "post");
+      const np = CARDS.filter(c => c.block === b.block && c.type === "pre").length, nq = CARDS.filter(c => c.block === b.block && c.type === "post").length;
+      return `<div class="qblock"><span class="tag">Block ${b.block}</span><span class="t">${esc(b.title)}</span>
+        <div class="row"><a class="btn" style="text-decoration:none" href="#quiz?block=${b.block}&kind=pre">Warm-up · ${np}</a>${pre ? `<span class="sub">${pct(pre)}</span>` : ""}</div>
+        <div class="row"><a class="btn primary" style="text-decoration:none" href="#quiz?block=${b.block}&kind=post">Final quiz · ${nq}</a>${post ? `<span class="sub">${pct(post)}</span>` : ""}</div></div>`;
+    }).join("")}</div></div>`;
+}
+function pct(q){ return Math.round(q.score / q.total * 100) + "%"; }
+function shuffle(a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function drawQuiz(v){
+  const Q = quiz, name = Q.kind === "pre" ? "Warm-up" : "Final quiz";
+  if (!Q.qs.length){ v.innerHTML = `<div class="panel empty">No ${name.toLowerCase()} questions for this block yet.</div>`; return; }
+  if (Q.i >= Q.qs.length) return drawResult(v);
+  const c = Q.qs[Q.i], L = "ABCDEF";
+  v.innerHTML = `<div class="card">
+    <div class="meta"><span>Block ${Q.block} · ${name} · ${esc(topicName(c.topic))}</span><span>${Q.i + 1} of ${Q.qs.length}</span></div>
+    <div class="progress" aria-hidden="true"><i style="width:${Q.i / Q.qs.length * 100}%"></i></div>
+    <div class="q md">${md(c.q)}</div>
+    <div class="opts">${c.options.map((o, i) => {
+      let cls = "";
+      if (Q.picked != null){ if (i === c.correct) cls = " right"; else if (i === Q.picked) cls = " wrong"; }
+      return `<button class="opt${cls}" data-i="${i}" ${Q.picked != null ? "disabled" : ""}><span class="l">${L[i]}</span><span>${inl(o)}</span></button>`;
+    }).join("")}</div>
+    ${Q.picked != null ? `<div class="note"><b>${Q.picked === c.correct ? "Correct." : "Not quite. The answer is " + L[c.correct] + "."}</b> ${inl(c.why || "")}</div>
+      <div class="row"><button class="btn primary" id="nextQ">${Q.i + 1 < Q.qs.length ? "Next question" : "See your score"}</button><span class="sub"><span class="kbd">Enter</span></span></div>` : `<p class="sub">Pick an answer, or press <span class="kbd">A</span>–<span class="kbd">${L[c.options.length - 1]}</span>.</p>`}
+  </div>
+  <p class="sub" style="margin-top:10px"><a href="#quiz">← All quizzes</a></p>`;
+  v.querySelectorAll(".opt").forEach(b => b.onclick = () => pick(+b.dataset.i));
+  const n = $("#nextQ"); if (n){ n.onclick = nextQ; n.focus(); }
+}
+function pick(i){ const c = quiz.qs[quiz.i]; if (quiz.picked != null) return; quiz.picked = i; quiz.res[c.id] = i === c.correct; drawQuiz($("#view")); }
+function nextQ(){
+  quiz.i++; quiz.picked = null;
+  if (quiz.i >= quiz.qs.length){
+    const score = Object.values(quiz.res).filter(Boolean).length;
+    st.quiz.push({ block: quiz.block, kind: quiz.kind, at: Date.now(), score, total: quiz.qs.length, res: quiz.res });
+    if (st.quiz.length > 400) st.quiz = st.quiz.slice(-400);
+    save();
+  }
+  drawQuiz($("#view"));
+}
+document.addEventListener("keydown", e => {
+  if (view !== "quiz" || !quiz || e.target.matches("textarea,select,input")) return;
+  const c = quiz.qs[quiz.i]; if (!c) return;
+  const k = e.key.toUpperCase();
+  if (quiz.picked == null && "ABCDEF".includes(k) && k && "ABCDEF".indexOf(k) < c.options.length) pick("ABCDEF".indexOf(k));
+});
+function drawResult(v){
+  const Q = quiz, score = Object.values(Q.res).filter(Boolean).length, total = Q.qs.length, p = score / total;
+  const missed = Q.qs.filter(c => !Q.res[c.id]);
+  const pre = lastQuiz(Q.block, "pre");
+  const growth = Q.kind === "post" && pre ? Math.round((p - pre.score / pre.total) * 100) : null;
+  const [lab, cls] = level(p);
+  v.innerHTML = `<div class="stack"><div class="card">
+    <div class="meta"><span>Block ${Q.block} · ${Q.kind === "pre" ? "Warm-up" : "Final quiz"}</span><span>${esc(blockTitle(Q.block))}</span></div>
+    <div class="row"><span style="font-family:var(--display);font-weight:800;font-size:42px;line-height:1">${score}/${total}</span><span class="pill ${cls}">${lab}</span>
+      ${growth != null ? `<span class="sub">${growth >= 0 ? "+" : ""}${growth} points since your warm-up</span>` : ""}</div>
+    ${Q.kind === "pre" ? `<p class="sub">That's your baseline. Study the block, then take the final quiz to see how far you've come.</p>` : ""}
+    ${missed.length ? `<div><h3>Worth revisiting</h3><ul class="list">${missed.map(c => `<li><span>${inl(c.q)}<br><span class="tag">${esc(topicName(c.topic))} · answer ${"ABCDEF"[c.correct]}: ${inl(c.options[c.correct])}</span></span></li>`).join("")}</ul></div>` : `<p>Every question right.</p>`}
+    <div class="row"><button class="btn" id="retake">Retake</button>
+      <a class="btn primary" style="text-decoration:none" href="#practice?block=${Q.block}">Practise this block's flashcards</a>
+      <a class="btn" style="text-decoration:none" href="#strengths">See all strengths</a></div>
+  </div><p class="sub"><a href="#quiz">← All quizzes</a></p></div>`;
+  $("#retake").onclick = () => { quiz = null; renderQuiz(v); };
+}
+
+/* ---------- Strengths ---------- */
+function renderStrengths(v){
+  const reviewed = Object.keys(st.rev).filter(id => BYID[id]).length;
+  const due = KEY.filter(isDue).length;
+  const vals = BLOCKS.map(b => strength(b.block)).filter(x => x != null);
+  const overall = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+  const [olab] = level(overall);
+  const topics = topicStats().filter(t => t.n >= 2).sort((a, b) => a.v - b.v);
+  const weak = weakCards().slice(0, 10);
+  v.innerHTML = `<div class="stack">
+    <div class="tiles">
+      <div class="tile"><span class="k">Overall</span><span class="v">${overall == null ? "—" : Math.round(overall * 100) + "%"}</span><span class="sub">${olab}${vals.length ? ` · ${vals.length} block${vals.length > 1 ? "s" : ""}` : ""}</span></div>
+      <div class="tile"><span class="k">Cards learned</span><span class="v">${reviewed}<span class="sub"> / ${KEY.length}</span></span><span class="sub">key questions seen</span></div>
+      <div class="tile"><span class="k">Due now</span><span class="v">${due}</span><span class="sub">${due ? `<a href="#practice">review them</a>` : "all caught up"}</span></div>
+      <div class="tile"><span class="k">Quizzes taken</span><span class="v">${st.quiz.length}</span><span class="sub">latest score counts</span></div>
+    </div>
+    <div class="panel"><h2>By block</h2>
+      <p class="sub" style="margin-bottom:10px">Strength blends your latest final-quiz score with how well you rate the block's key questions (and how many you've seen). The warm-up is your baseline, so it doesn't count.</p>
+      <div class="tblwrap"><table><thead><tr><th>Block</th><th>Warm-up</th><th>Final quiz</th><th>Flashcards</th><th>Strength</th><th></th></tr></thead><tbody>
+      ${BLOCKS.map(b => {
+        const pre = lastQuiz(b.block, "pre"), post = lastQuiz(b.block, "post"), fl = flashStat(b.block), s = strength(b.block), [lab, cls] = level(s);
+        return `<tr><td><b>${b.block}</b> <span class="sub">${esc(b.title)}</span></td>
+          <td class="num">${pre ? pct(pre) : `<a href="#quiz?block=${b.block}&kind=pre">take</a>`}</td>
+          <td class="num">${post ? pct(post) : `<a href="#quiz?block=${b.block}&kind=post">take</a>`}</td>
+          <td class="num">${fl.seen ? `${Math.round(fl.score * 100)}% <span class="sub">(${fl.seen}/${fl.n})</span>` : `<a href="#practice?block=${b.block}">start</a>`}</td>
+          <td><div class="row" style="flex-wrap:nowrap"><span class="bar" aria-hidden="true"><i style="width:${(s || 0) * 100}%;background:${barColor(s || 0)}"></i></span><span class="pill ${cls}">${lab}</span></div></td>
+          <td><a href="#practice?block=${b.block}&mode=all">practise</a></td></tr>`;
+      }).join("")}</tbody></table></div></div>
+    <div class="cols">
+      <div class="panel"><h2>Weakest topics</h2>
+        ${topics.length ? `<ul class="list">${topics.slice(0, 8).map(t => { const [lab, cls] = level(t.v); return `<li><span><b>${esc(topicName(t.topic))}</b> <span class="tag">block ${t.block} · ${Math.round(t.v * 100)}% over ${t.n} answers</span></span><span class="row" style="gap:6px"><span class="pill ${cls}">${lab}</span><a href="#practice?block=${t.block}&topic=${t.topic}&mode=all">practise</a></span></li>`; }).join("")}</ul>` : `<p class="sub">Take a quiz or review some flashcards, and your topics show up here, weakest first.</p>`}
+      </div>
+      <div class="panel"><h2>Cards to work on</h2>
+        ${weak.length ? `<ul class="list">${weak.map(x => `<li><span>${inl(x.c.q.split("\n")[0])}<br><span class="tag">block ${x.c.block} · ${esc(topicName(x.c.topic))} · ${esc(x.why)}</span></span></li>`).join("")}</ul>
+          <div class="row" style="margin-top:10px"><a class="btn primary" style="text-decoration:none" href="#practice?mode=weak">Practise weak flashcards</a></div>` : `<p class="sub">Nothing flagged yet. Cards you rate Again or Hard, and quiz questions you miss, appear here.</p>`}
+      </div>
+    </div>
+    <div class="panel"><h2>Your progress file</h2>
+      <p class="sub">Progress is saved in this browser only. Download it to back it up or move it to another device.</p>
+      <div class="row" style="margin-top:10px"><button class="btn" id="exp">Download progress</button><label class="btn" style="cursor:pointer">Load progress<input type="file" id="imp" accept="application/json" hidden></label><button class="btn" id="reset">Reset everything</button><span class="sub" id="ioMsg"></span></div>
+    </div></div>`;
+  $("#exp").onclick = () => {
+    const blob = new Blob([JSON.stringify(st, null, 1)], { type: "application/json" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "blockchain-practice-progress.json"; document.body.appendChild(a); a.click(); a.remove();
+  };
+  $("#imp").onchange = e => {
+    const f = e.target.files[0]; if (!f) return;
+    f.text().then(t => { const s = JSON.parse(t); if (!s || typeof s !== "object" || !s.rev) throw 0; st = Object.assign(fresh(), s); save(); session = null; renderStrengths(v); $("#ioMsg").textContent = "Progress loaded."; })
+      .catch(() => { $("#ioMsg").textContent = "That file isn't a progress file from this page."; });
+  };
+  $("#reset").onclick = () => { if (confirm("Delete all your flashcard reviews, answers and quiz scores in this browser?")){ st = fresh(); save(); session = null; renderStrengths(v); } };
+}
+
+/* ---------- Browse ---------- */
+function renderBrowse(v){
+  const L = "ABCDEF";
+  const open = params.block ? +params.block : null;
+  v.innerHTML = `<div class="panel" style="margin-bottom:12px"><h2>All questions</h2>
+    <p class="sub">Every block's warm-up, key questions, final quiz and reflection questions. Reflection questions are for people following the 12-week plan, and aren't scored.${REPO ? ` The questions live in <a href="${REPO}/tree/main/cards" target="_blank" rel="noopener">cards/</a> in the repo, and anyone can suggest improvements.` : ""}</p></div>` +
+    BLOCKS.map(b => {
+      const cs = CARDS.filter(c => c.block === b.block);
+      const sec = (type, title) => { const x = cs.filter(c => c.type === type); if (!x.length) return ""; return `<h3 style="margin-top:6px">${title}</h3>` + x.map(c => {
+        if (type === "pre" || type === "post") return `<div class="bitem"><div class="md">${md(c.q)}</div><div>${c.options.map((o, i) => `<div class="sub">${L[i]}. ${inl(o)}</div>`).join("")}</div><details><summary>Answer</summary><p style="margin:4px 0 0"><b>${L[c.correct]}.</b> ${inl(c.why || "")}</p></details></div>`;
+        if (type === "key") return `<div class="bitem"><div class="md"><b>${md(c.q)}</b></div>${c.answer ? `<details><summary>Answer</summary><div class="md">${md(c.answer)}</div></details>` : `<span class="tag">No answer in the repo yet${st.own[c.id] ? " · you wrote one" : ""}</span>`}</div>`;
+        return `<div class="bitem"><div class="md">${md(c.q)}</div></div>`;
+      }).join(""); };
+      const s = strength(b.block), [lab, cls] = level(s);
+      return `<details class="blk" ${open === b.block ? "open" : ""}><summary><span class="tag">Block ${b.block}</span><span class="grow">${esc(b.title)}</span><span class="pill ${cls}">${lab}</span></summary>
+        <div class="blkbody"><p class="sub">${esc(b.intro || "")}</p>
+        <div class="row"><a class="btn" style="text-decoration:none" href="#quiz?block=${b.block}&kind=pre">Warm-up</a><a class="btn" style="text-decoration:none" href="#practice?block=${b.block}&mode=all">Flashcards</a><a class="btn primary" style="text-decoration:none" href="#quiz?block=${b.block}&kind=post">Final quiz</a>${REPO && b.plan ? `<a href="${REPO}/tree/main/${b.plan}" target="_blank" rel="noopener">This week in the plan</a>` : ""}</div>
+        ${sec("pre", "Warm-up")}${sec("key", "Key questions")}${sec("post", "Final quiz")}${sec("reflect", "Reflect (if you're following the plan)")}</div></details>`;
+    }).join("");
+}
+
+/* ---------- Header and footer ---------- */
+function chrome(){
+  const answered = KEY.filter(c => c.answer).length;
+  $("#toplinks").innerHTML = [
+    `<a href="../">Home</a>`, `<a href="../tracker/">Progress tracker</a>`, `<a href="../demo/">Trust stack demo</a>`,
+    DATA.anki ? `<a href="genesis-to-capstone.apkg" download>Download the Anki deck</a>` : "",
+    REPO ? `<a href="${REPO}" target="_blank" rel="noopener">Repo</a>` : "",
+  ].filter(Boolean).join("");
+  $("#foot").innerHTML = `${CARDS.length} questions across ${BLOCKS.length} blocks · ${answered} of ${KEY.length} key answers written so far${DATA.generated ? " · built " + esc(DATA.generated) : ""}. Progress is stored only in this browser.`;
+}
+chrome(); route();
+})();
+</script>
+</body>
+</html>
