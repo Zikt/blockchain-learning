@@ -12,9 +12,9 @@
 
 ### Plan
 
-- [ ] Learn (30 min): Watch 3Blue1Brown's bitcoin video end to end  
+- [x] Learn (30 min): Watch 3Blue1Brown's bitcoin video end to end  
   [But how does bitcoin actually work?](https://www.youtube.com/watch?v=bBC-nXj3Ng4)
-- [ ] Learn (45 min): Click through all five pages of the blockchain demo: hash, block, blockchain, distributed, tokens  
+- [x] Learn (45 min): Click through all five pages of the blockchain demo: hash, block, blockchain, distributed, tokens  
   [andersbrownworth.com/blockchain](https://andersbrownworth.com/blockchain/)
 - [ ] Learn (45 min): Read the Bitcoin whitepaper, sections 1–6. Don't worry about the math yet  
   [bitcoin.pdf](https://bitcoin.org/bitcoin.pdf)

@@ -66,11 +66,11 @@ The demo runs as far as the parts built so far; stages still to come show as "no
 This table updates itself from the checklists in each week's README. [progress.json](progress.json) holds the same data for my private study tracker.
 
 <!-- PROGRESS:START -->
-**Overall:** `░░░░░░░░░░` 0/160 tasks (0%) · 0 h logged · updated 2026-09-29
+**Overall:** `░░░░░░░░░░` 2/160 tasks (1%) · 0 h logged · updated 2026-09-30
 
 | Week | Dates | Project | Progress | Time | Status |
 |------|-------|---------|----------|------|--------|
-| 1 | 28 Sep – 4 Oct 2026 | [The mental model, keys and signatures](week01-toy-chain/) | `░░░░░░░░░░` 0/13 (0%) | 0 h | Not started |
+| 1 | 28 Sep – 4 Oct 2026 | [The mental model, keys and signatures](week01-toy-chain/) | `██░░░░░░░░` 2/13 (15%) | 0 h | 🔨 In progress |
 | 2 | 5 Oct – 11 Oct 2026 | [Bitcoin: UTXOs, raw transactions and mining](week02-bitcoin/) | `░░░░░░░░░░` 0/13 (0%) | 0 h | Not started |
 | 3 | 12 Oct – 18 Oct 2026 | [Consensus, attacks and proof-of-stake](week03-consensus-sim/) | `░░░░░░░░░░` 0/12 (0%) | 0 h | Not started |
 | 4 | 19 Oct – 25 Oct 2026 | [The Ethereum model and Solidity fluency](week04-first-contracts/) | `░░░░░░░░░░` 0/12 (0%) | 0 h | Not started |
