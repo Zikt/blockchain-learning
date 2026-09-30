@@ -36,6 +36,9 @@
   [EIP-712](https://eips.ethereum.org/EIPS/eip-712)
 - [ ] Capstone (15 min): Credential tests: a revoked credential can't sign or list (test_RevertWhen_RevokedCredential). Switch demo stage 2 from the mock to the real registry
 
+
+- [ ] Apps (45 min): Stablecoins II: why they matter in Africa, the BIS critique, and the rules (MiCA, GENIUS Act, Rwanda and Nigeria)
+- [ ] Explain (45 min): Stablecoin write-up: "Digital dollars for Africa? What stablecoins could fix and what they risk" in blog/ (600–900 words)
 ---
 
 ## What I built

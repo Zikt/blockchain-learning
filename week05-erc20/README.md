@@ -35,7 +35,7 @@
   [Slither](https://github.com/crytic/slither)
 - [ ] Capstone (15 min): Docker check (optional, see DOCKER.md): install Docker Desktop, then from trust-stack/ run make docker-test and make docker-demo. They should match your normal run, and the docker job in the Trust stack run on GitHub should be green  
   [Docker: get started](https://docs.docker.com/get-started/get-docker/)
-
+- [ ] Apps (45 min): Stablecoins I: how they hold $1 (fiat-backed, crypto-backed, algorithmic), and two failures: TerraUST (2022) and USDC's depeg when SVB failed (2023)
 ---
 
 ## What I built
