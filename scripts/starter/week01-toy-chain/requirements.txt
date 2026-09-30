@@ -1,0 +1,2 @@
+ecdsa>=0.19
+matplotlib>=3.8

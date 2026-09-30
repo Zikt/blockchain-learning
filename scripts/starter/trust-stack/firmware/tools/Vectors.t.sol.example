@@ -1,0 +1,35 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+import {Test} from "forge-std/Test.sol";
+contract VectorsTest is Test {
+    function _digest(uint256 b, uint32 s, uint64 t, int16 c) internal pure returns (bytes32) { return keccak256(abi.encodePacked(b, s, t, c)); }
+    function _recover(bytes32 d, bytes memory sig) internal pure returns (address) {
+        bytes32 eth = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", d));
+        bytes32 rr; bytes32 ss; uint8 vv; assembly { rr := mload(add(sig, 32)) ss := mload(add(sig, 64)) vv := byte(0, mload(add(sig, 96))) }
+        return ecrecover(eth, vv, rr, ss);
+    }
+    function test_VectorsAndMerkle() public view {
+        string memory j = vm.readFile("firmware/test_vectors.json");
+        address dev = vm.parseJsonAddress(j, ".device.address");
+        bytes32 d = _digest(1, 0, 1_700_000_000, 450);
+        assertEq(d, vm.parseJsonBytes32(j, ".cases[0].digest"));
+        assertEq(_recover(d, vm.parseJsonBytes(j, ".cases[0].signature")), dev, "good sig");
+        assertTrue(_recover(d, vm.parseJsonBytes(j, ".cases[1].signature")) != dev, "unregistered device");
+        bytes32 tampered = _digest(1, 0, 1_700_000_000, 1100);
+        assertTrue(_recover(tampered, vm.parseJsonBytes(j, ".cases[2].signature")) != dev, "tampered");
+        string memory s = vm.readFile("firmware/sample_readings.json");
+        for (uint b = 0; b < 2; b++) {
+            string memory p = string.concat(".batches[", vm.toString(b), "]");
+            bytes32 root = vm.parseJsonBytes32(s, string.concat(p, ".merkleRoot"));
+            for (uint i = 0; i < 6; i++) {
+                string memory q = string.concat(p, ".readings[", vm.toString(i), "]");
+                bytes32 dg = vm.parseJsonBytes32(s, string.concat(q, ".digest"));
+                assertEq(_recover(dg, vm.parseJsonBytes(s, string.concat(q, ".signature"))), dev);
+                bytes32[] memory proof = vm.parseJsonBytes32Array(s, string.concat(q, ".proof"));
+                bytes32 h = keccak256(abi.encodePacked(dg));
+                for (uint k = 0; k < proof.length; k++) h = h < proof[k] ? keccak256(abi.encodePacked(h, proof[k])) : keccak256(abi.encodePacked(proof[k], h));
+                assertEq(h, root, "merkle");
+            }
+        }
+    }
+}
