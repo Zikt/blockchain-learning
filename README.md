@@ -16,7 +16,7 @@ I'm Isaac Thani, a technical product & research engineer and founder based in Ki
 | Follow the learning, week by week | [Progress](#progress) below, and [LEARNING_LOG.md](LEARNING_LOG.md) |
 | Read the explainers or watch the videos | [blog/](blog/) |
 | Build it yourself | [BOM.md](BOM.md) for hardware and accounts, then [trust-stack/README.md](trust-stack/README.md) |
-
+| Take this course yourself, at your own pace | [FOLLOW_ALONG.md](FOLLOW_ALONG.md): set up your own copy in about 20 minutes |
 ## The capstone in one minute
 
 A cooperative issues role credentials to a farmer, a transporter, an inspector and a buyer. The farmer creates a batch of tomatoes under a rule set (2–8 °C, at most 48 hours in transit, inspection required). Every handoff is signed by someone with the right role, and a sensor in the crate signs temperature readings that are anchored on-chain. The buyer pays in a test stablecoin into escrow. If the batch met its rules, payment is released and the farmer's reputation goes up; if a reading broke them, the buyer can prove it and is refunded. Anyone can look up the batch's journey.
