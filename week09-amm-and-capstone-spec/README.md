@@ -41,6 +41,27 @@
 - [ ] Explain (45 min): Stablecoin write-up: "Digital dollars for Africa? What stablecoins could fix and what they risk" in blog/ (600–900 words)
 ---
 
+## Objectives and check-yourself
+
+**By the end of this block you can:**
+
+- Build a constant-product AMM and prove with a fuzz test that k never decreases
+- Explain why an AMM spot price is a dangerous oracle, and how Chainlink feeds differ
+- Compare rollups by their real risks using L2BEAT
+- Decide with numbers whether a use case needs a blockchain at all
+- Explain why stablecoins matter in Africa, and what regulators worry about
+- Write the trust stack's SPEC.md and replace the credential mock with the real registry
+
+**Check yourself** (answer these in LEARNING_LOG.md on Saturday):
+
+1. What slippage did my tests show for the same trade on a small pool and a large one?
+2. How could an attacker move my AMM's price inside one transaction, and who would lose?
+3. What can Base's operator do to my funds today, according to L2BEAT?
+4. Sending $200 to Nigeria or Rwanda: which route was cheapest, and what costs remain when the recipient cashes out?
+5. For each trust-stack part, what is on-chain, what is off-chain, and why?
+6. What does revoking a credential stop, and what can't it undo?
+
+
 ## What I built
 
 <!-- One paragraph, plus a screenshot or terminal output if it helps. -->

@@ -59,6 +59,47 @@
 
 ---
 
+## Objectives and check-yourself
+
+### Block 10
+
+**By the end of this block you can:**
+
+- Explain how hardware wallets and trusted execution protect keys, and where they fail
+- Generate a key on an ESP32 (or a simulator) and sign sensor readings
+- Batch readings into a Merkle tree and sign only the root
+- Accept on-chain only roots signed by registered devices (ecrecover)
+- Explain what anchoring proves (this device signed this data) and what it can't (that the reading is true)
+
+**Check yourself** (answer these in LEARNING_LOG.md on Saturday):
+
+1. Where does my ESP32's private key live, and how could someone holding the board extract it?
+2. Why sign a Merkle root instead of every reading? What does that save on-chain?
+3. Does my firmware reproduce test_vectors.json byte for byte? If not, where do the bytes differ?
+4. What does ecrecover return for a tampered reading, and how does my contract reject it?
+5. A sensor sitting in ice honestly signs "2 °C" while the tomatoes are warm. What does my system prove, and what does it miss?
+6. How does OpenTimestamps anchor millions of hashes with one transaction?
+
+### Block 11
+
+**By the end of this block you can:**
+
+- Deploy and verify all four contracts on Base Sepolia with a keystore, never a plain-text key
+- Run the end-to-end flow: credential, batch, journey, listing, payment, then settlement or refund
+- Enforce the product policy on-chain, with one compliant and one failing batch
+- Publish a demo site and trace page that anyone can use without logging in
+- Argue honestly, part by part, whether a blockchain beats a shared database
+
+**Check yourself** (answer these in LEARNING_LOG.md on Saturday):
+
+1. Can I run the whole demo from a fresh clone with one command, and does CI agree?
+2. What happens to the buyer's TestUSD when a reading is out of range, and which test proves it?
+3. Who can do what in my system, and what is the worst thing each role could do?
+4. For which of the four parts would a shared database be just as good, and why?
+5. Does make smoke pass against the live deployment?
+6. Can someone who has never seen my repo follow a batch on the trace page?
+
+
 ## What I built
 
 <!-- One paragraph, plus a screenshot or terminal output if it helps. -->

@@ -42,6 +42,27 @@
 
 ---
 
+## Objectives and check-yourself
+
+**By the end of this block you can:**
+
+- Give an AI agent a contract wallet with limits, and show which limits held under prompt injection
+- Explain account abstraction (ERC-4337, EIP-7702) and agent payments (x402)
+- Explain what zk-SNARKs and zkML can and can't prove
+- Issue verifiable credentials for your own learning, backed by commit hashes
+- Seed the live demo and run an admin console gated by an on-chain role
+- Reflect on what you learned and choose your next direction
+
+**Check yourself** (answer these in LEARNING_LOG.md on Saturday):
+
+1. Which injection prompts fooled the model, and did the contract still block the payment?
+2. What does my EZKL proof actually prove about the model, and what doesn't it?
+3. What is the difference between an ordinary account, an ERC-4337 smart account and an EIP-7702 delegated account?
+4. If someone doubts my week 5 credential, how can they check it themselves?
+5. What would I build with one more month, and why?
+6. Of tokenised assets, DAOs, prediction markets and DePIN, which has the most honest need for a blockchain?
+
+
 ## What I built
 
 <!-- One paragraph, plus a screenshot or terminal output if it helps. -->

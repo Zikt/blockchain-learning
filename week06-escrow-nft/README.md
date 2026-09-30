@@ -38,8 +38,31 @@
 - [ ] Capstone (15 min): Traceability design: in trust-stack/POLICY.md, define a batch's journey (harvested → packed → shipped → received), which role may sign each step (farmer, cooperative, transporter, inspector, buyer), and one product policy, e.g. tomatoes: 2–8 °C, at most 48 h in transit, inspection required
 - [ ] Capstone (20 min): Rules to tests: for every rule in your POLICY.md, add a row to TESTING.md with a named test (e.g. test_RevertWhen_TransporterSignsInspection) and write the empty test so CI shows what's still missing
 - [ ] Capstone (15 min): Demo stages 2–3 with the mocks: issue roles and list batch 1, so make demo now runs stages 01–03
+- [ ] Apps (30 min): NFTs beyond the hype: ERC-1155 (many token types in one contract), the royalty standard EIP-2981 and why marketplaces stopped enforcing royalties, wash trading, and what NFTs are used for now (tickets, credentials, game items, real-world assets). End with a capstone question in your log: should each produce batch be an NFT, or is a record in your trace registry enough?  
+  [ethereum.org: NFTs](https://ethereum.org/en/nft/) · [EIP-1155](https://eips.ethereum.org/EIPS/eip-1155) · [EIP-2981: NFT royalties](https://eips.ethereum.org/EIPS/eip-2981)
 
 ---
+
+## Objectives and check-yourself
+
+**By the end of this block you can:**
+
+- Write a contract that holds value (escrow) using checks-effects-interactions, with a test for every path
+- Explain re-entrancy and show how your escrow avoids it
+- Build an ERC-721 whose metadata and image live on-chain
+- Sign and verify EIP-712 typed data with replay protection
+- Explain how NFT marketplaces use signed orders, escrow and royalties, and what NFTs are really used for today
+- Define the trust stack's interfaces, product policy and rules-to-tests table
+
+**Check yourself** (answer these in LEARNING_LOG.md on Saturday):
+
+1. List every state my escrow can be in. Which transitions can only the arbiter trigger?
+2. Where exactly would a re-entrancy attack hit my escrow if I sent the money before updating state?
+3. What does my NFT actually own, and what would break if its metadata lived on an ordinary web server?
+4. What stops an EIP-712 signature being replayed on another chain or another contract?
+5. Why did most marketplaces stop enforcing royalties, and what does that say about on-chain rules versus off-chain choices?
+6. Should a produce batch be an NFT, or is a record in the trace registry enough? Why?
+
 
 ## What I built
 

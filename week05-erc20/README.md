@@ -38,6 +38,27 @@
 - [ ] Apps (45 min): Stablecoins I: how they hold $1 (fiat-backed, crypto-backed, algorithmic), and two failures: TerraUST (2022) and USDC's depeg when SVB failed (2023)
 ---
 
+## Objectives and check-yourself
+
+**By the end of this block you can:**
+
+- Set up a Foundry project and write unit and fuzz tests
+- Implement ERC-20 from the spec, including allowances, and explain the approval race
+- Deploy with forge script and verify the source on Etherscan
+- Compare your token with OpenZeppelin's and explain the differences
+- Explain how fiat-backed, crypto-backed and algorithmic stablecoins hold their peg, and why UST failed
+- Start the capstone: TestUSD with tests, demo stage 1, and the Trust stack workflow green
+
+**Check yourself** (answer these in LEARNING_LOG.md on Saturday):
+
+1. What does approve plus transferFrom let a spender do, and what is the known approval race?
+2. What did my fuzz tests find, or why did they find nothing, and what would be a stronger property to test?
+3. Why does TestUSD use 6 decimals, and what goes wrong when two tokens' decimals differ?
+4. What would have to back TestUSD for it to be a real stablecoin?
+5. Why did UST collapse for good while USDC got its peg back?
+6. Is the Trust stack workflow green, and can I say what each job checks?
+
+
 ## What I built
 
 <!-- One paragraph, plus a screenshot or terminal output if it helps. -->

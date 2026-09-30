@@ -37,6 +37,26 @@
 
 ---
 
+## Objectives and check-yourself
+
+**By the end of this block you can:**
+
+- Explain the UTXO model and why Bitcoin has no account balances
+- Run a regtest node and move coins with bitcoin-cli
+- Build, sign, broadcast and decode a raw transaction, and explain every field
+- Explain difficulty retargeting, the most-work chain rule, and what a 51% attacker can and can't do
+- Explain in one paragraph what Schnorr signatures and Taproot add to ECDSA
+
+**Check yourself** (answer these in LEARNING_LOG.md on Saturday):
+
+1. Where is "my balance" actually stored, and how does a wallet work it out?
+2. In my raw transaction, which script locks the output and which one unlocks it?
+3. Why did I have to mine 101 blocks before I could spend anything?
+4. What can a 51% attacker do to recent transactions, and why can't they take my coins?
+5. Where is the fee in my transaction? (It isn't a field.)
+6. If half the miners switched off tomorrow, what would happen to block times, and for how long?
+
+
 ## What I built
 
 <!-- One paragraph, plus a screenshot or terminal output if it helps. -->

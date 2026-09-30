@@ -31,8 +31,30 @@
 - [ ] Capstone (20 min): Demo stage 4 (payment into escrow). Then open your repo in GitHub Codespaces from the README badge and run make demo there, to confirm a stranger can run it with no setup
 - [ ] Capstone (20 min): Invariant tests: escrow always holds what it owes, and TestUSD's total supply equals the sum of balances (invariant_EscrowSolvent, invariant_SupplyEqualsBalances)  
   [Foundry guides (invariant testing)](https://www.getfoundry.sh/guides)
+- [ ] Build (45 min): Decentralised storage and web3 logins: pin your block 6 NFT's metadata to IPFS and compare it with the fully on-chain version, then read how ENS names and Sign-In with Ethereum (EIP-4361) work. Note in your log whether week 12's admin console needs SIWE (hint: the contract already checks the role)  
+  [IPFS: content addressing (CIDs)](https://docs.ipfs.tech/concepts/content-addressing/) · [ENS docs](https://docs.ens.domains/) · [EIP-4361: Sign-In with Ethereum](https://eips.ethereum.org/EIPS/eip-4361)
 
 ---
+
+## Objectives and check-yourself
+
+**By the end of this block you can:**
+
+- Connect a web frontend to your contracts so a non-developer could use it
+- Recognise common vulnerability classes by exploiting them (Ethernaut 0–5)
+- Run Slither and tell real findings from noise
+- Write invariant tests for escrow solvency and token supply
+- Store NFT metadata on IPFS, and explain content addressing, ENS and Sign-In with Ethereum
+
+**Check yourself** (answer these in LEARNING_LOG.md on Saturday):
+
+1. What happens, step by step, between clicking "Buy" and the transaction being mined?
+2. For each Ethernaut level I solved, what was the bug in one line?
+3. Which Slither findings were real, and why were the others noise?
+4. What must always be true of my escrow, and how does the invariant test try to break it?
+5. What does an IPFS CID guarantee, and what doesn't it guarantee?
+6. Could a stranger run my demo in Codespaces without asking me anything?
+
 
 ## What I built
 

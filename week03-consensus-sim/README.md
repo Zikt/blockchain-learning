@@ -34,6 +34,26 @@
 
 ---
 
+## Objectives and check-yourself
+
+**By the end of this block you can:**
+
+- State the consensus problem (state machine replication) and its safety and liveness properties
+- Explain why classic Byzantine agreement needs identities and a two-thirds honest majority, and how proof-of-work avoids identities
+- Observe forks and reorgs in your own simulation and relate them to network delay
+- Explain how proof-of-stake picks proposers, what finality means in Gasper, and what slashing punishes
+- Compare PoW and PoS on security, finality, energy and who can take part
+
+**Check yourself** (answer these in LEARNING_LOG.md on Saturday):
+
+1. What is the difference between safety and liveness? Which one did the partition in my simulation break?
+2. How did longer network delays change the fork rate in my simulation, and why?
+3. What does selfish mining show about the "honest majority" assumption?
+4. How does proof-of-stake stop someone creating a million fake validators?
+5. What does "finalised" mean on Ethereum, and roughly how long does it take?
+6. Who actually decided Bitcoin's block-size dispute and Ethereum's DAO fork? What does that say about "code is law"?
+
+
 ## What I built
 
 <!-- One paragraph, plus a screenshot or terminal output if it helps. -->

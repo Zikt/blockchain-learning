@@ -4,13 +4,29 @@ Genesis to Capstone: 12 weeks at 10 hours a week, starting Monday 28 September 2
 
 Due dates follow the weekly rhythm: Tuesday reading (2 h), Thursday reading then building (2 h), Friday building (1.5 h), Saturday main build, log and push (4.5 h). Mon and Wed are flex days. If you start on a different date, shift every date by the same number of days (the tracker in `tracker/` does this for you).
 
-Task IDs (`x3t4` = block 3, task 4) match the tracker and `progress.json`. Tick a box here, in the week README, or in the tracker.
+Task IDs (`x3t4` = block 3, task 4) match the tracker and `progress.json`. Each block lists what you should be able to do by the end, and questions to answer in your log on Saturday.
 
 ## Block 1 · 28 Sep – 4 Oct · The mental model, keys and signatures → Project 0
 
 **Goal:** Understand why hash-linking plus proof-of-work makes history expensive to rewrite, then add real ownership with ECDSA signatures and Merkle roots.  
 **Ship:** pow_demo.py and Project 0 (toy_chain.py with a tamper test)  
 **Time:** 10 h
+
+**By the end of this block you can:**
+
+- Explain how hash pointers link blocks, and why editing one block breaks every block after it
+- Explain what proof-of-work costs an attacker, and measure how the work grows with each extra leading zero
+- Sign and verify a transaction on secp256k1, and say what a signature proves and what it doesn't
+- Build a Merkle root and explain how it proves one transaction is in a block
+
+**Check yourself** (answer in your log on Saturday):
+
+1. If I change one transaction in block 2 of 10, which check fails first, and why do all later blocks fail too?
+2. Each extra leading hex zero multiplies the expected work by how much? What did my timings show?
+3. Which hash property (preimage, second-preimage or collision resistance) does proof-of-work rely on, and why that one?
+4. What exactly does a valid signature prove? Name one thing it doesn't prove.
+5. How many hashes do I need to prove one transaction is in a block of 1,024 transactions?
+6. Can I explain the chain to a non-technical friend in two minutes, without notes?
 
 | | ID | Due | Kind | Min | Task | Resources |
 |---|---|---|---|---|---|---|
@@ -34,6 +50,23 @@ Task IDs (`x3t4` = block 3, task 4) match the tracker and `progress.json`. Tick 
 **Ship:** A regtest node, a UTXO version of your toy chain, and raw_tx.py with a decoded transaction  
 **Time:** 10 h
 
+**By the end of this block you can:**
+
+- Explain the UTXO model and why Bitcoin has no account balances
+- Run a regtest node and move coins with bitcoin-cli
+- Build, sign, broadcast and decode a raw transaction, and explain every field
+- Explain difficulty retargeting, the most-work chain rule, and what a 51% attacker can and can't do
+- Explain in one paragraph what Schnorr signatures and Taproot add to ECDSA
+
+**Check yourself** (answer in your log on Saturday):
+
+1. Where is "my balance" actually stored, and how does a wallet work it out?
+2. In my raw transaction, which script locks the output and which one unlocks it?
+3. Why did I have to mine 101 blocks before I could spend anything?
+4. What can a 51% attacker do to recent transactions, and why can't they take my coins?
+5. Where is the fee in my transaction? (It isn't a field.)
+6. If half the miners switched off tomorrow, what would happen to block times, and for how long?
+
 | | ID | Due | Kind | Min | Task | Resources |
 |---|---|---|---|---|---|---|
 | ☐ | `x2t1` | Tue 6 Oct | Learn | 60 | Mastering Bitcoin: the 'Introduction' and 'How Bitcoin Works' chapters | [bitcoinbook on GitHub](https://github.com/bitcoinbook/bitcoinbook) |
@@ -56,6 +89,23 @@ Task IDs (`x3t4` = block 3, task 4) match the tracker and `progress.json`. Tick 
 **Ship:** Project 2: a multi-node simulation with gossip, fork resolution, a partition that heals, and stake-weighted proposers  
 **Time:** 10 h
 
+**By the end of this block you can:**
+
+- State the consensus problem (state machine replication) and its safety and liveness properties
+- Explain why classic Byzantine agreement needs identities and a two-thirds honest majority, and how proof-of-work avoids identities
+- Observe forks and reorgs in your own simulation and relate them to network delay
+- Explain how proof-of-stake picks proposers, what finality means in Gasper, and what slashing punishes
+- Compare PoW and PoS on security, finality, energy and who can take part
+
+**Check yourself** (answer in your log on Saturday):
+
+1. What is the difference between safety and liveness? Which one did the partition in my simulation break?
+2. How did longer network delays change the fork rate in my simulation, and why?
+3. What does selfish mining show about the "honest majority" assumption?
+4. How does proof-of-stake stop someone creating a million fake validators?
+5. What does "finalised" mean on Ethereum, and roughly how long does it take?
+6. Who actually decided Bitcoin's block-size dispute and Ethereum's DAO fork? What does that say about "code is law"?
+
 | | ID | Due | Kind | Min | Task | Resources |
 |---|---|---|---|---|---|---|
 | ☐ | `x3t1` | Tue 13 Oct | Learn | 75 | Roughgarden: Lecture 1 (overview, state machine replication, consistency and liveness) | [Foundations of Blockchains playlist](https://www.youtube.com/playlist?list=PLEGCF-WLh2RLOHv_xUGLqRts_9JxrckiA) |
@@ -75,7 +125,25 @@ Task IDs (`x3t4` = block 3, task 4) match the tracker and `progress.json`. Tick 
 
 **Goal:** Understand accounts, gas and the EVM, deploy your first contract to Sepolia, and get comfortable writing Solidity.  
 **Ship:** SimpleStorage on Sepolia and five small contracts in /week04  
-**Time:** 10 h
+**Time:** 10.5 h
+
+**By the end of this block you can:**
+
+- Explain accounts (externally owned vs contract), gas and fees, and how the EVM runs a transaction
+- Deploy a contract to Sepolia from a testnet-only wallet
+- Write small contracts with mappings, modifiers, events and custom errors from memory
+- Derive an Ethereum address from a public key with Keccak-256
+- Compare custodial wallets, self-custody, centralised exchanges and DEXs
+- Explain what "web3" claims, and the strongest case against it
+
+**Check yourself** (answer in your log on Saturday):
+
+1. How does an Ethereum account differ from a Bitcoin UTXO?
+2. Why does a failed transaction still cost gas?
+3. What is the difference between storage and memory, and which costs more?
+4. From memory: how do I get from a private key to an address?
+5. What did the FTX collapse show about "not your keys, not your coins"?
+6. Which web3 claims will this plan let me test myself, and what do I think of them today?
 
 | | ID | Due | Kind | Min | Task | Resources |
 |---|---|---|---|---|---|---|
@@ -91,12 +159,31 @@ Task IDs (`x3t4` = block 3, task 4) match the tracker and `progress.json`. Tick 
 | ☐ | `x4t10` | Fri 23 Oct | Crypto | 20 | Keccak-256 vs. SHA-3, and how an Ethereum address is derived from a public key. Derive one yourself in Python | [ethereum.org: accounts](https://ethereum.org/en/developers/docs/accounts/) |
 | ☐ | `x4t11` | Sat 24 Oct | Explain | 45 | Explainer #2: write "How strangers agree: consensus in plain words" in blog/ (600–900 words, weeks 3–4). Optional: record a 5-minute video teaching it and link it in the post | — |
 | ☐ | `x4t12` | Fri 23 Oct | Apps | 30 | Exchanges and wallets: custodial vs. self-custody, centralised exchanges vs. DEXs, and what the FTX collapse showed about 'not your keys, not your coins' | [ethereum.org: wallets](https://ethereum.org/en/wallets/) · [ethereum.org: DeFi](https://ethereum.org/en/defi/) |
+| ☐ | `x4t13` | Fri 23 Oct | Apps | 30 | What "web3" means, and the case against it: read ethereum.org's introduction to web3, then Moxie Marlinspike's "My first impressions of web3". In your log, list which web3 claims this plan lets you test yourself, and your view today | [ethereum.org: what is web3?](https://ethereum.org/en/web3/) · [Moxie Marlinspike: My first impressions of web3](https://moxie.org/2022/01/07/web3-first-impressions.html) |
 
 ## Block 5 · 26 Oct – 1 Nov · Foundry and your ERC-20 → Project 3a
 
 **Goal:** Move to a real toolchain, write a token from the spec, fuzz it, deploy it and verify it.  
 **Ship:** Project 3a: an ERC-20 with unit and fuzz tests, verified on Sepolia Etherscan  
 **Time:** 10.75 h
+
+**By the end of this block you can:**
+
+- Set up a Foundry project and write unit and fuzz tests
+- Implement ERC-20 from the spec, including allowances, and explain the approval race
+- Deploy with forge script and verify the source on Etherscan
+- Compare your token with OpenZeppelin's and explain the differences
+- Explain how fiat-backed, crypto-backed and algorithmic stablecoins hold their peg, and why UST failed
+- Start the capstone: TestUSD with tests, demo stage 1, and the Trust stack workflow green
+
+**Check yourself** (answer in your log on Saturday):
+
+1. What does approve plus transferFrom let a spender do, and what is the known approval race?
+2. What did my fuzz tests find, or why did they find nothing, and what would be a stronger property to test?
+3. Why does TestUSD use 6 decimals, and what goes wrong when two tokens' decimals differ?
+4. What would have to back TestUSD for it to be a real stablecoin?
+5. Why did UST collapse for good while USDC got its peg back?
+6. Is the Trust stack workflow green, and can I say what each job checks?
 
 | | ID | Due | Kind | Min | Task | Resources |
 |---|---|---|---|---|---|---|
@@ -120,7 +207,25 @@ Task IDs (`x3t4` = block 3, task 4) match the tracker and `progress.json`. Tick 
 
 **Goal:** Write your first contract that holds value, then an NFT whose image lives entirely on-chain. End with frontend prep for next week.  
 **Ship:** Project 3b (Escrow.sol) and Project 3c (on-chain SVG NFT)  
-**Time:** 10 h
+**Time:** 10.5 h
+
+**By the end of this block you can:**
+
+- Write a contract that holds value (escrow) using checks-effects-interactions, with a test for every path
+- Explain re-entrancy and show how your escrow avoids it
+- Build an ERC-721 whose metadata and image live on-chain
+- Sign and verify EIP-712 typed data with replay protection
+- Explain how NFT marketplaces use signed orders, escrow and royalties, and what NFTs are really used for today
+- Define the trust stack's interfaces, product policy and rules-to-tests table
+
+**Check yourself** (answer in your log on Saturday):
+
+1. List every state my escrow can be in. Which transitions can only the arbiter trigger?
+2. Where exactly would a re-entrancy attack hit my escrow if I sent the money before updating state?
+3. What does my NFT actually own, and what would break if its metadata lived on an ordinary web server?
+4. What stops an EIP-712 signature being replayed on another chain or another contract?
+5. Why did most marketplaces stop enforcing royalties, and what does that say about on-chain rules versus off-chain choices?
+6. Should a produce batch be an NFT, or is a record in the trace registry enough? Why?
 
 | | ID | Due | Kind | Min | Task | Resources |
 |---|---|---|---|---|---|---|
@@ -143,12 +248,30 @@ Task IDs (`x3t4` = block 3, task 4) match the tracker and `progress.json`. Tick 
 | ☐ | `x6t17` | Sat 7 Nov | Capstone | 15 | Traceability design: in trust-stack/POLICY.md, define a batch's journey (harvested → packed → shipped → received), which role may sign each step (farmer, cooperative, transporter, inspector, buyer), and one product policy, e.g. tomatoes: 2–8 °C, at most 48 h in transit, inspection required | — |
 | ☐ | `x6t18` | Sat 7 Nov | Capstone | 20 | Rules to tests: for every rule in your POLICY.md, add a row to TESTING.md with a named test (e.g. test_RevertWhen_TransporterSignsInspection) and write the empty test so CI shows what's still missing | — |
 | ☐ | `x6t19` | Sat 7 Nov | Capstone | 15 | Demo stages 2–3 with the mocks: issue roles and list batch 1, so make demo now runs stages 01–03 | — |
+| ☐ | `x6t20` | Thu 5 Nov | Apps | 30 | NFTs beyond the hype: ERC-1155 (many token types in one contract), the royalty standard EIP-2981 and why marketplaces stopped enforcing royalties, wash trading, and what NFTs are used for now (tickets, credentials, game items, real-world assets). End with a capstone question in your log: should each produce batch be an NFT, or is a record in your trace registry enough? | [ethereum.org: NFTs](https://ethereum.org/en/nft/) · [EIP-1155](https://eips.ethereum.org/EIPS/eip-1155) · [EIP-2981: NFT royalties](https://eips.ethereum.org/EIPS/eip-2981) |
 
 ## Block 7 · 9 Nov – 15 Nov · A dApp frontend, then start breaking contracts → Project 3d
 
 **Goal:** Ship a usable escrow frontend, then learn the common vulnerability classes by exploiting them.  
 **Ship:** Project 3d (escrow dApp with a 2-minute demo) and Ethernaut levels 0–5  
-**Time:** 10 h
+**Time:** 10.75 h
+
+**By the end of this block you can:**
+
+- Connect a web frontend to your contracts so a non-developer could use it
+- Recognise common vulnerability classes by exploiting them (Ethernaut 0–5)
+- Run Slither and tell real findings from noise
+- Write invariant tests for escrow solvency and token supply
+- Store NFT metadata on IPFS, and explain content addressing, ENS and Sign-In with Ethereum
+
+**Check yourself** (answer in your log on Saturday):
+
+1. What happens, step by step, between clicking "Buy" and the transaction being mined?
+2. For each Ethernaut level I solved, what was the bug in one line?
+3. Which Slither findings were real, and why were the others noise?
+4. What must always be true of my escrow, and how does the invariant test try to break it?
+5. What does an IPFS CID guarantee, and what doesn't it guarantee?
+6. Could a stranger run my demo in Codespaces without asking me anything?
 
 | | ID | Due | Kind | Min | Task | Resources |
 |---|---|---|---|---|---|---|
@@ -165,16 +288,34 @@ Task IDs (`x3t4` = block 3, task 4) match the tracker and `progress.json`. Tick 
 | ☐ | `x7t11` | Sat 14 Nov | Capstone | 30 | Integration test v1 (test/Integration.t.sol): mock credential → list → pay in TestUSD → release, passing in CI alongside the demo | — |
 | ☐ | `x7t12` | Sat 14 Nov | Capstone | 20 | Demo stage 4 (payment into escrow). Then open your repo in GitHub Codespaces from the README badge and run make demo there, to confirm a stranger can run it with no setup | — |
 | ☐ | `x7t13` | Sat 14 Nov | Capstone | 20 | Invariant tests: escrow always holds what it owes, and TestUSD's total supply equals the sum of balances (invariant_EscrowSolvent, invariant_SupplyEqualsBalances) | [Foundry guides (invariant testing)](https://www.getfoundry.sh/guides) |
+| ☐ | `x7t14` | Sat 14 Nov | Build | 45 | Decentralised storage and web3 logins: pin your block 6 NFT's metadata to IPFS and compare it with the fully on-chain version, then read how ENS names and Sign-In with Ethereum (EIP-4361) work. Note in your log whether week 12's admin console needs SIWE (hint: the contract already checks the role) | [IPFS: content addressing (CIDs)](https://docs.ipfs.tech/concepts/content-addressing/) · [ENS docs](https://docs.ens.domains/) · [EIP-4361: Sign-In with Ethereum](https://eips.ethereum.org/EIPS/eip-4361) |
 
 ## Block 8 · 16 Nov – 22 Nov · Deeper exploits and your own audit → Project 4
 
 **Goal:** Solve harder levels, then treat your earlier contracts as someone else's and write a real findings report.  
 **Ship:** Project 4: AUDIT.md with severity-ranked findings, invariant tests and fixes  
-**Time:** 10 h
+**Time:** 10.75 h
+
+**By the end of this block you can:**
+
+- Solve harder exploits, including re-entrancy, storage "privacy" and Damn Vulnerable DeFi's Unstoppable
+- Audit your own contracts and write severity-ranked findings with fixes
+- Compare what AI, tools and your own review each find
+- Write attack tests that fail exactly the way TESTING.md says
+- Explain how DAOs govern with token voting, and how governance can be attacked
+
+**Check yourself** (answer in your log on Saturday):
+
+1. Why is "private" state not private on a blockchain?
+2. What is the most severe finding in my AUDIT.md, and how did I fix it?
+3. What did the LLM find that Slither missed, and what did it get wrong?
+4. What breaks if one of my mocks is swapped for a malicious contract?
+5. How did the Beanstalk attacker pass a governance vote in one transaction, and which defences (timelocks, vote snapshots) would have stopped it?
+6. Who should hold the issuer and arbiter roles in my trust stack, and why?
 
 | | ID | Due | Kind | Min | Task | Resources |
 |---|---|---|---|---|---|---|
-| ☐ | `x8t1` | Thu 19 Nov | Build | 135 | Ethernaut: Re-entrancy, Elevator, Privacy and one more level of your choice | [Ethernaut](https://ethernaut.openzeppelin.com/) |
+| ☐ | `x8t1` | Fri 20 Nov | Build | 135 | Ethernaut: Re-entrancy, Elevator, Privacy and one more level of your choice | [Ethernaut](https://ethernaut.openzeppelin.com/) |
 | ☐ | `x8t2` | Tue 17 Nov | Learn | 45 | ConsenSys best practices: the attacks section | [Smart contract best practices](https://consensys.github.io/smart-contract-best-practices/) |
 | ☐ | `x8t3` | Sat 21 Nov | Write | 30 | Log: which Slither findings were real and which were noise | — |
 | ☐ | `x8t4` | Fri 20 Nov | Build | 60 | Damn Vulnerable DeFi: challenge 1 (Unstoppable) | [damnvulnerabledefi.xyz](https://www.damnvulnerabledefi.xyz/) |
@@ -185,12 +326,31 @@ Task IDs (`x3t4` = block 3, task 4) match the tracker and `progress.json`. Tick 
 | ☐ | `x8t9` | Sat 21 Nov | Explain | 45 | Explainer #4: write "What I learned auditing my own smart contracts" in blog/ (600–900 words, weeks 7–8). Optional: record a 5-minute video teaching it and link it in the post | — |
 | ☐ | `x8t10` | Sat 21 Nov | Capstone | 15 | Add the integration to your audit: what breaks if a mock is swapped for a malicious contract, or a batch id is reused? Note findings in AUDIT.md | — |
 | ☐ | `x8t11` | Sat 21 Nov | Capstone | 30 | Attack tests in test/Attacks.t.sol: replayed signature, reused batch id, re-entrancy on release, a stranger releasing escrow. Each must fail the way TESTING.md says | — |
+| ☐ | `x8t12` | Thu 19 Nov | Apps | 45 | DAOs and on-chain governance: how proposals, token voting, quorums and timelocks work (OpenZeppelin Governor), then the Beanstalk attack (April 2022), where a flash loan bought enough votes to drain the treasury in one transaction. In your log, for next week's SPEC.md: who should hold the trust stack's issuer and arbiter roles, you, a Safe multisig, or a DAO of cooperatives? | [ethereum.org: DAOs](https://ethereum.org/en/dao/) · [OpenZeppelin: on-chain governance](https://docs.openzeppelin.com/contracts/governance) · [Beanstalk - REKT](https://rekt.news/beanstalk-rekt) · [Updraft: DAOs (optional build)](https://updraft.cyfrin.io/courses/advanced-foundry/daos/create-governor-contract) |
 
 ## Block 9 · 23 Nov – 29 Nov · AMMs, oracles, rollups → Project 5, and the capstone spec
 
 **Goal:** Build x·y=k, see why a spot price is a dangerous oracle, compare rollups by their real risks, and decide exactly what your capstone puts on-chain.  
 **Ship:** Project 5 (AMM with a fuzz test), the 'do you need a blockchain?' memo, and SPEC.md for the capstone  
 **Time:** 11.5 h
+
+**By the end of this block you can:**
+
+- Build a constant-product AMM and prove with a fuzz test that k never decreases
+- Explain why an AMM spot price is a dangerous oracle, and how Chainlink feeds differ
+- Compare rollups by their real risks using L2BEAT
+- Decide with numbers whether a use case needs a blockchain at all
+- Explain why stablecoins matter in Africa, and what regulators worry about
+- Write the trust stack's SPEC.md and replace the credential mock with the real registry
+
+**Check yourself** (answer in your log on Saturday):
+
+1. What slippage did my tests show for the same trade on a small pool and a large one?
+2. How could an attacker move my AMM's price inside one transaction, and who would lose?
+3. What can Base's operator do to my funds today, according to L2BEAT?
+4. Sending $200 to Nigeria or Rwanda: which route was cheapest, and what costs remain when the recipient cashes out?
+5. For each trust-stack part, what is on-chain, what is off-chain, and why?
+6. What does revoking a credential stop, and what can't it undo?
 
 | | ID | Due | Kind | Min | Task | Resources |
 |---|---|---|---|---|---|---|
@@ -217,6 +377,23 @@ Task IDs (`x3t4` = block 3, task 4) match the tracker and `progress.json`. Tick 
 **Ship:** ESP32 firmware that signs Merkle roots of readings, and a tested SensorRegistry contract  
 **Time:** 10 h
 
+**By the end of this block you can:**
+
+- Explain how hardware wallets and trusted execution protect keys, and where they fail
+- Generate a key on an ESP32 (or a simulator) and sign sensor readings
+- Batch readings into a Merkle tree and sign only the root
+- Accept on-chain only roots signed by registered devices (ecrecover)
+- Explain what anchoring proves (this device signed this data) and what it can't (that the reading is true)
+
+**Check yourself** (answer in your log on Saturday):
+
+1. Where does my ESP32's private key live, and how could someone holding the board extract it?
+2. Why sign a Merkle root instead of every reading? What does that save on-chain?
+3. Does my firmware reproduce test_vectors.json byte for byte? If not, where do the bytes differ?
+4. What does ecrecover return for a tampered reading, and how does my contract reject it?
+5. A sensor sitting in ice honestly signs "2 °C" while the tomatoes are warm. What does my system prove, and what does it miss?
+6. How does OpenTimestamps anchor millions of hashes with one transaction?
+
 | | ID | Due | Kind | Min | Task | Resources |
 |---|---|---|---|---|---|---|
 | ☐ | `x10t1` | Tue 1 Dec | Learn | 15 | Browse the Trezor firmware repo: the crypto folder and the security docs | [trezor-firmware](https://github.com/trezor/trezor-firmware) |
@@ -236,6 +413,23 @@ Task IDs (`x3t4` = block 3, task 4) match the tracker and `progress.json`. Tick 
 **Goal:** Deploy the whole trust stack to an L2 testnet, prove it works end to end with one test, and publish it.  
 **Ship:** All four parts on an L2 testnet, one end-to-end test passing, and a README with an architecture diagram, demo video and post  
 **Time:** 10 h
+
+**By the end of this block you can:**
+
+- Deploy and verify all four contracts on Base Sepolia with a keystore, never a plain-text key
+- Run the end-to-end flow: credential, batch, journey, listing, payment, then settlement or refund
+- Enforce the product policy on-chain, with one compliant and one failing batch
+- Publish a demo site and trace page that anyone can use without logging in
+- Argue honestly, part by part, whether a blockchain beats a shared database
+
+**Check yourself** (answer in your log on Saturday):
+
+1. Can I run the whole demo from a fresh clone with one command, and does CI agree?
+2. What happens to the buyer's TestUSD when a reading is out of range, and which test proves it?
+3. Who can do what in my system, and what is the worst thing each role could do?
+4. For which of the four parts would a shared database be just as good, and why?
+5. Does make smoke pass against the live deployment?
+6. Can someone who has never seen my repo follow a batch on the trace page?
 
 | | ID | Due | Kind | Min | Task | Resources |
 |---|---|---|---|---|---|---|
@@ -257,6 +451,24 @@ Task IDs (`x3t4` = block 3, task 4) match the tracker and `progress.json`. Tick 
 **Goal:** Give an LLM agent spending power that a contract limits, try to break it, and learn what zkML can and can't prove.  
 **Ship:** Project 7 (guarded agent wallet with a red-team report), an implications memo, and your retrospective  
 **Time:** 10 h
+
+**By the end of this block you can:**
+
+- Give an AI agent a contract wallet with limits, and show which limits held under prompt injection
+- Explain account abstraction (ERC-4337, EIP-7702) and agent payments (x402)
+- Explain what zk-SNARKs and zkML can and can't prove
+- Issue verifiable credentials for your own learning, backed by commit hashes
+- Seed the live demo and run an admin console gated by an on-chain role
+- Reflect on what you learned and choose your next direction
+
+**Check yourself** (answer in your log on Saturday):
+
+1. Which injection prompts fooled the model, and did the contract still block the payment?
+2. What does my EZKL proof actually prove about the model, and what doesn't it?
+3. What is the difference between an ordinary account, an ERC-4337 smart account and an EIP-7702 delegated account?
+4. If someone doubts my week 5 credential, how can they check it themselves?
+5. What would I build with one more month, and why?
+6. Of tokenised assets, DAOs, prediction markets and DePIN, which has the most honest need for a blockchain?
 
 | | ID | Due | Kind | Min | Task | Resources |
 |---|---|---|---|---|---|---|

@@ -31,8 +31,31 @@
 - [ ] Explain (45 min): Explainer #2: write "How strangers agree: consensus in plain words" in blog/ (600–900 words, weeks 3–4). Optional: record a 5-minute video teaching it and link it in the post
 - [ ] Apps (30 min): Exchanges and wallets: custodial vs. self-custody, centralised exchanges vs. DEXs, and what the FTX collapse showed about 'not your keys, not your coins'  
   [ethereum.org: wallets](https://ethereum.org/en/wallets/) · [ethereum.org: DeFi](https://ethereum.org/en/defi/)
+- [ ] Apps (30 min): What "web3" means, and the case against it: read ethereum.org's introduction to web3, then Moxie Marlinspike's "My first impressions of web3". In your log, list which web3 claims this plan lets you test yourself, and your view today  
+  [ethereum.org: what is web3?](https://ethereum.org/en/web3/) · [Moxie Marlinspike: My first impressions of web3](https://moxie.org/2022/01/07/web3-first-impressions.html)
 
 ---
+
+## Objectives and check-yourself
+
+**By the end of this block you can:**
+
+- Explain accounts (externally owned vs contract), gas and fees, and how the EVM runs a transaction
+- Deploy a contract to Sepolia from a testnet-only wallet
+- Write small contracts with mappings, modifiers, events and custom errors from memory
+- Derive an Ethereum address from a public key with Keccak-256
+- Compare custodial wallets, self-custody, centralised exchanges and DEXs
+- Explain what "web3" claims, and the strongest case against it
+
+**Check yourself** (answer these in LEARNING_LOG.md on Saturday):
+
+1. How does an Ethereum account differ from a Bitcoin UTXO?
+2. Why does a failed transaction still cost gas?
+3. What is the difference between storage and memory, and which costs more?
+4. From memory: how do I get from a private key to an address?
+5. What did the FTX collapse show about "not your keys, not your coins"?
+6. Which web3 claims will this plan let me test myself, and what do I think of them today?
+
 
 ## What I built
 

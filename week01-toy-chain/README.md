@@ -36,6 +36,25 @@
 
 ---
 
+## Objectives and check-yourself
+
+**By the end of this block you can:**
+
+- Explain how hash pointers link blocks, and why editing one block breaks every block after it
+- Explain what proof-of-work costs an attacker, and measure how the work grows with each extra leading zero
+- Sign and verify a transaction on secp256k1, and say what a signature proves and what it doesn't
+- Build a Merkle root and explain how it proves one transaction is in a block
+
+**Check yourself** (answer these in LEARNING_LOG.md on Saturday):
+
+1. If I change one transaction in block 2 of 10, which check fails first, and why do all later blocks fail too?
+2. Each extra leading hex zero multiplies the expected work by how much? What did my timings show?
+3. Which hash property (preimage, second-preimage or collision resistance) does proof-of-work rely on, and why that one?
+4. What exactly does a valid signature prove? Name one thing it doesn't prove.
+5. How many hashes do I need to prove one transaction is in a block of 1,024 transactions?
+6. Can I explain the chain to a non-technical friend in two minutes, without notes?
+
+
 ## What I built
 
 <!-- One paragraph, plus a screenshot or terminal output if it helps. -->
