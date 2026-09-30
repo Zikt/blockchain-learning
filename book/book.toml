@@ -1,0 +1,8 @@
+[book]
+title = "Blockchain from Scratch: 12 Weeks, One Trust Stack"
+authors = ["Isaac Thani Moses"]
+language = "en"
+src = "src"
+
+[output.html]
+git-repository-url = "https://github.com/YOUR-USERNAME/blockchain-learning"

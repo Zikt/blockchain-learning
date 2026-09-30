@@ -1,0 +1,1803 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Genesis to Capstone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#EEF1F4; --surface:#FFFFFF; --surface-2:#F6F8FA; --line:#D6DDE4; --line-2:#E4E9EE;
+  --ink:#131C26; --ink-2:#3C4957; --muted:#667585;
+  --accent:#2451A6; --accent-soft:#E3EAF7; --accent-ink:#FFFFFF;
+  --done:#17785A; --done-soft:#DDF0E8; --warn:#A5610B; --warn-soft:#F8EBD7;
+  --learn:#2451A6; --build:#7A3E9D; --write:#5E6B24;
+  --learn-soft:#E3EAF7; --build-soft:#F0E6F6; --write-soft:#EEF0DE;
+  --display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0E141B; --surface:#151D27; --surface-2:#1A2430; --line:#2A3746; --line-2:#223040;
+    --ink:#E3E9EF; --ink-2:#B7C2CE; --muted:#8595A6;
+    --accent:#86A9EC; --accent-soft:#1E2C45; --accent-ink:#0E141B;
+    --done:#5CC79C; --done-soft:#15342A; --warn:#E3A857; --warn-soft:#3A2A14;
+    --learn:#86A9EC; --build:#C69BE0; --write:#BFCB7A;
+    --learn-soft:#1E2C45; --build-soft:#2D2138; --write-soft:#262B17;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0E141B; --surface:#151D27; --surface-2:#1A2430; --line:#2A3746; --line-2:#223040;
+  --ink:#E3E9EF; --ink-2:#B7C2CE; --muted:#8595A6;
+  --accent:#86A9EC; --accent-soft:#1E2C45; --accent-ink:#0E141B;
+  --done:#5CC79C; --done-soft:#15342A; --warn:#E3A857; --warn-soft:#3A2A14;
+  --learn:#86A9EC; --build:#C69BE0; --write:#BFCB7A;
+  --learn-soft:#1E2C45; --build-soft:#2D2138; --write-soft:#262B17;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;padding-inline:16px;padding-block:0 64px}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.wrap{max-width:980px;margin:0 auto}
+.mono{font-family:var(--mono)}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* Masthead */
+.mast{padding-block:36px 20px;display:grid;gap:14px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--display);font-stretch:78%;font-weight:800;font-size:clamp(34px,6vw,54px);line-height:1;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.lede{margin:0;max-width:64ch;color:var(--ink-2);font-size:16px}
+
+/* Status strip */
+.status{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-block:8px 20px}
+.stat{background:var(--surface);padding:14px 16px;display:grid;gap:4px;align-content:start}
+.stat .k{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.stat .v{font-family:var(--display);font-stretch:85%;font-weight:700;font-size:26px;line-height:1.1}
+.stat .s{font-size:13px;color:var(--muted)}
+.stat input[type=date]{font:inherit;font-size:14px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:4px 8px;width:100%;max-width:190px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;width:max-content}
+.pill.ok{background:var(--done-soft);color:var(--done)}
+.pill.behind{background:var(--warn-soft);color:var(--warn)}
+.pill.ahead{background:var(--accent-soft);color:var(--accent)}
+
+/* chain strip */
+.chainbar{display:flex;gap:3px;margin-block:0 6px;flex-wrap:wrap}
+.chainbar a{flex:1 1 0;min-width:14px;height:18px;border-radius:3px;background:var(--line-2);border:1px solid var(--line);display:block}
+.chainbar a.part{background:linear-gradient(to top,var(--accent) var(--p),var(--line-2) var(--p));border-color:var(--accent)}
+.chainbar a.mined{background:var(--done);border-color:var(--done)}
+.chainbar a.cur{outline:2px solid var(--accent);outline-offset:1px}
+.chainlegend{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:22px}
+
+/* Rhythm */
+.rhythm{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:28px}
+.rhythm h2{font-family:var(--display);font-stretch:85%;font-size:20px;margin:0 0 8px}
+.rhythm p,.rhythm li{color:var(--ink-2);font-size:14px}
+.rhythm p{margin:0 0 8px}
+.rhythm ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.split{display:flex;height:34px;border-radius:6px;overflow:hidden;font-size:12px;font-weight:600;margin-block:6px 10px}
+.split div{display:flex;align-items:center;justify-content:center;white-space:nowrap;padding-inline:6px}
+.split .l{background:var(--learn-soft);color:var(--learn)}
+.split .b{background:var(--build-soft);color:var(--build)}
+.split .w{background:var(--write-soft);color:var(--write)}
+.trackpick{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.trackpick .k{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.milestone{display:inline-block;font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--done);border:1px solid currentColor;border-radius:4px;padding:0 5px;margin-left:6px;vertical-align:2px}
+.sessions{display:grid;gap:6px;align-content:start}
+.sess{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:baseline;font-size:14px;padding-block:6px;border-bottom:1px solid var(--line-2)}
+.sess:last-child{border-bottom:0}
+.sess .d{font-family:var(--mono);font-size:12px;color:var(--muted);text-transform:uppercase}
+.sess .h{font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+
+/* Toolbar */
+.toolbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ground);padding-block:10px;border-bottom:1px solid var(--line);margin-bottom:18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.phasenav{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin;max-width:100%}
+.phasenav a{font-family:var(--mono);font-size:12px;text-decoration:none;color:var(--ink-2);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:4px 9px;white-space:nowrap}
+.phasenav a.done{color:var(--done);border-color:var(--done)}
+.tools{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.seg button{font:inherit;font-size:13px;border:0;background:transparent;color:var(--ink-2);padding:5px 10px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--ground)}
+.btn{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:5px 10px;border-radius:6px;cursor:pointer}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.savestate{font-size:12px;color:var(--muted);font-family:var(--mono)}
+
+/* Phase */
+.phase{margin-bottom:40px;scroll-margin-top:70px}
+.phase-head{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:end;margin-bottom:14px}
+.phase-no{font-family:var(--display);font-stretch:75%;font-weight:800;font-size:58px;line-height:.85;color:var(--accent);grid-row:span 2}
+.phase h2{font-family:var(--display);font-stretch:85%;font-weight:700;font-size:26px;margin:0;line-height:1.1;text-wrap:balance}
+.phase-meta{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.phase-why{color:var(--ink-2);max-width:68ch;margin:0 0 14px}
+.shelf{border:1px solid var(--line);border-radius:10px;background:var(--surface-2);padding:12px 14px;margin-bottom:14px}
+.shelf h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:500}
+.shelf ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 18px}
+.shelf li{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:baseline;font-size:14px}
+.shelf li span.n{display:block;color:var(--muted);font-size:13px}
+
+.tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;border:1px solid var(--line);color:var(--ink-2);background:var(--surface);white-space:nowrap}
+.tag.video{color:#B3261E;border-color:currentColor}
+.tag.book{color:var(--build);border-color:currentColor}
+.tag.paper{color:var(--build);border-color:currentColor}
+.tag.article{color:var(--write);border-color:currentColor}
+.tag.course{color:var(--accent);border-color:currentColor}
+.tag.docs,.tag.tool,.tag.spec{color:var(--ink-2)}
+:root[data-theme="dark"] .tag.video{color:#F2A09A}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tag.video{color:#F2A09A}}
+
+/* Week block */
+.week{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:10px;scroll-margin-top:70px}
+.week.mined{border-color:color-mix(in srgb,var(--done) 45%,var(--line))}
+.week.current{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.week summary{list-style:none;cursor:pointer;padding:14px 16px;display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:center}
+.week summary::-webkit-details-marker{display:none}
+.blk{font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.25;text-align:left;min-width:64px}
+.blk b{display:block;font-family:var(--display);font-stretch:80%;font-size:22px;color:var(--ink);font-weight:700}
+.wt{display:grid;gap:2px;min-width:0}
+.wt .t{font-weight:600;font-size:16px;text-wrap:balance}
+.wt .dates{font-size:12.5px;color:var(--muted)}
+.wprog{display:grid;justify-items:end;gap:4px;font-size:12px;color:var(--muted);font-family:var(--mono)}
+.meter{width:84px;height:6px;border-radius:3px;background:var(--line-2);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent)}
+.week.mined .meter i{background:var(--done)}
+.hash{font-family:var(--mono);font-size:11px;color:var(--done);grid-column:2 / -1}
+.chev{transition:transform .15s}
+.week[open] .chev{transform:rotate(90deg)}
+.wbody{padding:0 16px 16px;display:grid;gap:14px}
+.goal{margin:0;color:var(--ink-2);font-size:14.5px;max-width:70ch;border-top:1px solid var(--line-2);padding-top:12px}
+.tasks{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.task{display:grid;grid-template-columns:22px 1fr auto;gap:10px;padding:9px 8px;border-radius:8px;align-items:start}
+.task:hover{background:var(--surface-2)}
+.task input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--done);cursor:pointer}
+.task label{cursor:pointer;display:grid;gap:5px}
+.task .tx{font-size:14.5px}
+.task.checked .tx{color:var(--muted);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--muted) 60%,transparent)}
+.links{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:13px}
+.links a{display:inline-flex;gap:6px;align-items:baseline}
+.side{display:grid;justify-items:end;gap:4px}
+.kind{font-size:11px;font-weight:600;padding:1px 7px;border-radius:4px}
+.kind.L{background:var(--learn-soft);color:var(--learn)}
+.kind.B{background:var(--build-soft);color:var(--build)}
+.kind.W{background:var(--write-soft);color:var(--write)}
+.kind.C{background:var(--learn-soft);color:var(--learn);outline:1px solid currentColor;outline-offset:-1px}
+.kind.A{background:var(--build-soft);color:var(--build);outline:1px solid currentColor;outline-offset:-1px}
+.kind.P{background:var(--done-soft);color:var(--done);outline:1px solid currentColor;outline-offset:-1px}
+.kind.K{background:var(--ink);color:var(--ground)}
+.kind.E{background:var(--write-soft);color:var(--write);outline:1px solid currentColor;outline-offset:-1px}
+.min{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.deliver{display:grid;grid-template-columns:auto 1fr;gap:10px;background:var(--surface-2);border:1px dashed var(--line);border-radius:8px;padding:10px 12px;font-size:14px}
+.deliver .k{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding-top:2px}
+.logbox{display:grid;gap:6px}
+.logbox label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.logbox textarea{font:inherit;font-size:14px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-height:64px;resize:vertical;width:100%}
+.hidden-by-filter{display:none}
+
+.habits{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;margin-top:10px}
+.habits h2{font-family:var(--display);font-stretch:85%;font-size:22px;margin:0 0 10px}
+.habits ul{margin:0;padding-left:18px;display:grid;gap:6px;color:var(--ink-2);max-width:72ch}
+/* This week */
+.thisweek{display:grid;grid-template-columns:1.35fr 1fr;gap:20px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:22px}
+.thisweek h2,.pub h2{font-family:var(--display);font-stretch:85%;font-size:20px;margin:0 0 4px}
+.sub{font-size:13px;color:var(--muted);margin:0 0 12px}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.day{border:1px solid var(--line-2);border-radius:8px;padding:8px 4px;display:grid;gap:4px;justify-items:center;background:var(--surface-2);min-width:0}
+.day.today{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.day .dn{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)}
+.day .dd{font-size:11.5px;color:var(--muted)}
+.day .bar{width:100%;max-width:44px;height:64px;background:var(--surface);border:1px solid var(--line-2);border-radius:4px;position:relative;overflow:hidden}
+.day .bar .fill{position:absolute;left:0;right:0;bottom:0;background:var(--done)}
+.day .bar .plan{position:absolute;left:0;right:0;border-top:2px dashed var(--accent)}
+.day .ph{font-family:var(--mono);font-size:11px;color:var(--ink-2);text-align:center;line-height:1.25}
+.day .lg{font-family:var(--mono);font-size:11px;color:var(--done)}
+.day.rest{opacity:.7}
+.calsum{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--ink-2);margin-top:10px}
+.logform{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.logform label{display:grid;gap:3px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.logform .full{grid-column:1 / -1}
+.logform input,.logform select,.proofin{font:inherit;font-family:var(--body);font-size:14px;text-transform:none;letter-spacing:0;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%;min-width:0}
+.sesslist{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:4px;font-size:13px}
+.sesslist li{display:grid;grid-template-columns:auto auto 1fr auto;gap:8px;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--line-2)}
+.sesslist li:last-child{border-bottom:0}
+.sesslist .sd{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.sesslist .sm{font-family:var(--mono);font-size:12px;color:var(--done)}
+.sesslist .sn{color:var(--ink-2);min-width:0;overflow-wrap:anywhere}
+.linkbtn{font:inherit;font-size:12px;background:none;border:0;color:var(--muted);cursor:pointer;padding:0;text-decoration:underline}
+.formmsg{font-size:12.5px;color:var(--warn);min-height:1em}
+.pubtag{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--done);border:1px solid currentColor;border-radius:4px;padding:0 5px}
+.weekmeta{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.weekmeta > div{display:grid;gap:6px;align-content:start}
+.weekmeta .lab{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+@media (max-width:620px){.weekmeta{grid-template-columns:1fr}.logform{grid-template-columns:1fr}.cal{gap:3px}.day .ph{font-size:10px}}
+
+/* Build in public */
+.pub{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:28px;display:grid;gap:16px}
+.pubgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.pubgrid > *,.thisweek > *,.rhythm > *{min-width:0}
+.pub .mono{overflow-wrap:anywhere}
+.pub h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:500}
+.pub ol,.pub ul{margin:0;padding-left:18px;display:grid;gap:6px;color:var(--ink-2);font-size:14px}
+.pub p{margin:0;color:var(--ink-2);font-size:14px;max-width:70ch}
+.codebox{position:relative;background:var(--surface-2);border:1px solid var(--line);border-radius:8px}
+.codebox pre{margin:0;padding:12px 14px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.5;color:var(--ink)}
+.codebox .btn{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px}
+.syncgrid{display:grid;grid-template-columns:1fr 1.2fr;gap:20px}
+.syncgrid > *{min-width:0;display:grid;gap:8px;align-content:start}
+.syncgrid label{display:grid;gap:4px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.syncgrid input,.syncgrid textarea{font:inherit;font-family:var(--body);font-size:14px;text-transform:none;letter-spacing:0;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%}
+.syncgrid textarea{font-family:var(--mono);font-size:12px;min-height:110px;resize:vertical}
+.difflist{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:13.5px}
+.difflist li{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--line-2)}
+.difflist .id{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.difflist .f{display:block;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.syncstate{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.synchead{font-weight:600;font-size:14px;margin-top:6px}
+@media (max-width:760px){.syncgrid{grid-template-columns:1fr}}
+.capopts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.capopt{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer}
+.capopt:has(input:checked){border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.capopt input{margin:3px 0 0;accent-color:var(--accent)}
+.capopt .cn{font-weight:600;font-size:14.5px}
+.capopt .cp{grid-column:2;font-size:13.5px;color:var(--ink-2)}
+.capopt .cm{grid-column:2;font-size:12.5px;color:var(--muted)}
+.capnote{font-size:13px;color:var(--ink-2);margin:0 0 14px;max-width:72ch}
+@media (max-width:620px){.capopts{grid-template-columns:1fr}}
+.bomtbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.bomtbl th{text-align:left;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:6px 8px;border-bottom:1px solid var(--line)}
+.bomtbl td{padding:7px 8px;border-bottom:1px solid var(--line-2);vertical-align:top;color:var(--ink-2)}
+.bomtbl td:first-child{color:var(--ink);font-weight:500}
+.bomtbl .opt{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 4px;margin-left:4px}
+.tblwrap{overflow-x:auto}
+.foot{font-size:12.5px;color:var(--muted);margin-top:22px;max-width:72ch}
+
+/* Clock */
+.clock{display:grid;grid-template-columns:1fr 1fr 1fr 1.5fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:22px}
+.clock .c{background:var(--surface);padding:14px 16px;display:grid;gap:4px;align-content:start;min-width:0}
+.clock .k{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.clock .big{font-family:var(--display);font-stretch:80%;font-weight:700;font-size:20px;line-height:1.15;font-variant-numeric:tabular-nums}
+.clock .s{font-size:13px;color:var(--muted)}
+.pbar{display:block;height:6px;border-radius:3px;background:var(--line-2);overflow:hidden;margin-top:4px}
+.pbar i{display:block;height:100%;background:var(--accent)}
+.nextlist{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.nextlist li{display:grid;gap:1px;font-size:13.5px;min-width:0}
+.nextlist .nt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink)}
+.nextlist .nd{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.nextlist .nd.late{color:var(--warn)}
+/* Timeline */
+.tl td{vertical-align:top}
+.tl .due{font-family:var(--mono);font-size:12px;white-space:nowrap;color:var(--ink-2)}
+.tl .tid{font-family:var(--mono);font-size:11px;color:var(--muted);margin-right:6px}
+.tl tr.done td{color:var(--muted)}
+.tl tr.done .tt{text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--muted) 60%,transparent)}
+.tl tr.late .due{color:var(--warn)}
+.tl tr.blockrow td{background:var(--surface-2);font-weight:600;color:var(--ink);font-size:13.5px;border-bottom:1px solid var(--line)}
+.tl tr.blockrow .min{font-weight:400}
+.tl input{font:inherit;font-size:13px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:4px 6px;width:100%;min-width:170px}
+.tl .olink{display:inline-block;font-size:12px;margin-top:3px}
+.tl .hide{display:none}
+@media (max-width:760px){.clock{grid-template-columns:1fr 1fr}}
+@media (max-width:420px){.clock{grid-template-columns:1fr}}
+@media (max-width:760px){
+  .status{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .thisweek{grid-template-columns:1fr}
+  .pubgrid{grid-template-columns:1fr}
+  .rhythm{grid-template-columns:1fr}
+  .shelf ul{grid-template-columns:1fr}
+  .phase-no{font-size:44px}
+}
+@media (max-width:480px){
+  .week summary{grid-template-columns:auto 1fr}
+  .wprog{grid-column:1 / -1;justify-items:start;grid-auto-flow:column;align-items:center;justify-content:start;gap:10px}
+  .task{grid-template-columns:22px 1fr}
+  .side{grid-column:2;justify-items:start;grid-auto-flow:column;justify-content:start;gap:8px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="mast">
+    <div class="eyebrow" id="eyebrow">Blockchain learning plan</div>
+    <h1>Genesis to Capstone</h1>
+    <p class="lede" id="lede"></p>
+    <div class="trackpick"><span class="k">Plan</span><div class="seg" role="group" aria-label="Choose plan"><button type="button" id="tr12" aria-pressed="true">12 weeks · 10 h/week</button><button type="button" id="tr28" aria-pressed="false">28 weeks · 5 h/week</button></div></div>
+  </header>
+
+  <section class="status" aria-label="Progress summary">
+    <div class="stat"><span class="k">Blocks mined</span><span class="v tnum" id="sMined">0 / 28</span><span class="s" id="sMinedSub">weeks fully complete</span></div>
+    <div class="stat"><span class="k">Time logged</span><span class="v tnum" id="sHours">0 h</span><span class="s" id="sHoursSub"></span></div>
+    <div class="stat"><span class="k">Public proof</span><span class="v tnum" id="sProof">0 / 12</span><span class="s">weeks with a GitHub link</span></div>
+    <div class="stat"><span class="k">Pace</span><span class="v" id="sPace" style="font-size:20px">On schedule</span><span class="s" id="sPaceSub"></span></div>
+    <div class="stat"><span class="k">Started</span><input type="date" id="startDate" aria-label="Start date"><span class="s" id="sFinish"></span></div>
+  </section>
+
+  <nav class="chainbar" id="chainbar" aria-label="All 28 weeks"></nav>
+  <div class="chainlegend"><span>Block 1 · genesis</span><span id="chainHead">chain height 0</span><span id="chainEnd">Block 12</span></div>
+
+  <section class="clock" id="clock" aria-label="Countdown">
+    <div class="c"><span class="k">Time since you began</span><span class="big" id="cElapsed">—</span><span class="s" id="cElapsedSub"></span><span class="pbar" aria-hidden="true"><i id="cPlanBar"></i></span></div>
+    <div class="c"><span class="k">Capstone ships in</span><span class="big" id="cCap">—</span><span class="s" id="cCapSub"></span></div>
+    <div class="c"><span class="k">Plan ends in</span><span class="big" id="cEnd">—</span><span class="s" id="cEndSub"></span></div>
+    <div class="c"><span class="k">Next up</span><ul class="nextlist" id="cNext"></ul><span class="s" id="cToday"></span></div>
+  </section>
+
+  <section class="thisweek" aria-label="This week">
+    <div>
+      <h2>This week</h2>
+      <p class="sub" id="calSub">Planned hours per day, and the time you've logged. Any day counts.</p>
+      <div class="cal" id="cal"></div>
+      <div class="calsum"><span id="calTotal"></span><span id="calHint"></span></div>
+    </div>
+    <div>
+      <h2>Log a session</h2>
+      <p class="sub">Studied on a flex day or in a spare hour? Log it here. It counts toward the block you pick.</p>
+      <form class="logform" id="logform" novalidate>
+        <label for="lgDate">Date<input type="date" id="lgDate" required></label>
+        <label for="lgMin">Time spent<select id="lgMin">
+          <option value="15">15 min</option><option value="30">30 min</option><option value="45">45 min</option><option value="60">1 h</option><option value="90">1.5 h</option><option value="120" selected>2 h</option><option value="150">2.5 h</option><option value="180">3 h</option><option value="240">4 h</option><option value="270">4.5 h</option><option value="300">5 h</option>
+        </select></label>
+        <label class="full" for="lgWeek">Block<select id="lgWeek"></select></label>
+        <label class="full" for="lgNote">What you did (optional)<input type="text" id="lgNote" maxlength="200" placeholder="e.g. Finished Project 0 tamper test, pushed to GitHub"></label>
+        <div class="full" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="submit" class="btn primary" id="lgAdd">Log session</button><span class="formmsg" id="lgMsg" role="status"></span></div>
+      </form>
+      <ul class="sesslist" id="recent" aria-label="Recent sessions"></ul>
+    </div>
+  </section>
+
+  <section class="rhythm" aria-label="How a week runs">
+    <div>
+      <h2 id="rhythmTitle">How a week runs</h2>
+      <p>Every block has the same shape, so you never have to plan a week. Learn from a short, fixed list, build something that runs, then write down what you understood.</p>
+      <div class="split" id="split" aria-hidden="true"></div>
+      <ul>
+        <li>Miss a week? Skip ahead, don't double up. Move the start date and every week's dates shift.</li>
+        <li>If a build runs over, cut the optional reading first, never the log.</li>
+        <li id="flexNote">Mon and Wed are flex days. Time logged there counts toward the week, so you can shorten Saturday.</li>
+        <li>Every Saturday ends with a push to GitHub and a proof link in the tracker. See "Build in public" below.</li>
+      </ul>
+    </div>
+    <div class="sessions" id="sessions" aria-label="Suggested sessions"></div>
+  </section>
+
+  <section class="pub" id="bom" aria-label="What you need">
+    <div>
+      <h2>What you need</h2>
+      <p>Everything except the hardware is free. Order the hardware by early November so it arrives before week 10. Prices vary a lot by seller, so check local electronics shops or AliExpress/Amazon; the required parts usually come to a few tens of US dollars.</p>
+    </div>
+    <div>
+      <h3>Hardware (Capstone A, weeks 10–11)</h3>
+      <div class="tblwrap"><table class="bomtbl">
+        <thead><tr><th>Item</th><th>Qty</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>ESP32 dev board (ESP32-S3-DevKitC-1 preferred, any ESP32-DevKitC works)</td><td>1 + 1 spare</td><td>Holds the device key and signs readings. The S3 has more memory and hardware crypto acceleration.</td></tr>
+          <tr><td>Temperature sensor: DS18B20 waterproof probe, or SHT31/SHT41 breakout</td><td>1–2</td><td>The reading the device signs. SHT3x/SHT4x also give humidity.</td></tr>
+          <tr><td>4.7 kΩ resistor</td><td>2</td><td>Pull-up for the DS18B20. Not needed for SHT sensors.</td></tr>
+          <tr><td>Half-size breadboard and jumper wires (male-male, male-female)</td><td>1 set</td><td>Wiring without soldering.</td></tr>
+          <tr><td>USB data cable matching the board (USB-C or micro-USB)</td><td>1</td><td>Flashing and serial output. Charge-only cables won't work.</td></tr>
+          <tr><td>0.96" SSD1306 OLED display<span class="opt">optional</span></td><td>1</td><td>Shows the reading and signature status for demos.</td></tr>
+          <tr><td>ATECC608A secure-element breakout<span class="opt">optional</span></td><td>1</td><td>Keeps the private key in dedicated hardware, which is the custody topic from week 10.</td></tr>
+          <tr><td>microSD module, and a USB power bank<span class="opt">optional</span></td><td>1 each</td><td>Offline buffering, and running the device away from your laptop.</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <h3>Accounts and software</h3>
+      <div class="tblwrap"><table class="bomtbl">
+        <thead><tr><th>What</th><th>Needed from</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>GitHub account</td><td>Week 1</td><td>Your public repo, GitHub Actions and, later, GitHub Pages. Free.</td></tr>
+          <tr><td>Python 3.11+, Git, VS Code</td><td>Week 1</td><td>Free. Also <span class="mono">pip install ecdsa python-bitcoinlib slither-analyzer</span> as you reach each week.</td></tr>
+          <tr><td>Bitcoin Core</td><td>Week 2</td><td>Run in regtest only. No full-chain download needed.</td></tr>
+          <tr><td>Cyfrin Updraft account; Coursera<span class="opt">optional</span></td><td>Week 4 (Coursera week 1)</td><td>Free. Coursera courses can be audited for free.</td></tr>
+          <tr><td>Browser wallet (MetaMask or Rabby) in a separate browser profile</td><td>Week 4</td><td>Testnet only. Never reuse a wallet that holds real funds.</td></tr>
+          <tr><td>Sepolia test ETH from a faucet</td><td>Week 4</td><td>The Google Cloud faucet needs a Google account. Some faucets ask for a small mainnet balance; try another if one refuses.</td></tr>
+          <tr><td>Node.js 20+ and Foundry</td><td>Week 5</td><td>Free. Foundry installs with one command.</td></tr>
+          <tr><td>RPC provider (Alchemy or Infura) free tier, and an Etherscan API key</td><td>Week 5</td><td>For deploying with scripts and verifying contracts.</td></tr>
+          <tr><td>LLM API key (e.g. Anthropic or OpenAI)</td><td>Week 12 (chat apps are fine before)</td><td>The only likely spend besides hardware: a few dollars of credit for the agent wallet.</td></tr>
+          <tr><td>YouTube or Loom</td><td>Week 2</td><td>For optional explainer videos. OBS Studio (free) for screen recording.</td></tr>
+          <tr><td>ESP-IDF or PlatformIO</td><td>Before week 10</td><td>Free. Flash a "hello world" early so the toolchain isn't a surprise.</td></tr>
+          <tr><td>Base Sepolia test ETH</td><td>Week 11</td><td>Bridge from Sepolia or use a Base Sepolia faucet.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="sub" style="margin:10px 0 0">Computer: 8 GB RAM (16 GB is more comfortable) and about 20 GB free disk. macOS, Linux, or Windows with WSL2.</p>
+    </div>
+  </section>
+
+  <section class="pub" id="pub" aria-label="Build in public">
+    <div>
+      <h2>Build in public</h2>
+      <p>One public GitHub repo holds everything: code, notes and a progress table. Each week's folder is your proof of learning, and the commit history shows steady work. Paste each week's folder link into the <strong>Public proof</strong> field in that block.</p>
+    </div>
+    <div class="pubgrid">
+      <div>
+        <h3>Repo layout</h3>
+        <div class="codebox"><pre>blockchain-learning/
+├── README.md          progress table, links to every week
+├── LEARNING_LOG.md    dated session notes
+├── .gitignore         .env, keystores, *.key
+├── week01-toy-chain/
+│   ├── README.md      what I built, how to run it, what I learned
+│   └── toy_chain.py
+├── week02-bitcoin/
+├── …
+├── week10-11-capstone/
+├── week12-agent-wallet/
+└── trust-stack/       the four-part capstone (Foundry project)</pre></div>
+      </div>
+      <div>
+        <h3>Routine</h3>
+        <ol>
+          <li><strong>Every session:</strong> commit before you stop, even if it's only notes. Write messages that say what happened, like <span class="mono">week03: partition test shows a 4-block reorg</span>.</li>
+          <li><strong>Saturday:</strong> fill in the week's README, update the progress table, push, and paste the folder link into the tracker.</li>
+          <li><strong>Each finished project:</strong> tag a release (<span class="mono">v0.1-toy-chain</span>, <span class="mono">v0.3a-erc20</span> … <span class="mono">v1.0-capstone</span>).</li>
+          <li><strong>Deployed contracts:</strong> verify on Etherscan and put the address in the week's README.</li>
+          <li><strong>Optional, 15 min on Saturday:</strong> a short LinkedIn or X post linking the week's folder. The capstone gets a full write-up in week 11.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="pubgrid">
+      <div>
+        <h3>Root README template</h3>
+        <div class="codebox"><button type="button" class="btn" data-copy="tplRoot">Copy</button><pre id="tplRoot"># Blockchain, learned in public
+
+I'm learning blockchain from first principles and building every step
+in the open: 12 weeks at 10 hours a week, ending with a tamper-evident
+cold-chain provenance system on an L2 testnet.
+
+| Week | Topic | What I built | Status |
+|------|-------|--------------|--------|
+| 1 | Cryptographic foundations | [Toy blockchain in Python](week01-toy-chain/) | Done |
+| 2 | Bitcoin | [UTXOs and a raw transaction](week02-bitcoin/) | In progress |
+| 3 | Consensus | | |
+
+Session notes: [LEARNING_LOG.md](LEARNING_LOG.md)</pre></div>
+      </div>
+      <div>
+        <h3>Weekly README template</h3>
+        <div class="codebox"><button type="button" class="btn" data-copy="tplWeek">Copy</button><pre id="tplWeek"># Week 01: The mental model, keys and signatures
+
+**Goal:** understand why hash-linking plus proof-of-work makes
+history expensive to rewrite.
+**Time:** 10 h over 4 sessions
+
+## What I built
+## How to run it
+## What I learned
+## What broke, and how I fixed it
+## Resources I used</pre></div>
+      </div>
+    </div>
+    <div>
+      <h3>Keep it safe</h3>
+      <ul>
+        <li>Never commit private keys, seed phrases or <span class="mono">.env</span> files. Add them to <span class="mono">.gitignore</span> in week 1, and store deploy keys with <span class="mono">cast wallet import</span> rather than in plain text.</li>
+        <li>Use testnet-only wallets for everything in this repo.</li>
+        <li>Optional: open one GitHub issue per week with that week's checklist, and close it from your last commit (<span class="mono">closes #3</span>). It gives each week a timestamped record.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="pub" id="sync" aria-label="Repo sync">
+    <div>
+      <h2>Repo sync</h2>
+      <p>Check whether this tracker and your GitHub repo agree on which tasks are done. Your repo publishes <span class="mono">progress.json</span> every time you push. Paste it here to see which side is behind, then update that side with one click or one command.</p>
+    </div>
+    <div class="syncgrid">
+      <div>
+        <label for="syncRepo">Your repo URL<input type="url" id="syncRepo" placeholder="https://github.com/you/blockchain-learning"></label>
+        <p class="sub" id="syncLinkWrap" style="margin:0">Add your repo URL to get a direct link to progress.json.</p>
+        <label for="syncIn">Paste progress.json<textarea id="syncIn" spellcheck="false" placeholder='{"checked": ["x1t1", "x1t2"], ...}'></textarea></label>
+      </div>
+      <div id="syncOut" aria-live="polite"><p class="sub" style="margin:0">Paste your repo's progress.json and the comparison appears here.</p></div>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <nav class="phasenav" id="phasenav" aria-label="Phases"></nav>
+    <div class="tools">
+      <div class="seg" role="group" aria-label="Filter weeks">
+        <button type="button" id="fAll" aria-pressed="true">All</button>
+        <button type="button" id="fOpen" aria-pressed="false">Remaining</button>
+        <button type="button" id="fDone" aria-pressed="false">Mined</button>
+      </div>
+      <button type="button" class="btn primary" id="jump">Jump to current</button>
+      <button type="button" class="btn" id="expand">Expand all</button>
+      <a class="btn" href="#timeline" style="text-decoration:none">All tasks</a>
+      <span class="savestate" id="saveState">Loading progress…</span>
+    </div>
+  </div>
+
+  <main id="plan"></main>
+
+  <section class="pub" id="timeline" aria-label="All tasks and outputs">
+    <div>
+      <h2>Every task, with due dates and output links</h2>
+      <p>Due dates follow your weekly rhythm: reading on Tuesday, building from Thursday to Saturday, and logs and posts on Saturday. Paste the link to anything you publish (a blog post, video, demo or social post) next to its task. The links save with your progress, and the "Outputs only" view becomes your portfolio.</p>
+    </div>
+    <div class="tools"><div class="seg" role="group" aria-label="Filter tasks">
+      <button type="button" id="tlAll" aria-pressed="true">All tasks</button>
+      <button type="button" id="tlOut" aria-pressed="false">Outputs only</button>
+      <button type="button" id="tlOpen" aria-pressed="false">Remaining</button>
+    </div><span class="sub" id="tlCount" style="margin:0"></span></div>
+    <div class="tblwrap"><table class="bomtbl tl" id="tlTable"></table></div>
+  </section>
+
+  <section class="habits">
+    <h2>Habits that run alongside every phase</h2>
+    <ul>
+      <li>Read one exploit post-mortem on <a href="https://rekt.news/" target="_blank" rel="noopener">rekt.news</a> each month, even after Phase 4.</li>
+      <li>Stay on regtest, Anvil and testnets. Use a separate browser profile for wallets, and never paste a seed phrase anywhere.</li>
+      <li>For any project you read about, ask who has to trust whom, and what still works if the chain disappears. If a trusted party already exists, a database usually wins.</li>
+      <li>Phase 7 moves fastest. Check the current state of any agent-payment or zkML tool before you build on it.</li>
+    </ul>
+  </section>
+  <p class="foot">Nearly every resource here is free. The books (Mastering Bitcoin, Mastering Ethereum, the Princeton textbook, Programming Bitcoin) are free to read online. Hour estimates assume you already code comfortably in Python.</p>
+</div>
+
+<script>
+const R = (t, label, url, note) => ({t, label, url, note});
+const PHASES = [
+{ id:"p0", title:"Cryptographic foundations", weeks:[1,2],
+  why:"Hashes, keys and signatures are the whole trick. Once you've built a hash-linked chain yourself, everything later is a variation on it.",
+  shelf:[
+    R("video","But how does bitcoin actually work? (3Blue1Brown)","https://www.youtube.com/watch?v=bBC-nXj3Ng4","The best 26 minutes to start with"),
+    R("tool","Blockchain demo (Anders Brownworth)","https://andersbrownworth.com/blockchain/","Interactive hashes, blocks and chains"),
+    R("paper","Bitcoin whitepaper","https://bitcoin.org/bitcoin.pdf","9 pages; read it early, then again with the mining chapter"),
+    R("book","Bitcoin and Cryptocurrency Technologies (Princeton, free PDF)","https://d28rh4a8wq0iu5.cloudfront.net/bitcointech/readings/princeton_bitcoin_book.pdf","Chapter 1 covers everything in this phase"),
+  ],
+  wk:[
+  { title:"The mental model", goal:"Understand why hash-linking plus proof-of-work makes history expensive to rewrite, and feel it by mining your own nonce.",
+    deliver:"pow_demo.py in your repo, plus your first log entry",
+    tasks:[
+      ["L",30,"Watch 3Blue1Brown's bitcoin video end to end",[R("video","But how does bitcoin actually work?","https://www.youtube.com/watch?v=bBC-nXj3Ng4")]],
+      ["L",60,"Click through all five pages of the blockchain demo: hash, block, blockchain, distributed, tokens",[R("tool","andersbrownworth.com/blockchain","https://andersbrownworth.com/blockchain/")]],
+      ["L",60,"Read the Bitcoin whitepaper, sections 1–6. Don't worry about the math yet",[R("paper","bitcoin.pdf","https://bitcoin.org/bitcoin.pdf")]],
+      ["B",30,"Create the blockchain-learning repo with a README and a /week01 folder",[]],
+      ["B",90,"Using Python's hashlib, find a nonce that gives 4 leading hex zeros, then time 5 and 6 zeros",[R("docs","hashlib docs","https://docs.python.org/3/library/hashlib.html")]],
+      ["W",30,"Log: explain in five sentences why editing one block invalidates every block after it",[]],
+    ]},
+  { title:"Keys, signatures and Merkle trees → Project 0", goal:"Add real ownership (ECDSA signatures on secp256k1) and Merkle roots to your chain, then prove that tampering is detected.",
+    deliver:"Project 0: toy_chain.py with blocks, PoW, signed transactions, Merkle roots and a tamper test",
+    tasks:[
+      ["L",45,"Read Cloudflare's primer on elliptic-curve cryptography",[R("article","A (relatively easy to understand) primer on ECC","https://blog.cloudflare.com/a-relatively-easy-to-understand-primer-on-elliptic-curve-cryptography/")]],
+      ["L",60,"Princeton textbook, chapter 1: hash pointers, Merkle trees, digital signatures",[R("book","Princeton book PDF","https://d28rh4a8wq0iu5.cloudfront.net/bitcointech/readings/princeton_bitcoin_book.pdf")]],
+      ["B",150,"Build Project 0: Block class, SHA-256 linking, adjustable-difficulty PoW, transactions signed with the ecdsa library (SECP256k1), a Merkle root per block, and validate_chain()",[R("tool","python-ecdsa","https://pypi.org/project/ecdsa/")]],
+      ["B",30,"Tamper test: change one transaction in block 2 and confirm validation fails at the right block",[]],
+      ["W",15,"Log: what a signature proves, and what it does not",[]],
+    ]},
+  ]},
+{ id:"p1", title:"Bitcoin in depth", weeks:[3,5],
+  why:"Bitcoin is the simplest real blockchain. The UTXO model, Script and mining make sense once you've built and decoded a transaction by hand on a private network.",
+  shelf:[
+    R("book","Mastering Bitcoin, 3rd ed. (free on GitHub)","https://github.com/bitcoinbook/bitcoinbook","Main text for this phase"),
+    R("article","learnmeabitcoin: technical guide","https://learnmeabitcoin.com/technical/","Byte-by-byte breakdowns"),
+    R("book","Programming Bitcoin (Jimmy Song, free on GitHub)","https://github.com/jimmysong/programmingbitcoin","Optional: build Bitcoin from scratch in Python"),
+    R("course","Bitcoin and Cryptocurrency Technologies (Princeton, Coursera)","https://www.coursera.org/learn/cryptocurrency","Lecture videos that match the textbook"),
+  ],
+  wk:[
+  { title:"Transactions and the UTXO model", goal:"See that Bitcoin has no balances, only unspent outputs, and run your own node in regtest.",
+    deliver:"A regtest node you can start with one command, and a UTXO version of your toy chain that rejects double spends",
+    tasks:[
+      ["L",75,"Mastering Bitcoin: the 'Introduction' and 'How Bitcoin Works' chapters",[R("book","bitcoinbook on GitHub","https://github.com/bitcoinbook/bitcoinbook")]],
+      ["L",45,"learnmeabitcoin: the transaction and UTXO pages",[R("article","learnmeabitcoin technical","https://learnmeabitcoin.com/technical/")]],
+      ["B",90,"Install Bitcoin Core, start it with -regtest, mine 101 blocks, send coins to a second address with bitcoin-cli",[R("tool","Bitcoin Core download","https://bitcoincore.org/en/download/"),R("docs","Bitcoin developer examples (regtest)","https://developer.bitcoin.org/examples/testing.html")]],
+      ["B",60,"Change your toy chain to UTXOs: inputs reference earlier outputs, and double spends are rejected",[]],
+      ["W",30,"Log: draw the UTXO set before and after one transaction",[]],
+    ]},
+  { title:"Keys, addresses and a raw transaction", goal:"Build, sign and broadcast a transaction without a wallet doing it for you, and understand every field.",
+    deliver:"raw_tx.py plus one fully annotated decoded transaction in your README",
+    tasks:[
+      ["L",90,"Mastering Bitcoin: the 'Keys and Addresses' and 'Transactions' chapters",[R("book","bitcoinbook on GitHub","https://github.com/bitcoinbook/bitcoinbook")]],
+      ["L",30,"learnmeabitcoin: Script, P2PKH and P2WPKH",[R("article","learnmeabitcoin technical","https://learnmeabitcoin.com/technical/")]],
+      ["B",120,"With python-bitcoinlib, build, sign and broadcast a raw transaction on regtest, then run decoderawtransaction on it",[R("tool","python-bitcoinlib","https://github.com/petertodd/python-bitcoinlib")]],
+      ["B",30,"Annotate every field of the decoded transaction in your README",[]],
+      ["W",30,"Log: what the locking and unlocking scripts do in your transaction",[]],
+    ]},
+  { title:"Mining, difficulty and the network", goal:"Understand how difficulty keeps block time steady and why the longest chain is the one with the most work.",
+    deliver:"Difficulty retargeting in your toy chain, with a plot of block times",
+    tasks:[
+      ["L",75,"Mastering Bitcoin: the mining and consensus chapter",[R("book","bitcoinbook on GitHub","https://github.com/bitcoinbook/bitcoinbook")]],
+      ["L",45,"Re-read the whitepaper, sections 7–11, including the attacker probability calculation",[R("paper","bitcoin.pdf","https://bitcoin.org/bitcoin.pdf")]],
+      ["L",60,"Princeton course: the Bitcoin mining lecture",[R("course","Coursera: Bitcoin and Cryptocurrency Technologies","https://www.coursera.org/learn/cryptocurrency")]],
+      ["B",90,"Add difficulty retargeting every 10 blocks to hit a target block time; plot actual block times with matplotlib",[]],
+      ["W",30,"Log: why a 51% attacker can rewrite recent history but can't steal your coins",[]],
+    ]},
+  ]},
+{ id:"p2", title:"Consensus and distributed systems", weeks:[6,7],
+  why:"This is where blockchain stops being a data structure and becomes a distributed-systems problem: how strangers agree on one history when some of them lie.",
+  shelf:[
+    R("video","Foundations of Blockchains (Tim Roughgarden), full playlist","https://www.youtube.com/playlist?list=PLEGCF-WLh2RLOHv_xUGLqRts_9JxrckiA","The most rigorous free lecture series"),
+    R("docs","Roughgarden's course page with readings","https://timroughgarden.github.io/fob21/","Supplementary reading for each lecture"),
+    R("article","Decentralized Thoughts: Nakamoto's longest-chain protocol","https://decentralizedthoughts.github.io/2021-10-15-Nakamoto-Consensus/",""),
+    R("docs","ethereum.org: Proof-of-stake","https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/",""),
+  ],
+  wk:[
+  { title:"Byzantine agreement and longest-chain consensus", goal:"Learn the problem blockchains solve (state machine replication with faulty nodes), then watch forks resolve in your own network simulation.",
+    deliver:"Project 2a: a multi-node network simulation with gossip and longest-chain fork resolution",
+    tasks:[
+      ["L",90,"Roughgarden: Lecture 1 (overview, state machine replication, consistency and liveness)",[R("video","Foundations of Blockchains playlist","https://www.youtube.com/playlist?list=PLEGCF-WLh2RLOHv_xUGLqRts_9JxrckiA")]],
+      ["L",30,"Decentralized Thoughts on Nakamoto consensus",[R("article","Nakamoto's longest-chain-wins protocol","https://decentralizedthoughts.github.io/2021-10-15-Nakamoto-Consensus/")]],
+      ["L",45,"Lamport, Shostak and Pease: The Byzantine Generals Problem, sections 1–3",[R("paper","byz.pdf","https://lamport.azurewebsites.net/pubs/byz.pdf")]],
+      ["B",105,"Build a simulation of 4 nodes that mine and gossip blocks with random network delays and resolve forks by the longest chain",[]],
+      ["W",30,"Log: how often did forks happen, and how did delay change that?",[]],
+    ]},
+  { title:"Attacks and proof-of-stake", goal:"See where Nakamoto consensus breaks (partitions, selfish mining) and how proof-of-stake replaces work with locked capital.",
+    deliver:"Project 2b: partition and heal in your simulation, plus stake-weighted proposer selection",
+    tasks:[
+      ["L",75,"Roughgarden: the lectures on selfish mining and proof-of-stake sybil resistance",[R("video","Foundations of Blockchains playlist","https://www.youtube.com/playlist?list=PLEGCF-WLh2RLOHv_xUGLqRts_9JxrckiA")]],
+      ["L",45,"ethereum.org: proof-of-stake and Gasper",[R("docs","Proof-of-stake","https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"),R("docs","Gasper","https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/gasper/")]],
+      ["L",30,"Skim Eyal and Sirer, Majority is not Enough (selfish mining)",[R("paper","Selfish mining paper","https://www.cs.cornell.edu/~ie53/publications/btcProcFC.pdf")]],
+      ["B",120,"Split your network into two halves for 20 blocks, heal it, and log the reorg. Then add stake-weighted proposer selection",[]],
+      ["W",30,"Log: a table comparing PoW and PoS on security, finality, energy and who can participate",[]],
+    ]},
+  ]},
+{ id:"p3", title:"Ethereum and smart contracts", weeks:[8,14],
+  why:"The longest phase, and the core of building. You move from blockchains that store transfers to blockchains that run programs, and ship four contracts plus a frontend.",
+  shelf:[
+    R("course","Cyfrin Updraft: Foundry Fundamentals","https://updraft.cyfrin.io/courses/foundry","Free video course; your main guide for the Foundry weeks"),
+    R("course","Speedrun Ethereum","https://speedrunethereum.com/","Hands-on build challenges"),
+    R("docs","Solidity by Example","https://solidity-by-example.org/","Short, runnable examples"),
+    R("docs","ethereum.org developer docs","https://ethereum.org/en/developers/docs/","Accounts, transactions, gas, EVM"),
+    R("book","Mastering Ethereum (free on GitHub)","https://github.com/ethereumbook/ethereumbook","Depth when you want it"),
+    R("tool","Foundry","https://www.getfoundry.sh/","forge, cast, anvil, chisel"),
+    R("tool","evm.codes","https://www.evm.codes/","Opcode reference and playground"),
+    R("docs","Solidity documentation","https://docs.soliditylang.org/",""),
+  ],
+  wk:[
+  { title:"The Ethereum model and a first contract", goal:"Understand accounts, gas and the EVM, then deploy your first contract to a public testnet.",
+    deliver:"A SimpleStorage contract deployed on Sepolia, with its address in your README",
+    tasks:[
+      ["L",60,"Read the Ethereum whitepaper",[R("docs","ethereum.org/whitepaper","https://ethereum.org/en/whitepaper/")]],
+      ["L",60,"ethereum.org docs: accounts, transactions, gas and fees, the EVM",[R("docs","Ethereum developer docs","https://ethereum.org/en/developers/docs/")]],
+      ["B",120,"Cyfrin Updraft: Blockchain Basics, then the first Remix lessons of Solidity Smart Contract Development",[R("course","Blockchain Basics","https://updraft.cyfrin.io/courses/blockchain-basics"),R("course","Updraft course list","https://updraft.cyfrin.io/courses"),R("tool","Remix IDE","https://remix.ethereum.org/")]],
+      ["B",30,"Set up a wallet in a separate browser profile, get Sepolia ETH from a faucet, deploy SimpleStorage",[R("tool","Google Cloud Sepolia faucet","https://cloud.google.com/application/web3/faucet/ethereum/sepolia")]],
+      ["W",30,"Log: the difference between a Bitcoin UTXO and an Ethereum account",[]],
+    ]},
+  { title:"Solidity fluency", goal:"Get comfortable with types, storage vs. memory, mappings, modifiers, events and errors.",
+    deliver:"Five small contracts written from memory in /week09",
+    tasks:[
+      ["L",90,"Work through the first ~25 Solidity by Example pages, running each in Remix",[R("docs","solidity-by-example.org","https://solidity-by-example.org/")]],
+      ["L",90,"Updraft: continue the Solidity course (the FundMe section)",[R("course","Updraft courses","https://updraft.cyfrin.io/courses")]],
+      ["B",90,"Write 5 small contracts without looking: a counter, a whitelist, a vault, a voting contract, a timelock",[]],
+      ["W",30,"Log: what surprised you about gas costs",[]],
+    ]},
+  { title:"Foundry and your ERC-20 → Project 3a", goal:"Move from Remix to a real toolchain and write a token from scratch, with tests.",
+    deliver:"Project 3a: an ERC-20 written without OpenZeppelin, with forge tests",
+    tasks:[
+      ["L",45,"Foundry: getting started, then forge test basics",[R("docs","Foundry getting started","https://www.getfoundry.sh/introduction/getting-started")]],
+      ["L",105,"Updraft Foundry Fundamentals: the first section",[R("course","Foundry Fundamentals","https://updraft.cyfrin.io/courses/foundry")]],
+      ["B",120,"Write an ERC-20 by reading the spec only. Test transfer, approve, transferFrom and the failure cases",[R("spec","EIP-20","https://eips.ethereum.org/EIPS/eip-20")]],
+      ["W",30,"Log: what the allowance pattern protects, and its known approval race",[]],
+    ]},
+  { title:"Fuzzing, deployment and verification", goal:"Test with random inputs, deploy with scripts, and publish verified source.",
+    deliver:"ERC-20 with fuzz tests, deployed and verified on Sepolia",
+    tasks:[
+      ["L",45,"Compare your token with OpenZeppelin's ERC20 source",[R("docs","OpenZeppelin Contracts","https://docs.openzeppelin.com/contracts/"),R("tool","OpenZeppelin Wizard","https://wizard.openzeppelin.com/")]],
+      ["L",30,"Foundry docs: fuzz testing and forge scripts",[R("docs","Foundry guides","https://www.getfoundry.sh/guides")]],
+      ["B",150,"Add fuzz tests, deploy with forge script to Sepolia, verify the contract on Etherscan",[R("tool","Sepolia Etherscan","https://sepolia.etherscan.io/")]],
+      ["L",45,"Updraft Foundry Fundamentals: continue",[R("course","Foundry Fundamentals","https://updraft.cyfrin.io/courses/foundry")]],
+      ["W",30,"Log: one bug the fuzzer found, or why it found none",[]],
+    ]},
+  { title:"Escrow contract → Project 3b", goal:"Write your first contract that holds real value, with a buyer, a seller, an arbiter and timeouts.",
+    deliver:"Project 3b: Escrow.sol with events, custom errors and a test for every path",
+    tasks:[
+      ["L",45,"Solidity docs: Security Considerations (read before writing code that holds money)",[R("docs","Security considerations","https://docs.soliditylang.org/en/latest/security-considerations.html")]],
+      ["L",45,"Solidity by Example: Sending Ether, Payable, and the Re-entrancy hack",[R("docs","solidity-by-example.org","https://solidity-by-example.org/")]],
+      ["B",180,"Build Escrow: deposit, release by buyer or arbiter, refund after a deadline, dispute. Emit events, use checks-effects-interactions",[]],
+      ["W",30,"Log: every state the escrow can be in, as a small state diagram",[]],
+    ]},
+  { title:"NFTs and on-chain metadata → Project 3c", goal:"Understand ERC-721 and build an NFT whose image lives entirely on-chain.",
+    deliver:"Project 3c: an NFT with an on-chain SVG and base64 JSON tokenURI",
+    tasks:[
+      ["L",30,"Read EIP-721",[R("spec","EIP-721","https://eips.ethereum.org/EIPS/eip-721")]],
+      ["L",30,"OpenZeppelin ERC-721 docs and the Wizard",[R("docs","OpenZeppelin Contracts","https://docs.openzeppelin.com/contracts/"),R("tool","Wizard","https://wizard.openzeppelin.com/")]],
+      ["B",90,"Speedrun Ethereum: the Simple NFT challenge with Scaffold-ETH 2",[R("course","speedrunethereum.com","https://speedrunethereum.com/"),R("docs","Scaffold-ETH 2 docs","https://docs.scaffoldeth.io/")]],
+      ["B",120,"Build an NFT whose tokenURI returns base64 JSON with an SVG generated in Solidity",[]],
+      ["W",30,"Log: what an NFT actually owns, and what lives off-chain in most NFTs",[]],
+    ]},
+  { title:"A dApp frontend → Project 3d", goal:"Connect a web frontend to your escrow so a non-developer could use it.",
+    deliver:"Project 3d: an escrow dApp on Sepolia, plus a 2-minute demo recording",
+    tasks:[
+      ["L",45,"viem: getting started, reading and writing contracts",[R("docs","viem.sh","https://viem.sh/")]],
+      ["L",45,"Scaffold-ETH 2 docs: hooks and deploying",[R("docs","docs.scaffoldeth.io","https://docs.scaffoldeth.io/"),R("docs","wagmi","https://wagmi.sh/")]],
+      ["B",180,"Build the frontend: connect wallet, create an escrow, release or refund, and list events",[]],
+      ["W",30,"Record a 2-minute demo and write the log",[]],
+    ]},
+  ]},
+{ id:"p4", title:"Security", weeks:[15,17],
+  why:"Smart contracts are public, immutable programs that hold money. Learning to break them is the fastest way to learn to write them.",
+  shelf:[
+    R("course","Cyfrin Updraft: Smart Contract Security","https://updraft.cyfrin.io/courses/security","Free auditing course"),
+    R("tool","Ethernaut (OpenZeppelin)","https://ethernaut.openzeppelin.com/","Hack-the-contract levels"),
+    R("tool","Damn Vulnerable DeFi","https://www.damnvulnerabledefi.xyz/","Harder, DeFi-specific challenges"),
+    R("article","rekt.news","https://rekt.news/","Post-mortems of real exploits"),
+    R("docs","Smart contract security best practices (ConsenSys)","https://consensys.github.io/smart-contract-best-practices/",""),
+    R("tool","Slither static analyzer","https://github.com/crytic/slither",""),
+  ],
+  wk:[
+  { title:"Attack patterns", goal:"Learn the common vulnerability classes by exploiting them yourself.",
+    deliver:"Ethernaut levels 0–5 solved, with notes on each",
+    tasks:[
+      ["L",90,"Updraft Smart Contract Security: the introduction section",[R("course","Smart Contract Security","https://updraft.cyfrin.io/courses/security")]],
+      ["L",45,"Read two rekt.news post-mortems: one re-entrancy, one oracle manipulation",[R("article","rekt.news","https://rekt.news/")]],
+      ["B",135,"Ethernaut levels 0–5",[R("tool","ethernaut.openzeppelin.com","https://ethernaut.openzeppelin.com/")]],
+      ["W",30,"Log: for each level, the bug in one line",[]],
+    ]},
+  { title:"Deeper exploits and tooling", goal:"Solve harder levels and let tools find bugs for you.",
+    deliver:"Four more Ethernaut levels, and a Slither report on your Phase 3 contracts",
+    tasks:[
+      ["B",150,"Ethernaut: Re-entrancy, Elevator, Privacy and one more level of your choice",[R("tool","Ethernaut","https://ethernaut.openzeppelin.com/")]],
+      ["B",60,"Install Slither and run it on your ERC-20, Escrow and NFT",[R("tool","Slither","https://github.com/crytic/slither")]],
+      ["L",60,"ConsenSys best practices: the attacks section",[R("docs","Smart contract best practices","https://consensys.github.io/smart-contract-best-practices/")]],
+      ["W",30,"Log: which Slither findings were real and which were noise",[]],
+    ]},
+  { title:"Audit your own code → Project 4", goal:"Treat your earlier contracts as someone else's and write a real findings report.",
+    deliver:"Project 4: AUDIT.md with severity-ranked findings, invariant tests and fixes",
+    tasks:[
+      ["L",30,"Foundry docs: invariant testing",[R("docs","Foundry guides","https://www.getfoundry.sh/guides")]],
+      ["B",90,"Damn Vulnerable DeFi: challenge 1 (Unstoppable)",[R("tool","damnvulnerabledefi.xyz","https://www.damnvulnerabledefi.xyz/")]],
+      ["B",150,"Audit your Escrow, ERC-20 and NFT: write each finding (severity, description, fix), add invariant tests, and fix the code",[]],
+      ["W",30,"Log: the one mistake you'll never make again",[]],
+    ]},
+  ]},
+{ id:"p5", title:"The application landscape", weeks:[18,20],
+  why:"Now you can read DeFi, rollups and real-world use cases as code and trust assumptions rather than marketing. Includes the most important skill: knowing when a blockchain is the wrong tool.",
+  shelf:[
+    R("paper","Uniswap v2 whitepaper","https://uniswap.org/whitepaper.pdf",""),
+    R("video","Finematics (YouTube)","https://www.youtube.com/@Finematics","Short, clear DeFi explainers"),
+    R("article","An incomplete guide to rollups (Vitalik Buterin)","https://vitalik.eth.limo/general/2021/01/05/rollup.html",""),
+    R("tool","L2BEAT","https://l2beat.com/","Rollup risk dashboards"),
+    R("docs","Chainlink docs","https://docs.chain.link/",""),
+    R("spec","W3C Decentralized Identifiers (DIDs)","https://www.w3.org/TR/did-core/",""),
+  ],
+  wk:[
+  { title:"AMMs and DeFi primitives → Project 5", goal:"Understand x·y=k by building it, including fees and slippage.",
+    deliver:"Project 5: a constant-product AMM with a fuzz test proving k never decreases",
+    tasks:[
+      ["L",45,"Finematics: the AMM and Uniswap explainers",[R("video","Finematics channel","https://www.youtube.com/@Finematics")]],
+      ["L",60,"Uniswap v2 whitepaper, sections 1–3",[R("paper","Uniswap v2 whitepaper","https://uniswap.org/whitepaper.pdf")]],
+      ["L",45,"Read UniswapV2Pair.sol in the v2-core repo",[R("tool","Uniswap v2-core","https://github.com/Uniswap/v2-core")]],
+      ["B",120,"Build an AMM with addLiquidity, removeLiquidity and swap with a 0.3% fee. Fuzz-test that k never decreases",[]],
+      ["W",30,"Log: slippage on a small pool vs. a large one, with numbers from your tests",[]],
+    ]},
+  { title:"Lending, oracles and MEV", goal:"Learn how DeFi gets outside prices, how loans liquidate, and how transaction ordering becomes profit.",
+    deliver:"A Foundry test showing your AMM being manipulated when used as a price oracle",
+    tasks:[
+      ["L",60,"DeFi MOOC lecture: Oracles (Ari Juels)",[R("video","Oracles lecture","https://www.youtube.com/watch?v=vFcW18ZpPZ4")]],
+      ["L",60,"DeFi MOOC lecture: Lending protocols (Arthur Gervais)",[R("video","Lending lecture","https://www.youtube.com/watch?v=dKk9rGWDoTI")]],
+      ["L",30,"Chainlink: Data Feeds overview",[R("docs","docs.chain.link","https://docs.chain.link/")]],
+      ["L",30,"Flash Boys 2.0, introduction only",[R("paper","Flash Boys 2.0","https://arxiv.org/pdf/1904.05234.pdf")]],
+      ["B",90,"Read a Chainlink price feed on Sepolia. Then write a test where someone skews your AMM's price in one transaction",[]],
+      ["W",30,"Log: why a spot price from an AMM is a dangerous oracle",[]],
+    ]},
+  { title:"Scaling, identity and when not to use a blockchain", goal:"Compare rollups by their actual risks, and practise deciding whether a use case needs a blockchain at all.",
+    deliver:"A one-page rollup comparison, plus a decision memo on three African use cases",
+    tasks:[
+      ["L",45,"Vitalik Buterin: An incomplete guide to rollups",[R("article","vitalik.eth.limo","https://vitalik.eth.limo/general/2021/01/05/rollup.html")]],
+      ["L",45,"L2BEAT: read the FAQ, then compare two rollups on its risk dashboard",[R("tool","L2BEAT","https://l2beat.com/"),R("docs","L2BEAT FAQ","https://l2beat.com/faq")]],
+      ["L",45,"W3C DIDs and the Verifiable Credentials data model (introductions only)",[R("spec","DID Core","https://www.w3.org/TR/did-core/"),R("spec","VC Data Model 2.0","https://www.w3.org/TR/vc-data-model-2.0/")]],
+      ["L",45,"Solana docs: core concepts (accounts and programs), for contrast with Ethereum",[R("docs","solana.com/docs","https://solana.com/docs")]],
+      ["W",90,"Write a 'do you need a blockchain?' memo for remittances, land registry and cold-chain provenance",[]],
+      ["W",30,"Log",[]],
+    ]},
+  ]},
+{ id:"p6", title:"Hardware", weeks:[21,22],
+  why:"Where your electronics background pays off. Keys live in hardware, and a physical sensor can sign its own data so a contract can check it came from that device.",
+  shelf:[
+    R("tool","Trezor firmware (open source)","https://github.com/trezor/trezor-firmware","Includes trezor-crypto"),
+    R("tool","micro-ecc","https://github.com/kmackay/micro-ecc","Small ECDSA library for microcontrollers"),
+    R("docs","ESP-IDF programming guide","https://docs.espressif.com/projects/esp-idf/en/latest/esp32/",""),
+    R("docs","OpenZeppelin ECDSA utilities","https://docs.openzeppelin.com/contracts/5.x/api/utils#ECDSA",""),
+    R("article","SGX.Fail","https://sgx.fail/","What goes wrong with trusted execution"),
+    R("tool","Cambridge Bitcoin Electricity Consumption Index","https://ccaf.io/cbnsi/cbeci","Energy data for mining"),
+  ],
+  wk:[
+  { title:"Custody and trusted hardware → Project 6a", goal:"See how hardware wallets and TEEs protect keys, then make an ESP32 hold its own key and sign.",
+    deliver:"Project 6a: ESP32 firmware that generates a secp256k1 key on-device and signs a sensor reading",
+    tasks:[
+      ["L",45,"Browse the Trezor firmware repo: the crypto folder and the security docs",[R("tool","trezor-firmware","https://github.com/trezor/trezor-firmware")]],
+      ["L",30,"Safe docs: how multisig accounts work",[R("docs","Safe","https://docs.safe.global/")]],
+      ["L",30,"SGX.Fail: skim the list of TEE attacks",[R("article","sgx.fail","https://sgx.fail/")]],
+      ["L",20,"Look at the Cambridge electricity index for mining energy use",[R("tool","CBECI","https://ccaf.io/cbnsi/cbeci")]],
+      ["B",145,"On an ESP32, generate a key with micro-ecc or trezor-crypto, hash a sensor reading with keccak256, and print r, s, v and the address",[R("tool","micro-ecc","https://github.com/kmackay/micro-ecc"),R("docs","ESP-IDF","https://docs.espressif.com/projects/esp-idf/en/latest/esp32/")]],
+      ["W",30,"Log: where the key lives, and how someone with the board could extract it",[]],
+    ]},
+  { title:"Verify device data on-chain → Project 6b", goal:"Close the loop: a contract accepts a reading only if a registered device signed it.",
+    deliver:"Project 6b: SensorRegistry.sol plus an end-to-end ESP32 → contract demo",
+    tasks:[
+      ["L",30,"OpenZeppelin ECDSA and MessageHashUtils docs",[R("docs","OZ ECDSA","https://docs.openzeppelin.com/contracts/5.x/api/utils#ECDSA")]],
+      ["L",30,"Helium docs overview, as one DePIN example",[R("docs","docs.helium.com","https://docs.helium.com/")]],
+      ["B",210,"Write SensorRegistry: register a device address, then accept submitReading only if ecrecover matches. Test with vm.sign, then with a real ESP32 signature",[]],
+      ["W",30,"Log: what this proves (the device signed it) and what it doesn't (the reading is true)",[]],
+    ]},
+  ]},
+{ id:"p7", title:"AI × blockchain", weeks:[23,24],
+  why:"Three directions: agents that hold wallets, blockchains that prove things about AI, and AI that writes and audits contracts. This area changes monthly, so check each tool is current before building on it.",
+  shelf:[
+    R("article","The promise and challenges of crypto + AI applications (Vitalik Buterin)","https://vitalik.eth.limo/general/2024/01/30/cryptoai.html",""),
+    R("spec","ERC-4337: Account abstraction","https://eips.ethereum.org/EIPS/eip-4337",""),
+    R("docs","x402: HTTP-native payments for agents","https://docs.x402.org/",""),
+    R("spec","ERC-8004: Trustless Agents (draft)","https://eips.ethereum.org/EIPS/eip-8004","Agent identity, reputation and validation"),
+    R("docs","EZKL: getting started (zkML)","https://docs.ezkl.xyz/getting-started/",""),
+    R("article","Simon Willison's prompt injection series","https://simonwillison.net/series/prompt-injection/",""),
+  ],
+  wk:[
+  { title:"Agents with wallets → Project 7a", goal:"Give an LLM agent spending power that a contract limits, then try to break it with prompt injection.",
+    deliver:"Project 7a: a guarded agent wallet and a red-team report",
+    tasks:[
+      ["L",45,"Vitalik Buterin: The promise and challenges of crypto + AI applications",[R("article","vitalik.eth.limo","https://vitalik.eth.limo/general/2024/01/30/cryptoai.html")]],
+      ["L",45,"ERC-4337 motivation, then EIP-7702",[R("spec","ERC-4337","https://eips.ethereum.org/EIPS/eip-4337"),R("spec","EIP-7702","https://eips.ethereum.org/EIPS/eip-7702")]],
+      ["L",30,"x402 docs: the quickstart",[R("docs","docs.x402.org","https://docs.x402.org/"),R("tool","x402 on GitHub","https://github.com/x402-foundation/x402")]],
+      ["L",20,"ERC-8004 abstract and motivation",[R("spec","ERC-8004","https://eips.ethereum.org/EIPS/eip-8004")]],
+      ["L",20,"Simon Willison on prompt injection: two posts",[R("article","Prompt injection series","https://simonwillison.net/series/prompt-injection/")]],
+      ["B",110,"Build a contract wallet with a daily cap and a recipient allowlist. Give an LLM a single 'pay' tool that calls it. Try five injection prompts and record what the contract blocked",[]],
+      ["W",30,"Log: which defences held in the model and which only held in the contract",[]],
+    ]},
+  { title:"Verifiable AI and the implications → Project 7b", goal:"Prove a model produced an output without revealing the model, and write down the real risks.",
+    deliver:"Project 7b: a zkML proof of a small classifier, plus an implications memo",
+    tasks:[
+      ["L",45,"Vitalik Buterin: an approximate introduction to how zk-SNARKs are possible",[R("article","vitalik.eth.limo","https://vitalik.eth.limo/general/2021/01/26/snarks.html")]],
+      ["L",45,"EZKL: getting started",[R("docs","EZKL docs","https://docs.ezkl.xyz/getting-started/"),R("tool","ezkl on GitHub","https://github.com/zkonduit/ezkl")]],
+      ["B",150,"Train a tiny classifier, export to ONNX, generate and verify a proof with EZKL. The on-chain verifier is optional",[]],
+      ["W",30,"Memo: custody for autonomous agents, accountability, energy, and the current rules in Rwanda, Nigeria and the EU (check these; they change)",[R("docs","EU MiCA (ESMA)","https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica")]],
+      ["W",30,"Log",[]],
+    ]},
+  ]},
+{ id:"p8", title:"Capstone: tamper-evident cold-chain provenance", weeks:[25,28],
+  why:"One system that uses every phase. Edge devices sign temperature readings, batches are Merkle-rooted and anchored on an L2 testnet, and a dashboard verifies any reading against the chain. The write-up must argue honestly whether a blockchain beats a shared database here.",
+  shelf:[
+    R("tool","OpenTimestamps","https://opentimestamps.org/","A minimal Merkle-anchoring design to learn from"),
+    R("docs","Base docs (an L2 testnet option)","https://docs.base.org/",""),
+    R("docs","OpenZeppelin MerkleProof","https://docs.openzeppelin.com/contracts/5.x/api/utils#MerkleProof",""),
+  ],
+  wk:[
+  { title:"Design and threat model", goal:"Decide what goes on-chain, who trusts whom, and what an attacker could fake.",
+    deliver:"SPEC.md with architecture diagram, threat model and the blockchain-vs-database argument",
+    tasks:[
+      ["W",120,"Write the spec: actors, trust assumptions, what is on-chain vs. off-chain, failure modes",[]],
+      ["L",30,"Study how OpenTimestamps anchors many hashes with one transaction",[R("tool","opentimestamps.org","https://opentimestamps.org/")]],
+      ["W",60,"Argue blockchain vs. shared database for this use case, and be willing to conclude it isn't needed",[]],
+      ["B",60,"Architecture diagram and repo scaffold",[]],
+      ["W",30,"Log",[]],
+    ]},
+  { title:"Device and contracts", goal:"Signed batches from the device, and an anchoring contract on an L2 testnet.",
+    deliver:"Firmware that batches and signs, and a tested anchoring contract",
+    tasks:[
+      ["B",150,"Firmware or gateway: collect readings, build a Merkle tree, sign the root",[]],
+      ["B",120,"Contract: anchor signed roots from registered devices on an L2 testnet, with tests",[R("docs","OZ MerkleProof","https://docs.openzeppelin.com/contracts/5.x/api/utils#MerkleProof"),R("docs","Base docs","https://docs.base.org/")]],
+      ["W",30,"Log",[]],
+    ]},
+  { title:"Verifier and AI layer", goal:"Let anyone check a single reading, and flag anomalies at the edge.",
+    deliver:"A verification dashboard and an anomaly-flagging model",
+    tasks:[
+      ["B",150,"Dashboard: paste any reading, show its Merkle proof and the anchoring transaction",[]],
+      ["B",120,"Add a small on-device anomaly detector that flags temperature excursions before signing",[]],
+      ["W",30,"Log",[]],
+    ]},
+  { title:"Ship it", goal:"Review, document and publish.",
+    deliver:"Public repo, README, demo video and a write-up post",
+    tasks:[
+      ["B",90,"Security pass: Slither, your Project 4 checklist, and invariant tests",[R("tool","Slither","https://github.com/crytic/slither")]],
+      ["W",150,"README, a 3-minute demo video, and a blog post on what you built and what you'd change",[]],
+      ["W",60,"Retrospective: pick the next direction (ZK, auditing, DePIN, or agent payments)",[]],
+    ]},
+  ]},
+];
+
+/* ---------- Tracks ---------- */
+const RAW = {}; { let k = 0; PHASES.forEach(p => p.wk.forEach(w => { k++; RAW[k] = w; })); }
+const T = (ow, i, min, text) => { const r = RAW[ow].tasks[i - 1]; return [r[0], min == null ? r[1] : min, text || r[2], r[3]]; };
+const N = (kind, min, text, links) => [kind, min, text, links || []];
+const PS = i => PHASES[i].shelf;
+
+const SECTIONS12 = [
+{ title:"Foundations: cryptography, Bitcoin and consensus", short:"Foundations",
+  why:"The first three phases of the full plan in three dense weeks. You still build every core piece yourself (a signed, Merkle-rooted chain, a hand-built Bitcoin transaction and a forking network), because everything after this rests on them.",
+  shelf:[...PS(0).slice(0, 3), ...PS(1).slice(0, 2), PS(2)[0], PS(2)[2]],
+  wk:[
+  { title:"The mental model, keys and signatures → Project 0", goal:"Understand why hash-linking plus proof-of-work makes history expensive to rewrite, then add real ownership with ECDSA signatures and Merkle roots.",
+    deliver:"pow_demo.py and Project 0 (toy_chain.py with a tamper test)",
+    tasks:[T(1,1),T(1,2),T(1,3),T(1,4),T(1,5),T(1,6),T(2,1),T(2,2),T(2,3),T(2,4),T(2,5)]},
+  { title:"Bitcoin: UTXOs, raw transactions and mining", goal:"Run your own node, see that Bitcoin has no balances, and build and decode a transaction by hand.",
+    deliver:"A regtest node, a UTXO version of your toy chain, and raw_tx.py with a decoded transaction",
+    tasks:[T(3,1),T(3,2),T(3,3),T(3,4),T(4,1,60),T(4,2),T(4,3),T(5,1,60),T(5,2),N("W",15,"Log: what the locking and unlocking scripts did in your transaction, and why a 51% attacker still can't steal coins")]},
+  { title:"Consensus, attacks and proof-of-stake → Project 2", goal:"Learn the problem blockchains solve, then watch forks, partitions and reorgs happen in your own network simulation.",
+    deliver:"Project 2: a multi-node simulation with gossip, fork resolution, a partition that heals, and stake-weighted proposers",
+    tasks:[T(6,1),T(6,2),T(6,3),T(6,4),T(6,5),T(7,1),T(7,2),T(7,3),T(7,4),T(7,5)]},
+  ]},
+{ title:"Building on Ethereum", short:"Ethereum",
+  why:"From blockchains that store transfers to blockchains that run programs. Three weeks, three contracts, all tested with Foundry. The frontend comes at the start of week 7.",
+  shelf:PS(3),
+  wk:[
+  { title:"The Ethereum model and Solidity fluency", goal:"Understand accounts, gas and the EVM, deploy your first contract to Sepolia, and get comfortable writing Solidity.",
+    deliver:"SimpleStorage on Sepolia and five small contracts in /week04",
+    tasks:[T(8,1),T(8,2),T(8,3),T(8,4),T(8,5),T(9,1),T(9,2),T(9,3),T(9,4)]},
+  { title:"Foundry and your ERC-20 → Project 3a", goal:"Move to a real toolchain, write a token from the spec, fuzz it, deploy it and verify it.",
+    deliver:"Project 3a: an ERC-20 with unit and fuzz tests, verified on Sepolia Etherscan",
+    tasks:[T(10,1),T(10,2),T(10,3),T(10,4),T(11,1),T(11,2),T(11,3),T(11,4),T(11,5)]},
+  { title:"Escrow and an on-chain NFT → Projects 3b and 3c", goal:"Write your first contract that holds value, then an NFT whose image lives entirely on-chain. End with frontend prep for next week.",
+    deliver:"Project 3b (Escrow.sol) and Project 3c (on-chain SVG NFT)",
+    tasks:[T(12,1),T(12,2),T(12,3),T(12,4),T(13,1),T(13,2),T(13,4),T(13,5),T(14,1),T(14,2)]},
+  ]},
+{ title:"Frontend and security", short:"Security",
+  why:"Finish the dApp, then switch sides. Breaking contracts is the fastest way to learn to write them, and the week-8 audit of your own code is one of the most useful things in the plan.",
+  shelf:PS(4),
+  wk:[
+  { title:"A dApp frontend, then start breaking contracts → Project 3d", goal:"Ship a usable escrow frontend, then learn the common vulnerability classes by exploiting them.",
+    deliver:"Project 3d (escrow dApp with a 2-minute demo) and Ethernaut levels 0–5",
+    tasks:[T(14,3),T(14,4),T(15,1),T(15,2),T(15,3),T(15,4),T(16,2),T(17,1)]},
+  { title:"Deeper exploits and your own audit → Project 4", goal:"Solve harder levels, then treat your earlier contracts as someone else's and write a real findings report.",
+    deliver:"Project 4: AUDIT.md with severity-ranked findings, invariant tests and fixes",
+    tasks:[T(16,1,180),T(16,3),T(16,4),T(17,2),T(17,3,180),T(17,4),N("L",30,"Read one more rekt.news post-mortem and match it to a bug class you now know",[R("article","rekt.news","https://rekt.news/")])]},
+  ]},
+{ title:"Applications and capstone design", short:"Applications",
+  why:"Read DeFi and rollups as code and trust assumptions, build an AMM, and finish the week with the capstone spec, so weeks 10 and 11 are pure building.",
+  shelf:[...PS(5), PS(8)[0]],
+  wk:[
+  { title:"AMMs, oracles, rollups → Project 5, and the capstone spec", goal:"Build x·y=k, see why a spot price is a dangerous oracle, compare rollups by their real risks, and decide exactly what your capstone puts on-chain.",
+    deliver:"Project 5 (AMM with a fuzz test), the 'do you need a blockchain?' memo, and SPEC.md for the capstone",
+    tasks:[N("L",30,"Finematics: the AMM and Uniswap explainers",[R("video","Finematics channel","https://www.youtube.com/@Finematics")]),T(18,2),T(18,4),T(19,1),T(19,3),T(20,1),T(20,2),T(20,5),
+      N("W",90,"Capstone SPEC.md: actors, trust assumptions, what is on-chain vs. off-chain, threat model, and the blockchain-vs-database argument",[]),T(18,5)]},
+  ]},
+{ title:"Capstone: tamper-evident cold-chain provenance", short:"Capstone",
+  why:"Two weeks to build and ship one complete system that uses everything so far. You pick the project in week 6 and refine it in week 9's SPEC.md. The default, option A, merges the hardware phase into the capstone. It ships at the end of week 11.",
+  shelf:[...PS(6).slice(0, 4), ...PS(8)],
+  wk:[
+  { title:"Capstone I: the device signs, the contract verifies", goal:"Make an ESP32 hold its own key and sign batched readings, and write the contract that accepts only signatures from registered devices.",
+    deliver:"ESP32 firmware that signs Merkle roots of readings, and a tested SensorRegistry contract",
+    tasks:[T(21,1,30),T(21,3),T(22,1),T(25,2),T(21,5,150),
+      N("B",120,"Batch readings on the device or a gateway: build a Merkle tree and sign the root instead of each reading",[R("docs","OZ MerkleProof","https://docs.openzeppelin.com/contracts/5.x/api/utils#MerkleProof")]),
+      T(22,3,180,"Write SensorRegistry: register device addresses, accept a signed Merkle root only if ecrecover matches. Test with vm.sign, then with a real ESP32 signature"),
+      T(22,4)]},
+  { title:"Capstone II: anchor, verify, ship", goal:"Deploy to an L2 testnet, let anyone check a single reading, and publish the project. This week is the mid-December deadline.",
+    deliver:"The finished capstone: public repo, deployed contract, verification dashboard, README, demo video and write-up",
+    tasks:[T(26,2),T(27,1),T(27,2,60,"Optional if time is short: a small anomaly detector that flags temperature excursions before signing"),
+      T(28,1,60),T(25,3),T(28,2,120,"README, a 3-minute demo video, and a short post on what you built"),N("W",30,"Log: what you'd change with another month",[])]},
+  ]},
+{ title:"AI × blockchain, and buffer", short:"AI + buffer",
+  why:"The fastest-moving area, placed after the capstone on purpose. If the capstone slipped, finish it here first and treat this week's reading as optional. Check each tool is still current before building on it.",
+  shelf:PS(7),
+  wk:[
+  { title:"Agents with wallets, verifiable AI, and a retrospective → Project 7", goal:"Give an LLM agent spending power that a contract limits, try to break it, and learn what zkML can and can't prove.",
+    deliver:"Project 7 (guarded agent wallet with a red-team report), an implications memo, and your retrospective",
+    tasks:[T(23,1),T(23,2),T(23,3),T(23,4),T(23,5),T(23,6,150),T(23,7),T(24,1),
+      T(24,2,45,"EZKL: read the getting-started guide and run its example (the full build is optional)"),T(24,4,60),T(28,3),N("B",50,"Buffer: finish anything that slipped from the capstone, or act on feedback from people who tried your demo",[])]},
+  ]},
+];
+
+/* ---------- Threads: cryptography, AI × blockchain, explainers (appended; IDs stay stable) ---------- */
+const BOOK_BS = R("book","A Graduate Course in Applied Cryptography (Boneh & Shoup, free)","https://toc.cryptobook.us/");
+const COURSE_C1 = R("course","Cryptography I (Dan Boneh, Coursera)","https://www.coursera.org/learn/crypto");
+const ZKBOOK = R("book","RareSkills ZK Book (free)","https://www.rareskills.io/zk-book");
+const EXPLAIN = (n, title, covers) => ["E", 45, `Explainer #${n}: write "${title}" in blog/ (600–900 words, ${covers}). Optional: record a 5-minute video teaching it and link it in the post`, []];
+const THREADS = {
+  1: { trim:{2:45,3:45,8:45}, add:[
+    ["C",30,"The three security properties of hash functions (preimage, second-preimage and collision resistance), and which one proof-of-work relies on",[BOOK_BS, COURSE_C1]],
+    ["A",15,"Ask an LLM to explain proof-of-work, then use the whitepaper to find one thing it got wrong or oversimplified. Note it in your log",[]] ]},
+  2: { trim:{1:60,3:75,5:45,8:45,9:30}, add:[
+    ["C",30,"Schnorr signatures and Taproot. Why Bitcoin added them alongside ECDSA (linearity, key aggregation)",[R("spec","BIP-340: Schnorr signatures","https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki"), R("article","learnmeabitcoin: technical guide","https://learnmeabitcoin.com/technical/")]],
+    EXPLAIN(1, "I built a blockchain from scratch", "weeks 1–2") ]},
+  3: { trim:{1:75,6:60}, add:[
+    ["C",30,"BLS signature aggregation and VRFs. How proof-of-stake compresses thousands of validator votes and picks proposers fairly",[R("docs","ethereum.org: proof-of-stake keys (BLS)","https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/keys/"), BOOK_BS]] ]},
+  4: { trim:{1:45,3:105,6:75,7:70}, add:[
+    ["C",20,"Keccak-256 vs. SHA-3, and how an Ethereum address is derived from a public key. Derive one yourself in Python",[R("docs","ethereum.org: accounts","https://ethereum.org/en/developers/docs/accounts/")]],
+    EXPLAIN(2, "How strangers agree: consensus in plain words", "weeks 3–4") ]},
+  5: { trim:{2:90,8:30}, add:[
+    ["A",30,"Have an LLM write fuzz tests for your ERC-20, then check which ones actually test something. Keep the good ones and note the useless ones in your log",[]] ]},
+  6: { trim:{1:30,2:30,6:15,9:30,10:30}, add:[
+    ["C",30,"EIP-712 typed-data signatures and replay protection. Sign an escrow release off-chain and verify it in Solidity",[R("spec","EIP-712","https://eips.ethereum.org/EIPS/eip-712"), R("docs","OpenZeppelin EIP712 utilities","https://docs.openzeppelin.com/contracts/5.x/api/utils#EIP712")]],
+    EXPLAIN(3, "Replacing a middleman with an escrow contract, and what it can't replace", "weeks 5–6") ]},
+  7: { trim:{3:75,5:120}, add:[
+    ["A",30,"Give an LLM one vulnerable Ethernaut contract without the hint. Compare its answer with what you found yourself",[R("tool","Ethernaut","https://ethernaut.openzeppelin.com/")]] ]},
+  8: { trim:{1:165,2:45,4:75,5:165,7:15}, add:[
+    ["A",30,"AI-assisted audit: run an LLM over your escrow and compare its findings with Slither's and your own. Count true and false positives in AUDIT.md",[]],
+    EXPLAIN(4, "What I learned auditing my own smart contracts", "weeks 7–8") ]},
+  9: { trim:{2:45,7:30}, add:[
+    ["C",30,"Commitments and Merkle proofs. Write a Merkle proof verifier in Solidity and test it (you'll reuse it in the capstone)",[R("docs","OpenZeppelin MerkleProof","https://docs.openzeppelin.com/contracts/5.x/api/utils#MerkleProof")]] ]},
+  10: { trim:{1:15,2:15,4:15}, add:[
+    EXPLAIN(5, "Teaching a sensor to sign its own data", "weeks 9–10") ]},
+  11: { trim:{3:30}, add:[
+    ["A",30,"GenAI provenance: read the C2PA overview, then add a paragraph to your capstone README on how the same sign-and-anchor pattern could prove where a photo or AI-generated output came from",[R("docs","C2PA","https://c2pa.org/")]] ]},
+  12: { trim:{12:20}, add:[
+    ["C",30,"Zero-knowledge in practice. Read the first chapters of the RareSkills ZK Book, then revisit what your EZKL proof actually proved",[ZKBOOK]] ]},
+};
+(function applyThreads(){
+  let n = 0;
+  SECTIONS12.forEach(sec => sec.wk.forEach(w => {
+    n++;
+    const t = THREADS[n]; if (!t) return;
+    w.tasks = w.tasks.map((task, i) => t.trim[i + 1] != null ? [task[0], t.trim[i + 1], task[2], task[3]] : task);
+    w.tasks = w.tasks.concat(t.add);
+  }));
+  SECTIONS12[0].shelf = SECTIONS12[0].shelf.concat([BOOK_BS, COURSE_C1]);
+  SECTIONS12[5].shelf = SECTIONS12[5].shelf.concat([ZKBOOK, R("docs","C2PA: content provenance","https://c2pa.org/")]);
+})();
+
+/* ---------- Applications thread + capstone choice (appended after the other threads; IDs stay stable) ---------- */
+const APPS = {
+  2: { trim:{3:60,7:105}, add:[
+    ["P",30,"Cryptocurrencies as money: Bitcoin's fixed supply and halvings, why stablecoins exist, and what a CBDC is. Look up the eNaira and one other CBDC on the tracker and note why adoption differed",[R("docs","ethereum.org: stablecoins","https://ethereum.org/en/stablecoins/"), R("tool","Atlantic Council CBDC tracker","https://www.atlanticcouncil.org/cbdctracker/")]] ]},
+  3: { trim:{4:95,9:110}, add:[
+    ["P",20,"How cryptocurrencies change their rules: read about Bitcoin's block-size dispute and Ethereum's DAO fork. Who decided, and what happened to people who disagreed?",[R("docs","ethereum.org: history of Ethereum","https://ethereum.org/en/history/")]] ]},
+  4: { trim:{3:90,8:75}, add:[
+    ["P",30,"Exchanges and wallets: custodial vs. self-custody, centralised exchanges vs. DEXs, and what the FTX collapse showed about 'not your keys, not your coins'",[R("docs","ethereum.org: wallets","https://ethereum.org/en/wallets/"), R("docs","ethereum.org: DeFi","https://ethereum.org/en/defi/")]] ]},
+  6: { trim:{3:150,7:105}, add:[
+    ["P",30,"Marketplaces: how on-chain marketplaces work (listings, signed orders, escrow, royalties, disputes). Skim the Seaport contracts and sketch how your escrow and NFT could become a small marketplace",[R("tool","Seaport (OpenSea's marketplace protocol)","https://github.com/ProjectOpenSea/seaport")]],
+    ["W",15,"Choose your capstone: read the options in the Capstone section of this tracker, pick one (or propose your own), and write a one-paragraph pitch in week10-11-capstone/IDEA.md",[]] ]},
+  9: { trim:{3:105,8:75}, add:[
+    ["P",30,"Payments and remittances in Africa: compare the cost of sending $200 to Nigeria or Rwanda by bank, mobile money and a stablecoin. Add the numbers to your 'do you need a blockchain?' memo",[R("tool","World Bank: Remittance Prices Worldwide","https://remittanceprices.worldbank.org/")]] ]},
+  12: { trim:{1:30,6:135}, add:[
+    ["P",30,"Other applications, one paragraph each on who has to trust whom: tokenised real-world assets, DAOs and on-chain governance, prediction markets, and DePIN networks",[R("docs","ethereum.org: DAOs","https://ethereum.org/en/dao/"), R("docs","Helium docs (DePIN example)","https://docs.helium.com/")]] ]},
+};
+const CAPSTONES = [
+  { id:"A", name:"Tamper-evident cold-chain provenance", pitch:"Edge devices sign temperature readings, batches are Merkle-rooted and anchored on an L2, and anyone can verify a reading.", uses:"ESP32 signing, Merkle proofs, L2, edge AI", risk:"Hardware can slip. Get the ESP32 working early." },
+  { id:"B", name:"Escrow marketplace with reputation", pitch:"Buyers and sellers trade through escrow paid in a test stablecoin, with an arbiter for disputes and on-chain reputation built from completed trades.", uses:"ERC-20, escrow, EIP-712 orders, frontend, reputation (ERC-8004 ideas)", risk:"Low. Reuses most of weeks 5–7. Needs a clean UX to impress." },
+  { id:"C", name:"Stablecoin remittance rail", pitch:"A cross-border payment demo on an L2 with a test stablecoin, a fee and time comparison against bank and mobile-money averages, and a simple recipient cash-out flow.", uses:"ERC-20, L2, frontend, remittance data from week 9", risk:"Medium. The on-chain part is simple; the value is in the honest comparison." },
+  { id:"D", name:"Verifiable learning certificates", pitch:"An issuer signs course certificates as credentials, anchors a Merkle root of each cohort on-chain, and anyone can verify a certificate without a central database.", uses:"EIP-712 signatures, Merkle proofs, DIDs/credentials, frontend", risk:"Low to medium. Clear real-world fit for education programmes." },
+];
+(function applyApps(){
+  let n = 0;
+  SECTIONS12.forEach(sec => sec.wk.forEach(w => {
+    n++;
+    const t = APPS[n]; if (!t) return;
+    w.tasks = w.tasks.map((task, i) => t.trim[i + 1] != null ? [task[0], t.trim[i + 1], task[2], task[3]] : task);
+    w.tasks = w.tasks.concat(t.add);
+  }));
+  SECTIONS12[0].shelf = SECTIONS12[0].shelf.concat([R("docs","ethereum.org: stablecoins","https://ethereum.org/en/stablecoins/")]);
+  SECTIONS12[3].shelf = SECTIONS12[3].shelf.concat([R("tool","World Bank: Remittance Prices Worldwide","https://remittanceprices.worldbank.org/")]);
+})();
+
+/* ---------- Four-part capstone: A provenance, B marketplace, C payment rail, D credentials (IDs stay stable) ---------- */
+const BASE = R("docs","Base docs (Base Sepolia testnet)","https://docs.base.org/");
+const CAPS = {
+  5: { trim:{5:30,8:15}, add:[
+    ["K",30,"Capstone C: turn your ERC-20 into TestUSD, the stablecoin for the payment rail. Use 6 decimals, add a capped faucet mint for testers, write tests, and keep it in trust-stack/ (the shared capstone project)",[]] ]},
+  6: { trim:{5:20,9:20,10:20}, rewrite:{
+    14:["W",15,"Write trust-stack/README.md: the four parts (A provenance, B marketplace, C payment rail, D credentials) in your own words, how they connect, and what 'working and tested' means for each",[]] },
+    add:[
+    ["K",30,"Capstone B: copy your escrow into trust-stack/ as Marketplace.sol. Add listings (item, price, seller), take payment in TestUSD instead of ETH, and count completed trades as reputation. Test list, buy, release and refund",[]] ]},
+  7: { trim:{1:150}, add:[
+    ["K",30,"Capstone B: point your escrow frontend at Marketplace.sol so you can list, buy and release from the browser",[]] ]},
+  9: { trim:{2:30,6:30,8:60}, rewrite:{
+    9:["W",90,"Capstone SPEC.md for the whole trust stack: actors, trust assumptions, what is on-chain vs. off-chain for each part, the threat model, and the end-to-end test you'll write in week 11",[]] },
+    add:[
+    ["K",45,"Capstone D: CredentialRegistry.sol. An issuer signs EIP-712 credentials, each cohort's credentials are Merkle-rooted on-chain, and anyone can verify one with your Merkle verifier. Include tests",[R("spec","EIP-712","https://eips.ethereum.org/EIPS/eip-712")]] ]},
+  10: { rewrite:{
+    5:["B",150,"Capstone A: on an ESP32, generate a key with micro-ecc or trezor-crypto, hash a sensor reading with keccak256, and print r, s, v and the address. If the board fights you, start with a Python device simulator and swap the board in later",[R("tool","micro-ecc","https://github.com/kmackay/micro-ecc"),R("docs","ESP-IDF","https://docs.espressif.com/projects/esp-idf/en/latest/esp32/")]],
+    7:["B",180,"Capstone A: ProvenanceAnchor.sol in trust-stack/. Register device addresses and accept a signed Merkle root only if ecrecover matches. Test with vm.sign, then with a real ESP32 signature",[]] }},
+  11: { rewrite:{
+    1:["B",120,"Deploy all four parts to an L2 testnet such as Base Sepolia: TestUSD, Marketplace, CredentialRegistry and ProvenanceAnchor. Verify each contract on the explorer",[BASE]],
+    2:["B",150,"End-to-end flow: a credentialed seller (D) lists a batch whose sensor root is anchored (A), a buyer pays in TestUSD (C) into escrow (B), and release on delivery raises the seller's reputation. Write one Foundry test for the whole flow, plus a script that runs it on the testnet",[]],
+    3:["B",30,"Capstone C demo: a script that sends a TestUSD payment with a receipt event and prints its cost and time next to the bank and mobile-money figures from week 9",[]],
+    4:["B",60,"Security pass on all four contracts: Slither, your Project 4 checklist, and invariant tests",[R("tool","Slither","https://github.com/crytic/slither")]],
+    5:["W",60,"For each of the four parts, argue honestly whether a blockchain beats a shared database, and say so where it doesn't",[]],
+    6:["W",120,"README with an architecture diagram, a 5-minute demo video of the full flow, and the capstone post",[]] }},
+  12: { rewrite:{
+    6:["B",135,"Build a guarded agent wallet that pays through your TestUSD rail: a contract wallet with a daily cap and a recipient allowlist, and an LLM with a single 'pay' tool. Try five injection prompts and record what the contract blocked",[]],
+    12:["B",20,"Proof of learning (Capstone D): issue yourself a credential for each finished week, with that week's folder commit hash as evidence, and verify one on the testnet",[]] }},
+};
+const STACK = [
+  { id:"A", name:"Provenance", what:"An ESP32 signs sensor readings; batches are Merkle-rooted and anchored on-chain.", weeks:"Weeks 1, 9, 10", done:"ProvenanceAnchor tests pass; a real (or simulated) device signature is accepted on the testnet." },
+  { id:"B", name:"Marketplace", what:"Sellers list goods, buyers pay into escrow, an arbiter settles disputes, and completed trades build reputation.", weeks:"Weeks 6, 7, 8", done:"Marketplace tests for list, buy, release and refund pass; you can trade from the browser." },
+  { id:"C", name:"Payment rail", what:"TestUSD, a 6-decimal test stablecoin, with payment receipts and an honest cost comparison against bank and mobile money.", weeks:"Weeks 5, 9, 11", done:"TestUSD tests pass; a scripted payment runs on the testnet and prints the comparison." },
+  { id:"D", name:"Credentials", what:"Signed EIP-712 credentials with on-chain Merkle roots. It also proves your own learning: one credential per finished week, with the commit hash as evidence.", weeks:"Weeks 6, 9, 12", done:"CredentialRegistry tests pass; anyone can verify one of your week credentials." },
+];
+(function applyCaps(){
+  let n = 0;
+  SECTIONS12.forEach(sec => sec.wk.forEach(w => {
+    n++;
+    const t = CAPS[n]; if (!t) return;
+    w.tasks = w.tasks.map((task, i) => {
+      if (t.rewrite && t.rewrite[i + 1]) return t.rewrite[i + 1];
+      if (t.trim && t.trim[i + 1] != null) return [task[0], t.trim[i + 1], task[2], task[3]];
+      return task;
+    });
+    if (t.add) w.tasks = w.tasks.concat(t.add);
+  }));
+  const cap = SECTIONS12[4];
+  cap.title = "Capstone: a four-part trust stack";
+  cap.why = "One connected system with four working, tested parts, built up from week 5. A proves where goods came from, B lets people trade them, C moves the money, and D proves who is qualified, including you. Weeks 10–11 add the hardware and connect everything. It ships on 13 December.";
+  cap.wk[1].title = "Capstone II: connect all four parts and ship";
+  cap.wk[1].goal = "Deploy the whole trust stack to an L2 testnet, prove it works end to end with one test, and publish it.";
+  cap.wk[1].deliver = "All four parts on an L2 testnet, one end-to-end test passing, and a README with an architecture diagram, demo video and post";
+})();
+
+/* ---------- Integration + traceability (appended/retexted; task IDs stay stable) ---------- */
+const TRACE = {
+  6: { trim:{2:20,7:90,8:20,10:10}, retext:{
+      15:"Capstone B: copy your escrow into trust-stack/ as Marketplace.sol. list(batchId, price) is allowed only for sellers with a valid credential (check the mock for now), buyers pay in TestUSD into escrow, and completed trades count as reputation. Test it against the mocks" },
+    add:[
+      ["K",30,"Integration design: write trust-stack/INTERFACES.md and the Solidity interfaces the parts talk through (ICredentialRegistry.isValid(account, role), IProvenance.batchStatus(batchId), IMarketplace.list(batchId, price)), plus mock versions of D and A so the marketplace can be tested against them now",[]],
+      ["K",15,"Traceability design: in trust-stack/POLICY.md, define a batch's journey (harvested → packed → shipped → received), which role may sign each step (farmer, cooperative, transporter, inspector, buyer), and one product policy, e.g. tomatoes: 2–8 °C, at most 48 h in transit, inspection required",[]] ]},
+  7: { trim:{3:60,4:30}, retext:{}, add:[
+      ["K",30,"Integration test v1 (test/Integration.t.sol): mock credential → list → pay in TestUSD → release. Add scripts/demo.sh that runs the whole flow on a local Anvil chain and prints each step",[]] ]},
+  8: { trim:{1:150}, retext:{}, add:[
+      ["K",15,"Add the integration to your audit: what breaks if a mock is swapped for a malicious contract, or a batch id is reused? Note findings in AUDIT.md",[]] ]},
+  9: { trim:{3:90,13:60}, retext:{
+      13:"Capstone D: CredentialRegistry.sol with roles (farmer, cooperative, transporter, inspector, buyer). An issuer signs EIP-712 credentials, each cohort is Merkle-rooted on-chain, and isValid(account, role) replaces the mock in the integration test" }, add:[] },
+  10: { trim:{3:15,6:105}, retext:{
+      7:"Capstone A: ProvenanceAnchor.sol as a trace registry. createBatch(product, policyId); recordEvent(batchId, stage, dataRoot) only by an actor with the right role credential and in the right order; accept sensor Merkle roots only from registered devices (ecrecover). Test with vm.sign, then with a real ESP32 signature" }, add:[
+      ["K",30,"Replace the provenance mock in the integration test: create a batch, record its events and a signed sensor root, list it, pay, release. Update demo.sh",[]] ]},
+  11: { trim:{3:15,4:45,5:45,6:90}, retext:{
+      2:"End-to-end flow in the integration test and demo.sh: a credentialed farmer creates a batch, a transporter records pickup and delivery with the ESP32's signed readings, the batch is checked against its policy, and the buyer's TestUSD in escrow is released only if the batch is compliant; otherwise the buyer is refunded" }, add:[
+      ["K",45,"Compliance check: anyone can mark a batch non-compliant by submitting a signed reading outside the policy range with its Merkle proof, and a missing step or wrong role also fails. Test one compliant batch and one failing batch",[]],
+      ["K",30,"Public trace page: enter a batch id (or scan its QR code) to see the journey, who signed each step, the readings summary and the compliance status",[]] ]},
+};
+(function applyTrace(){
+  let n = 0;
+  SECTIONS12.forEach(sec => sec.wk.forEach(w => {
+    n++;
+    const t = TRACE[n]; if (!t) return;
+    w.tasks = w.tasks.map((task, i) => [task[0], t.trim[i + 1] != null ? t.trim[i + 1] : task[1], t.retext[i + 1] || task[2], task[3]]);
+    w.tasks = w.tasks.concat(t.add);
+  }));
+  if (typeof STACK !== "undefined") {
+    const S = id => STACK.find(s => s.id === id);
+    const a = S("A"), b = S("B"), d = S("D");
+    if (a) Object.assign(a, { name:"Provenance and traceability", what:"Each batch's journey (harvested, packed, shipped, received) is signed step by step by credentialed actors, ESP32 temperature readings are anchored, a product policy decides whether the batch is compliant, and a public trace page shows it all.", weeks:"Weeks 6, 10, 11", done:"A compliant batch and a failing batch are both tested, and the trace page shows a real batch." });
+    if (b) Object.assign(b, { what:"Only credentialed sellers can list a batch, buyers pay into escrow, and payment is released only for compliant batches; completed trades build reputation.", done:"Marketplace and integration tests pass; you can trade from the browser." });
+    if (d) Object.assign(d, { what:"Role credentials for supply-chain actors (farmer, transporter, inspector, buyer), signed with EIP-712 and Merkle-rooted on-chain. The same system issues your own proof-of-learning credentials." });
+  }
+})();
+
+/* ---------- Testing, runnable demo, deployment (appended/retexted; task IDs stay stable) ---------- */
+const TESTS = {
+  5: { trim:{2:75,5:20,6:20}, retext:{}, add:[
+      ["K",20,"Demo stage 1: add forge-std as a submodule (see trust-stack/README.md), write script/demo/01_TestUSD.s.sol from the template in script/demo/README.md, run make demo, push, and check the Trust stack run on GitHub shows stage 01 passed",[R("docs","Foundry: scripting","https://www.getfoundry.sh/guides")]],
+      ["K",15,"Testing setup: run python scripts/set_github_user.py <your-username>, open TESTING.md, and start the rules-to-tests table with TestUSD's tests. Check coverage and Slither pass in CI",[R("tool","Slither","https://github.com/crytic/slither")]] ]},
+  6: { trim:{1:20,3:135,7:80}, retext:{}, add:[
+      ["K",20,"Rules to tests: for every rule in your POLICY.md, add a row to TESTING.md with a named test (e.g. test_RevertWhen_TransporterSignsInspection) and write the empty test so CI shows what's still missing",[]],
+      ["K",15,"Demo stages 2–3 with the mocks: issue roles and list batch 1, so make demo now runs stages 01–03",[]] ]},
+  7: { trim:{3:45,4:20,5:105}, retext:{
+      11:"Integration test v1 (test/Integration.t.sol): mock credential → list → pay in TestUSD → release, passing in CI alongside the demo" }, add:[
+      ["K",20,"Demo stage 4 (payment into escrow). Then open your repo in GitHub Codespaces from the README badge and run make demo there, to confirm a stranger can run it with no setup",[]],
+      ["K",20,"Invariant tests: escrow always holds what it owes, and TestUSD's total supply equals the sum of balances (invariant_EscrowSolvent, invariant_SupplyEqualsBalances)",[R("docs","Foundry guides (invariant testing)","https://www.getfoundry.sh/guides")]] ]},
+  8: { trim:{1:135,4:60}, retext:{}, add:[
+      ["K",30,"Attack tests in test/Attacks.t.sol: replayed signature, reused batch id, re-entrancy on release, a stranger releasing escrow. Each must fail the way TESTING.md says",[]] ]},
+  9: { trim:{3:75}, retext:{}, add:[
+      ["K",15,"Credential tests: a revoked credential can't sign or list (test_RevertWhen_RevokedCredential). Switch demo stage 2 from the mock to the real registry",[]] ]},
+  10: { trim:{6:90,7:165}, retext:{}, add:[
+      ["K",30,"Firmware checks: run make vectors, make your ESP32 reproduce test_vectors.json byte for byte, and add firmware/tools/Vectors.t.sol.example to test/ so CI proves tampered and unregistered readings are rejected. Demo stage 5 uses sample_readings.json, so it runs without hardware",[]] ]},
+  11: { trim:{1:90,8:15}, retext:{}, add:[
+      ["K",30,"Deploy for real: forge script with your keystore account to Base Sepolia, verify on Basescan, record addresses and read-only checks in deployments/base-sepolia.json (copy the example), and run make smoke until every check is green",[R("docs","Base docs","https://docs.base.org/")]],
+      ["K",15,"Make it public: put the trace page in trust-stack/app/site/ so it publishes to GitHub Pages, then check the README's Trust stack badge, Codespaces button and DEMO.md all work from a logged-out browser",[]] ]},
+};
+(function applyTests(){
+  let n = 0;
+  SECTIONS12.forEach(sec => sec.wk.forEach(w => {
+    n++;
+    const t = TESTS[n]; if (!t) return;
+    w.tasks = w.tasks.map((task, i) => [task[0], t.trim[i + 1] != null ? t.trim[i + 1] : task[1], t.retext[i + 1] || task[2], task[3]]);
+    w.tasks = w.tasks.concat(t.add);
+  }));
+})();
+
+/* ---------- Live demo site with sample data and an admin console (task IDs stay stable) ---------- */
+const LIVE = {
+  11: { trim:{}, retext:{
+      10:"Demo site v1, open to everyone with no login: Explore (sample batches), Market (listings) and Trace (enter a batch id or scan its QR code to see the journey, who signed each step, the readings summary and compliance status), reading from your deployed contracts. Build it in trust-stack/app/site/ following trust-stack/app/README.md" }, add:[] },
+  12: { trim:{2:30,6:105,8:30,9:30,10:45}, retext:{}, add:[
+      ["K",30,"Seed the live demo: put throwaway actor keys in trust-stack/.env (never your real wallet), run make seed so the sample batches, listings and one failing batch exist on Base Sepolia, then make smoke. Rerun make seed any time to top it up",[R("docs","Foundry: keystores (cast wallet)","https://getfoundry.sh/cast/reference/cast-wallet-import")]],
+      ["K",60,"Admin console: an Admin tab that appears only when the connected wallet holds the issuer role on-chain. From it, issue a credential, create a batch, record a step and anchor readings, so you can show something new live. The contracts enforce the role; the page only hides the buttons",[R("docs","viem: writing to contracts","https://viem.sh/docs/contract/writeContract")]] ]},
+};
+(function applyLive(){
+  let n = 0;
+  SECTIONS12.forEach(sec => sec.wk.forEach(w => {
+    n++;
+    const t = LIVE[n]; if (!t) return;
+    w.tasks = w.tasks.map((task, i) => [task[0], t.trim[i + 1] != null ? t.trim[i + 1] : task[1], t.retext[i + 1] || task[2], task[3]]);
+    w.tasks = w.tasks.concat(t.add);
+  }));
+})();
+
+/* ---------- Pinned toolchain and Docker (task IDs stay stable) ---------- */
+const DOCKER = {
+  5: { trim:{2:60}, retext:{
+      1:"Foundry: getting started, then forge test basics. Install the pinned version the repo uses: foundryup --install v1.5.1 (see toolchain.env)" }, add:[
+      ["K",15,"Docker check (optional, see DOCKER.md): install Docker Desktop, then from trust-stack/ run make docker-test and make docker-demo. They should match your normal run, and the docker job in the Trust stack run on GitHub should be green",[R("docs","Docker: get started","https://docs.docker.com/get-started/get-docker/")]] ]},
+};
+(function applyDocker(){
+  let n = 0;
+  SECTIONS12.forEach(sec => sec.wk.forEach(w => {
+    n++;
+    const t = DOCKER[n]; if (!t) return;
+    w.tasks = w.tasks.map((task, i) => [task[0], t.trim[i + 1] != null ? t.trim[i + 1] : task[1], t.retext[i + 1] || task[2], task[3]]);
+    w.tasks = w.tasks.concat(t.add);
+  }));
+})();
+
+/* ---------- Stablecoins thread: how they work, why they matter, a write-up (appended; task IDs stay stable) ---------- */
+const STABLES = {
+  5: { add:[
+      ["P",45,"Stablecoins I, how they hold $1: fiat-backed (USDC, USDT) and what their reserve reports actually show; crypto-collateralised (DAI); algorithmic. Then two failures: TerraUST's collapse (May 2022) and USDC's brief depeg when Silicon Valley Bank failed (March 2023). Note in your log which design TestUSD copies, and what would have to back it for real",[R("docs","ethereum.org: stablecoins","https://ethereum.org/en/stablecoins/"), R("docs","Circle: USDC transparency","https://www.circle.com/transparency"), R("docs","Tether: transparency","https://tether.to/en/transparency/"), R("article","Terra (blockchain) and the UST collapse","https://en.wikipedia.org/wiki/Terra_(blockchain)"), R("paper","Federal Reserve: SVB's failure and its impact on stablecoins","https://www.federalreserve.gov/econres/notes/feds-notes/in-the-shadow-of-bank-run-lessons-from-the-silicon-valley-bank-failure-and-its-impact-on-stablecoins-20251217.html")]] ]},
+  9: { add:[
+      ["P",45,"Stablecoins II, why they matter and why regulators worry: how people in Sub-Saharan Africa use them (remittances, saving against inflation, trade), the BIS argument that they fail as money, and the rules: EU MiCA, the US GENIUS Act, and what the National Bank of Rwanda and Central Bank of Nigeria currently say. Check the latest; these rules change",[R("article","Chainalysis: Sub-Saharan Africa crypto adoption 2025","https://www.chainalysis.com/blog/subsaharan-africa-crypto-adoption-2025/"), R("paper","BIS Annual Economic Report 2025, ch. III","https://www.bis.org/publ/arpdf/ar2025e3.htm"), R("docs","EU MiCA (ESMA)","https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica"), R("docs","GENIUS Act resource center (Arnold & Porter)","https://www.arnoldporter.com/en/perspectives/topics/the-genius-act-and-stablecoin-regulation-resource-center")]],
+      ["E",45,"Stablecoin write-up: \"Digital dollars for Africa? What stablecoins could fix and what they risk\" in blog/ (600–900 words). Cover how they hold their peg, one failure, one real use case with numbers from your remittance comparison, the rules, and your honest verdict. Optional: a 5-minute video",[]] ]},
+};
+(function applyStables(){
+  let n = 0;
+  SECTIONS12.forEach(sec => sec.wk.forEach(w => {
+    n++;
+    const t = STABLES[n]; if (!t) return;
+    w.tasks = w.tasks.concat(t.add);
+  }));
+})();
+
+const TRACKS = {
+  t12: { key:"t12", prefix:"x", sections:SECTIONS12, unit:"Stage", base:1, perWeek:10, capstoneWeek:11,
+    eyebrow:"Blockchain learning plan · 10 hours a week · 12 weeks",
+    lede:"Twelve 10-hour weekly blocks, from hashing a string to shipping a signed-sensor provenance system. The capstone ships in week 11, and week 12 covers AI × blockchain and doubles as a buffer. Tick tasks as you finish them. A week is \"mined\" when every task in it is done.",
+    split:[["l","Learn ~3.5h",35],["b","Build ~5.5h",55],["w","Log",10]],
+    sessions:[["Tue","Reading and videos (the Learn items)","2h"],["Thu","Remaining reading, then start the build","2h"],["Fri","Keep building","1.5h"],["Sat","Main build block, write the log, push to GitHub","4.5h"],["Sun","Rest","—"]],
+    days:[[0,"Flex"],[120,"Learn"],[0,"Flex"],[120,"Learn + build"],[90,"Build"],[270,"Build + push"],[-1,"Rest"]],
+    flex:"Mon and Wed are flex days. Time logged there counts toward the week, so you can shorten Saturday. Sunday is a rest day." },
+  t28: { key:"t28", prefix:"w", sections:PHASES.map((p, i) => Object.assign({}, p, { short:["Crypto","Bitcoin","Consensus","Ethereum","Security","Applications","Hardware","AI","Capstone"][i] })), unit:"Phase", base:0, perWeek:5, capstoneWeek:28,
+    eyebrow:"Blockchain learning plan · 5 hours a week · 28 weeks",
+    lede:"Twenty-eight weekly blocks, from hashing a string to shipping a signed-sensor provenance system. Each block is five hours of reading, building and writing, with every resource linked. Tick tasks as you finish them. A week is \"mined\" when every task in it is done.",
+    split:[["l","Learn ~2h",40],["b","Build ~2.5h",50],["w","Log",10]],
+    sessions:[["Tue","Reading and videos (the Learn items)","1.5h"],["Thu","Remaining reading, then start the build","1.5h"],["Sat","Finish the build, write the log, push to GitHub","2h"],["Sun","Rest","—"]],
+    days:[[0,"Flex"],[90,"Learn"],[0,"Flex"],[90,"Learn + build"],[0,"Flex"],[120,"Build + push"],[-1,"Rest"]],
+    flex:"Mon, Wed and Fri are flex days. Time logged there counts toward the week. Sunday is a rest day." },
+};
+function flatten(tr){
+  const out = [];
+  tr.sections.forEach((s, si) => s.wk.forEach(w => {
+    const n = out.length + 1, id = tr.prefix + n;
+    const tasks = w.tasks.map((t, ti) => ({ id: id + "t" + (ti + 1), kind: t[0], min: t[1], text: t[2], links: t[3] }));
+    out.push({ n, id, sec: si, title: w.title, goal: w.goal, deliver: w.deliver, tasks, total: tasks.reduce((a, t) => a + t.min, 0) });
+  }));
+  return out;
+}
+let TR = TRACKS.t12, WEEKS = flatten(TR);
+
+/* ---------- State ---------- */
+const DEFAULT_START = "2026-09-28";
+let state = { checked: {}, notes: {}, proofs: {}, sessions: [], start: DEFAULT_START, track: "t12", repo: "", capstone: "", outputs: {}, social: {} };
+let db = null, docRef = null, canWrite = true, mode = "local";
+const LS_KEY = "g2c-progress-v1";
+function lsRead(){ try { const s = localStorage.getItem(LS_KEY); return s ? JSON.parse(s) : null; } catch(e){ return null; } }
+function lsWrite(){ try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e){} }
+function normalize(s){ return Object.assign({}, (s && typeof s === "object") ? s : {}, normalize0(s)); }
+function normalize0(s){ return { outputs: (s && s.outputs) || {}, social: (s && s.social) || {}, checked: (s && s.checked) || {}, notes: (s && s.notes) || {}, proofs: (s && s.proofs) || {}, sessions: Array.isArray(s && s.sessions) ? s.sessions : [], start: (s && s.start) || DEFAULT_START, track: (s && TRACKS[s.track]) ? s.track : "t12", repo: (s && s.repo) || "", capstone: (s && s.capstone) || "" }; }
+function iso(d){ return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+const DAYN = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+
+/* ---------- Helpers ---------- */
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const KIND = { L: "Learn", B: "Build", W: "Write", C: "Crypto", A: "AI", E: "Explain", P: "Apps", K: "Capstone" };
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function parseDate(s){ const [y,m,d] = s.split("-").map(Number); return new Date(y, m - 1, d); }
+function addDays(d, n){ const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+function fmt(d){ return d.getDate() + " " + MONTHS[d.getMonth()]; }
+function fmtY(d){ return d.getDate() + " " + MONTHS[d.getMonth()] + " " + d.getFullYear(); }
+function weekDone(w){ return w.tasks.filter(t => state.checked[t.id]).length; }
+function isMined(w){ return weekDone(w) === w.tasks.length; }
+function hrs(min){ const h = Math.round(min / 6) / 10; return h + " h"; }
+
+function sessHTML(x){
+  const d = parseDate(x.d);
+  const wk = WEEKS.find(w => w.id === x.w);
+  return `<li><span class="sd">${DAYN[(d.getDay() + 6) % 7]} ${fmt(d)}</span><span class="sm">${hrs(x.m)}</span><span class="sn">${wk ? "B" + wk.n + " · " : ""}${esc(x.n || "")}</span>${canWrite ? `<button type="button" class="linkbtn" data-del="${x.id}" aria-label="Remove session">Remove</button>` : "<span></span>"}</li>`;
+}
+function renderCal(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const mon = addDays(today, -((today.getDay() + 6) % 7));
+  const byDate = {};
+  state.sessions.forEach(x => { byDate[x.d] = (byDate[x.d] || 0) + x.m; });
+  let tot = 0;
+  const maxM = Math.max(300, ...[0,1,2,3,4,5,6].map(i => byDate[iso(addDays(mon, i))] || 0));
+  $("#cal").innerHTML = TR.days.map(([plan, label], i) => {
+    const d = addDays(mon, i), m = byDate[iso(d)] || 0; tot += m;
+    const isToday = +d === +today, rest = plan < 0;
+    return `<div class="day${isToday ? " today" : ""}${rest ? " rest" : ""}" title="${DAYN[i]} ${fmt(d)}: ${rest ? "rest day" : plan ? hrs(plan) + " planned" : "flex day"}${m ? ", " + hrs(m) + " logged" : ""}">
+      <span class="dn">${DAYN[i]}</span><span class="dd">${d.getDate()}</span>
+      <span class="bar">${m ? `<span class="fill" style="height:${Math.min(100, m / maxM * 100)}%"></span>` : ""}${plan > 0 ? `<span class="plan" style="bottom:${plan / maxM * 100}%"></span>` : ""}</span>
+      <span class="ph">${plan > 0 ? hrs(plan).replace(" ", "") : label}</span>
+      <span class="lg">${m ? hrs(m).replace(" ", "") : "&nbsp;"}</span></div>`;
+  }).join("");
+  const target = TR.perWeek * 60;
+  $("#calTotal").innerHTML = `<strong>${hrs(tot)}</strong> logged of ${TR.perWeek} h this week`;
+  $("#calHint").textContent = tot >= target ? "Week's hours done" : `${hrs(target - tot)} to go · dashed line = plan`;
+}
+async function sha(str){
+  try {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+  } catch(e){
+    let h = 2166136261; for (let i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return (h >>> 0).toString(16).padStart(8, "0").repeat(8);
+  }
+}
+
+/* ---------- Render ---------- */
+function linkHTML(l){
+  return `<a href="${esc(l.url)}" target="_blank" rel="noopener"><span class="tag ${l.t}">${l.t}</span>${esc(l.label)}</a>`;
+}
+function capstoneHTML(){
+  return `<div class="shelf" style="background:var(--surface-2)"><h3>The trust stack: four parts, each working and tested by the end</h3>
+    <div class="capopts">${STACK.map(c => `<div class="capopt" style="cursor:default;grid-template-columns:1fr">
+      <span class="cn">${c.id}. ${esc(c.name)} <span class="min">· ${esc(c.weeks)}</span></span><span class="cp" style="grid-column:1">${esc(c.what)}</span><span class="cm" style="grid-column:1"><strong>Done means:</strong> ${esc(c.done)}</span></div>`).join("")}</div>
+    <p class="capnote"><strong>One demo shows all four.</strong> A credentialed farmer (D) creates a batch of produce; each handoff (packed, shipped, received) is signed by an actor with the right role, and the ESP32's temperature readings are anchored (A). The batch is listed (B) and the buyer pays in TestUSD (C) into escrow. On delivery the batch is checked against its product policy: compliant releases payment and raises the seller's reputation, while an out-of-range reading or a missing step refunds the buyer. Anyone can follow the batch on its public trace page.</p>
+    <p class="capnote">The parts share interfaces from week 6, with mocks standing in for D and A until the real contracts arrive in weeks 9 and 10. One integration test and <span class="mono">scripts/demo.sh</span> grow each week, so week 11 connects working pieces instead of starting from scratch. All code lives in one Foundry project, <span class="mono">trust-stack/</span>. Tasks for these parts are labelled Capstone.</p>
+    <p class="capnote"><strong>Anyone can see it work, from the first part you finish.</strong> Every push runs the tests, Slither and the demo on GitHub, and the run page shows which stages passed. Visitors can open the repo in Codespaces and type <span class="mono">make demo</span>, or run it locally with one install. Stages not built yet show as "not built yet". Details are in DEMO.md and TESTING.md in your repo.</p>
+    <p class="capnote"><strong>Same tools everywhere.</strong> Tool versions are pinned in <span class="mono">toolchain.env</span> and <span class="mono">requirements-dev.txt</span>. One Docker image built from them runs on your laptop (<span class="mono">make docker-demo</span>), in Codespaces and in CI, so a result on one machine holds on the others. Keys and git stay on your computer. See DOCKER.md.</p>
+    <p class="capnote"><strong>A live demo that stays up.</strong> By week 12 the contracts sit on Base Sepolia, seeded with clearly labelled sample batches, and the demo site on GitHub Pages reads from them, so anyone can browse Explore, Market and Trace without logging in. When you connect your admin wallet, an Admin tab appears where you can issue a credential, create a batch or anchor new readings, and the change shows on the site straight away. <span class="mono">make seed</span> tops up the sample data. The site is free to host and keeps running after the plan ends.</p></div>`;
+}
+function renderCapNote(){}
+function buildPlan(){
+  $("#eyebrow").textContent = TR.eyebrow;
+  $("#lede").textContent = TR.lede;
+  $("#tr12").setAttribute("aria-pressed", String(TR.key === "t12"));
+  $("#tr28").setAttribute("aria-pressed", String(TR.key === "t28"));
+  $("#rhythmTitle").textContent = `How a ${TR.perWeek}-hour week runs`;
+  $("#split").innerHTML = TR.split.map(([c, l, f]) => `<div class="${c}" style="flex:${f}">${l}</div>`).join("");
+  $("#sessions").innerHTML = TR.sessions.map(([d, t, h]) => `<div class="sess"><span class="d">${d}</span><span>${esc(t)}</span><span class="h">${h}</span></div>`).join("");
+  $("#flexNote").textContent = TR.flex;
+  $("#lgWeek").innerHTML = WEEKS.map(w => `<option value="${w.id}">Block ${w.n} · ${esc(w.title.split(" →")[0])}</option>`).join("");
+  weekTouched = false;
+  $("#chainEnd").textContent = `Block ${WEEKS.length} · ${TR.key === "t12" ? "AI + buffer" : "capstone"}`;
+
+  const plan = $("#plan");
+  plan.innerHTML = TR.sections.map((p, si) => {
+    const ws = WEEKS.filter(w => w.sec === si);
+    const a = ws[0].n, b = ws[ws.length - 1].n;
+    const hours = ws.reduce((s, w) => s + w.total, 0) / 60;
+    const num = si + TR.base;
+    return `<section class="phase" id="sec${si}">
+      <div class="phase-head"><div class="phase-no" aria-hidden="true">${num}</div>
+        <div class="phase-meta">${TR.unit} ${num} · week${b !== a ? "s" : ""} ${a}${b !== a ? "–" + b : ""} · ${hours} hours</div>
+        <h2>${esc(p.title)}</h2></div>
+      <p class="phase-why">${esc(p.why)}</p>
+      <div class="shelf"><h3>Core resources</h3><ul>
+        ${p.shelf.map(r => `<li><span class="tag ${r.t}">${r.t}</span><span><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.label)}</a>${r.note ? `<span class="n">${esc(r.note)}</span>` : ""}</span></li>`).join("")}
+      </ul></div>
+      ${TR.key === "t12" && si === 4 ? capstoneHTML() : ""}
+      ${ws.map(w => `<details class="week" id="${w.id}" data-w="${w.n}">
+        <summary>
+          <div class="blk">Block<b class="tnum">${w.n}</b></div>
+          <div class="wt"><span class="t">${esc(w.title)}${w.n === TR.capstoneWeek ? `<span class="milestone">Capstone ships</span>` : ""}</span><span class="dates" data-dates></span></div>
+          <div class="wprog"><span class="pubtag" data-pub hidden>public</span><span data-count class="tnum"></span><span class="meter"><i data-meter></i></span></div>
+          <span class="hash" data-hash hidden></span>
+        </summary>
+        <div class="wbody">
+          <p class="goal">${esc(w.goal)}</p>
+          <ul class="tasks">
+            ${w.tasks.map(t => `<li class="task" data-t="${t.id}">
+              <input type="checkbox" id="${t.id}" data-task="${t.id}">
+              <label for="${t.id}"><span class="tx">${esc(t.text)}</span>
+                ${t.links.length ? `<span class="links">${t.links.map(linkHTML).join("")}</span>` : ""}</label>
+              <div class="side"><span class="kind ${t.kind}">${KIND[t.kind]}</span><span class="min tnum">${t.min} min</span></div>
+            </li>`).join("")}
+          </ul>
+          <div class="deliver"><span class="k">Ship</span><span>${esc(w.deliver)}</span></div>
+          <div class="weekmeta">
+            <div><label class="lab" for="proof-${w.id}">Public proof (GitHub link)</label>
+              <input type="url" class="proofin" id="proof-${w.id}" data-proof-in="${w.id}" placeholder="https://github.com/you/blockchain-learning/tree/main/week${String(w.n).padStart(2,"0")}-…">
+            </div>
+            <div><span class="lab">Time logged on this block</span><span data-wtime class="tnum" style="font-size:14px"></span>
+              <ul class="sesslist" data-sess style="margin:0"></ul></div>
+          </div>
+          <div class="logbox"><label for="note-${w.id}">Week ${w.n} log: what you learned, what broke</label>
+            <textarea id="note-${w.id}" data-note="${w.id}" placeholder="Three or four sentences is enough. Copy it into LEARNING_LOG.md."></textarea></div>
+        </div>
+      </details>`).join("")}
+    </section>`;
+  }).join("");
+
+  $("#phasenav").innerHTML = TR.sections.map((p, si) => `<a href="#sec${si}" data-p="${si}">${TR.key === "t12" ? "S" : "P"}${si + TR.base} ${esc(p.short)}</a>`).join("");
+  buildTimeline();
+  $("#chainbar").innerHTML = WEEKS.map(w => `<a href="#${w.id}" data-cw="${w.n}" title="Block ${w.n}: ${esc(w.title)}" aria-label="Block ${w.n}: ${esc(w.title)}"></a>`).join("");
+}
+
+let hashSeq = 0;
+async function update(){
+  const start = parseDate(state.start);
+  const today = new Date(); today.setHours(0,0,0,0);
+  let mined = 0, minutes = 0, current = null;
+  const planned = WEEKS.reduce((s, w) => s + w.total, 0);
+  WEEKS.forEach(w => {
+    const done = weekDone(w);
+    const m = done === w.tasks.length;
+    if (m) mined++;
+    if (!m && !current) current = w;
+    minutes += w.tasks.reduce((s, t) => s + (state.checked[t.id] ? t.min : 0), 0);
+    const el = document.getElementById(w.id);
+    el.classList.toggle("mined", m);
+    const ws = addDays(start, (w.n - 1) * 7), we = addDays(ws, 6);
+    el.querySelector("[data-dates]").textContent = `${fmt(ws)} – ${fmt(we)} · ${w.total / 60} h`;
+    el.querySelector("[data-count]").textContent = m ? "mined" : `${done}/${w.tasks.length}`;
+    el.querySelector("[data-meter]").style.width = (done / w.tasks.length * 100) + "%";
+    w.tasks.forEach(t => {
+      const cb = document.getElementById(t.id);
+      cb.checked = !!state.checked[t.id];
+      cb.disabled = !canWrite;
+      cb.closest(".task").classList.toggle("checked", cb.checked);
+    });
+    const pin = document.getElementById("proof-" + w.id);
+    if (document.activeElement !== pin) pin.value = state.proofs[w.id] || "";
+    pin.readOnly = !canWrite;
+    el.querySelector("[data-pub]").hidden = !state.proofs[w.id];
+    const ss = state.sessions.filter(x => x.w === w.id);
+    const wm = ss.reduce((a, x) => a + x.m, 0);
+    el.querySelector("[data-wtime]").textContent = ss.length ? `${hrs(wm)} in ${ss.length} session${ss.length > 1 ? "s" : ""}` : "Nothing logged yet";
+    el.querySelector("[data-sess]").innerHTML = ss.slice().sort((a, b) => a.d < b.d ? -1 : 1).map(sessHTML).join("");
+    const ta = document.getElementById("note-" + w.id);
+    if (document.activeElement !== ta) ta.value = state.notes[w.id] || "";
+    ta.readOnly = !canWrite;
+    const cell = document.querySelector(`[data-cw="${w.n}"]`);
+    cell.className = m ? "mined" : done ? "part" : "";
+    if (done && !m) cell.style.setProperty("--p", (done / w.tasks.length * 100) + "%");
+  });
+  WEEKS.forEach(w => document.getElementById(w.id).classList.toggle("current", w === current));
+  if (current) document.querySelector(`[data-cw="${current.n}"]`).classList.add("cur");
+
+  TR.sections.forEach((p, si) => {
+    const all = WEEKS.filter(w => w.sec === si).every(isMined);
+    document.querySelector(`[data-p="${si}"]`).classList.toggle("done", all);
+  });
+
+  $("#sMined").textContent = `${mined} / ${WEEKS.length}`;
+  $("#sMinedSub").textContent = current ? `Next: block ${current.n}, ${current.title.split(" →")[0]}` : "Every block mined. Well done.";
+  const logged = state.sessions.reduce((a, x) => a + x.m, 0);
+  $("#sHours").textContent = hrs(logged);
+  $("#sHoursSub").textContent = `Ticked tasks are worth ${hrs(minutes)} of ${planned / 60} h`;
+  $("#sProof").textContent = `${WEEKS.filter(w => state.proofs[w.id]).length} / ${WEEKS.length}`;
+  if (!weekTouched && current) $("#lgWeek").value = current.id;
+  $("#lgAdd").disabled = !canWrite;
+  renderCal();
+  $("#recent").innerHTML = state.sessions.slice().sort((a, b) => a.d < b.d ? 1 : a.d > b.d ? -1 : 0).slice(0, 5).map(sessHTML).join("");
+  $("#chainHead").textContent = `chain height ${mined}`;
+  const finish = addDays(start, WEEKS.length * 7 - 1);
+  const cap = addDays(start, TR.capstoneWeek * 7 - 1);
+  $("#sFinish").textContent = TR.capstoneWeek !== WEEKS.length
+    ? `Capstone ships ${fmtY(cap)} · plan ends ${fmt(finish)}`
+    : `Planned finish ${fmtY(finish)}`;
+  const elapsed = Math.floor((today - start) / 86400000);
+  const pace = $("#sPace"), paceSub = $("#sPaceSub");
+  if (elapsed < 0){
+    pace.innerHTML = `<span class="pill ahead">Not started</span>`;
+    paceSub.textContent = `Block 1 begins ${fmt(start)}`;
+  } else {
+    const calWeek = Math.min(WEEKS.length, Math.floor(elapsed / 7) + 1);
+    const diff = mined - (calWeek - 1);
+    if (mined === WEEKS.length){ pace.innerHTML = `<span class="pill ok">Complete</span>`; paceSub.textContent = `All ${WEEKS.length} blocks mined`; }
+    else if (diff >= 1){ pace.innerHTML = `<span class="pill ahead">${diff} ahead</span>`; paceSub.textContent = `Calendar says week ${calWeek}`; }
+    else if (diff >= 0){ pace.innerHTML = `<span class="pill ok">On schedule</span>`; paceSub.textContent = `This is week ${calWeek}`; }
+    else { pace.innerHTML = `<span class="pill behind">${-diff} week${diff < -1 ? "s" : ""} behind</span>`; paceSub.textContent = `Week ${calWeek} by the calendar. Skip ahead or move the start date`; }
+  }
+  $("#startDate").value = state.start;
+  $("#startDate").disabled = !canWrite;
+  applyFilter();
+  computeDue(); updateTimeline(); tick();
+  if (typeof renderSync === "function" && document.getElementById("syncOut")) { try { renderSync(); } catch(e){} }
+  renderCapNote();
+  document.querySelectorAll('input[name="capstone"]').forEach(r => { r.checked = r.value === state.capstone; r.disabled = !canWrite; });
+
+  const seq = ++hashSeq;
+  let prev = "0".repeat(64);
+  for (const w of WEEKS){
+    const el = document.getElementById(w.id).querySelector("[data-hash]");
+    if (!isMined(w)){ el.hidden = true; continue; }
+    const h = await sha(prev + "|" + w.id + "|" + w.tasks.map(t => t.id).join(","));
+    if (seq !== hashSeq) return;
+    el.hidden = false;
+    el.textContent = `hash 0x${h.slice(0, 12)}… · prev 0x${prev.slice(0, 8)}…`;
+    prev = h;
+  }
+}
+function openCurrent(){ const c = document.querySelector(".week.current"); if (c) c.open = true; }
+function setTrack(key, save){
+  if (!TRACKS[key]) return;
+  TR = TRACKS[key]; WEEKS = flatten(TR);
+  expanded = false; $("#expand").textContent = "Expand all";
+  buildPlan(); update(); openCurrent();
+  if (save && canWrite && state.track !== key){ state.track = key; schedule(); }
+  state.track = key;
+}
+
+/* ---------- Due dates, countdown and the full task list ---------- */
+const DUE = {};
+const GROUP = { L:0, C:0, P:0, A:0, B:1, K:1, W:2, E:2 };
+function computeDue(){
+  const start = parseDate(state.start);
+  const sess = TR.days.map((d, i) => ({ off: i, min: d[0] })).filter(x => x.min > 0);
+  WEEKS.forEach(w => {
+    const bs = addDays(start, (w.n - 1) * 7);
+    const order = w.tasks.map((t, i) => ({ t, i })).sort((a, b) => (GROUP[a.t.kind] - GROUP[b.t.kind]) || (a.i - b.i));
+    let cum = 0;
+    order.forEach(({ t }) => {
+      cum += t.min;
+      let acc = 0, day = sess[sess.length - 1].off;
+      for (const s of sess){ acc += s.min; if (cum <= acc){ day = s.off; break; } }
+      DUE[t.id] = addDays(bs, day);
+    });
+  });
+}
+const OUT_RE = /post|video|demo|write-up|memo|README|SPEC|retrospective|pitch|explainer/i;
+function isOutput(t){ return t.kind === "E" || (t.kind === "W" && OUT_RE.test(t.text)) || (t.kind === "K" && /trace page|demo site|make it public/i.test(t.text)); }
+function dayLabel(d){ return DAYN[(d.getDay() + 6) % 7] + " " + fmt(d); }
+function endOf(d){ const x = new Date(d); x.setHours(23, 59, 59, 999); return x; }
+function dur(ms){
+  const neg = ms < 0; ms = Math.abs(ms);
+  const s = Math.floor(ms / 1000), d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), ss = s % 60;
+  const p = n => String(n).padStart(2, "0");
+  return (neg ? "−" : "") + (d ? d + "d " : "") + p(h) + "h " + p(m) + "m " + p(ss) + "s";
+}
+function short(ms){
+  const late = ms < 0; ms = Math.abs(ms);
+  const h = Math.floor(ms / 3600000), d = Math.floor(h / 24);
+  const txt = d >= 1 ? `${d}d ${h % 24}h` : `${h}h ${Math.floor(ms % 3600000 / 60000)}m`;
+  return late ? `overdue by ${txt}` : `${txt} left`;
+}
+function buildTimeline(){
+  const esc2 = esc;
+  $("#tlTable").innerHTML = `<thead><tr><th>Due</th><th>Task</th><th>Kind</th><th>Min</th><th>Output link</th></tr></thead><tbody>` +
+    WEEKS.map(w => `<tr class="blockrow" data-bw="${w.id}"><td colspan="5">Block ${w.n} · <span data-bd="${w.id}"></span> · ${esc2(w.title)}</td></tr>` +
+      w.tasks.map(t => `<tr data-row="${t.id}" data-out-row="${isOutput(t) ? 1 : 0}"><td class="due" data-due="${t.id}"></td><td><span class="tid">${t.id}</span><span class="tt">${esc2(t.text)}</span></td><td><span class="kind ${t.kind}">${KIND[t.kind]}</span></td><td class="min tnum">${t.min}</td><td>${isOutput(t) ? `<input type="url" data-out="${t.id}" placeholder="Paste link (post, video, demo)" aria-label="Output link for ${t.id}"><span data-olink="${t.id}"></span>` : `<span class="min">—</span>`}</td></tr>`).join("") +
+      `<tr data-row="${w.id}-social" data-out-row="1" data-social-row="${w.id}"><td class="due" data-sdue="${w.id}"></td><td><span class="tid">${w.id}s</span><span class="tt">Optional: a short LinkedIn or X post linking this week's folder</span></td><td><span class="kind W">Share</span></td><td class="min tnum">15</td><td><input type="url" data-social="${w.id}" placeholder="Paste link (social post)" aria-label="Social post link for block ${w.n}"><span data-slink="${w.id}"></span></td></tr>`
+    ).join("") + `</tbody>`;
+}
+let tlFilter = "all";
+function linkOut(url){ return /^https?:\/\//i.test(url || "") ? `<a class="olink" href="${esc(url)}" target="_blank" rel="noopener">Open ↗</a>` : ""; }
+function updateTimeline(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const start = parseDate(state.start);
+  let shown = 0, outs = 0, linked = 0;
+  WEEKS.forEach(w => {
+    const bs = addDays(start, (w.n - 1) * 7);
+    const bd = document.querySelector(`[data-bd="${w.id}"]`); if (bd) bd.textContent = `${fmt(bs)} – ${fmt(addDays(bs, 6))}`;
+    let anyShown = false;
+    w.tasks.forEach(t => {
+      const tr = document.querySelector(`[data-row="${t.id}"]`); if (!tr) return;
+      const done = !!state.checked[t.id], d = DUE[t.id];
+      tr.classList.toggle("done", done);
+      tr.classList.toggle("late", !done && d && endOf(d) < new Date());
+      tr.querySelector("[data-due]").textContent = d ? dayLabel(d) : "";
+      const inp = tr.querySelector("[data-out]");
+      if (inp){ outs++; const v = (state.outputs || {})[t.id] || ""; if (v) linked++; if (document.activeElement !== inp) inp.value = v; inp.readOnly = !canWrite; tr.querySelector("[data-olink]").innerHTML = linkOut(v); }
+      const hide = (tlFilter === "out" && tr.dataset.outRow !== "1") || (tlFilter === "open" && done);
+      tr.classList.toggle("hide", hide); if (!hide){ shown++; anyShown = true; }
+    });
+    const sr = document.querySelector(`[data-social-row="${w.id}"]`);
+    if (sr){
+      const v = (state.social || {})[w.id] || "", inp = sr.querySelector("[data-social]");
+      if (document.activeElement !== inp) inp.value = v; inp.readOnly = !canWrite;
+      sr.querySelector("[data-slink]").innerHTML = linkOut(v);
+      const sat = TR.days.map((d, i) => ({ off: i, min: d[0] })).filter(x => x.min > 0).pop();
+      sr.querySelector("[data-sdue]").textContent = dayLabel(addDays(bs, sat ? sat.off : 5));
+      sr.classList.toggle("done", !!v);
+      const hide = tlFilter === "open" && !!v;
+      sr.classList.toggle("hide", hide); if (!hide){ shown++; anyShown = true; }
+    }
+    const br = document.querySelector(`[data-bw="${w.id}"]`); if (br) br.classList.toggle("hide", !anyShown);
+  });
+  $("#tlCount").textContent = tlFilter === "out" ? `${linked} of ${outs} outputs linked` : `${shown} shown`;
+}
+function setTl(f){ tlFilter = f; [["tlAll","all"],["tlOut","out"],["tlOpen","open"]].forEach(([id, v]) => $("#" + id).setAttribute("aria-pressed", String(v === f))); updateTimeline(); }
+$("#tlAll").onclick = () => setTl("all");
+$("#tlOut").onclick = () => setTl("out");
+$("#tlOpen").onclick = () => setTl("open");
+let outTimer = null;
+document.addEventListener("input", e => {
+  const ds = e.target.dataset || {};
+  if (!(ds.out || ds.social) || !canWrite) return;
+  const key = ds.out ? "outputs" : "social", id = ds.out || ds.social, v = e.target.value.trim();
+  state[key] = state[key] || {};
+  if (v) state[key][id] = v; else delete state[key][id];
+  const holder = e.target.parentNode.querySelector(ds.out ? "[data-olink]" : "[data-slink]"); if (holder) holder.innerHTML = linkOut(v);
+  clearTimeout(outTimer); outTimer = setTimeout(schedule, 800);
+});
+function tick(){
+  const now = new Date(), start = parseDate(state.start);
+  const end = addDays(start, WEEKS.length * 7), cap = addDays(start, TR.capstoneWeek * 7);
+  const el = now - start, total = end - start;
+  $("#cElapsed").textContent = el < 0 ? "Not started" : dur(el);
+  $("#cElapsedSub").textContent = el < 0 ? `Starts in ${short(-el).replace(" left", "")}` : `since ${dayLabel(start)} · ${Math.min(100, el / total * 100).toFixed(1)}% of the plan`;
+  $("#cPlanBar").style.width = Math.max(0, Math.min(100, el / total * 100)) + "%";
+  $("#cCap").textContent = cap - now > 0 ? dur(cap - now) : "Shipped?";
+  $("#cCapSub").textContent = `ships ${fmtY(addDays(cap, -1))}, end of block ${TR.capstoneWeek}`;
+  $("#cEnd").textContent = end - now > 0 ? dur(end - now) : "Done";
+  $("#cEndSub").textContent = `last day ${fmtY(addDays(end, -1))}`;
+  const open = [];
+  WEEKS.forEach(w => w.tasks.forEach(t => { if (!state.checked[t.id] && DUE[t.id]) open.push(t); }));
+  open.sort((a, b) => DUE[a.id] - DUE[b.id]);
+  $("#cNext").innerHTML = open.length ? open.slice(0, 3).map(t => { const ms = endOf(DUE[t.id]) - now; return `<li><span class="nt" title="${esc(t.text)}"><span class="tid mono" style="font-size:11px;color:var(--muted)">${t.id}</span> ${esc(t.text)}</span><span class="nd${ms < 0 ? " late" : ""}">due ${dayLabel(DUE[t.id])} · ${short(ms)}</span></li>`; }).join("") : `<li><span class="nt">Everything is ticked.</span></li>`;
+  const di = (now.getDay() + 6) % 7, plan = TR.days[di] ? TR.days[di][0] : 0;
+  $("#cToday").textContent = plan > 0 ? `Today (${DAYN[di]}): ${hrs(plan)} session, ${TR.days[di][1].toLowerCase()}` : plan < 0 ? `Today (${DAYN[di]}): rest day` : `Today (${DAYN[di]}): flex day, any time you log counts`;
+}
+setInterval(() => { try { tick(); } catch(e){} }, 1000);
+
+/* ---------- Filter / navigation ---------- */
+let filter = "all";
+function applyFilter(){
+  WEEKS.forEach(w => {
+    const m = isMined(w);
+    const hide = (filter === "open" && m) || (filter === "done" && !m);
+    document.getElementById(w.id).classList.toggle("hidden-by-filter", hide);
+  });
+}
+function setFilter(f){
+  filter = f;
+  [["fAll","all"],["fOpen","open"],["fDone","done"]].forEach(([id, v]) => $("#" + id).setAttribute("aria-pressed", String(v === f)));
+  applyFilter();
+}
+$("#fAll").onclick = () => setFilter("all");
+$("#fOpen").onclick = () => setFilter("open");
+$("#fDone").onclick = () => setFilter("done");
+$("#tr12").onclick = () => setTrack("t12", true);
+$("#tr28").onclick = () => setTrack("t28", true);
+$("#jump").onclick = () => {
+  const cur = document.querySelector(".week.current") || document.getElementById(WEEKS[WEEKS.length - 1].id);
+  cur.open = true; cur.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+};
+let expanded = false;
+$("#expand").onclick = () => {
+  expanded = !expanded;
+  document.querySelectorAll(".week").forEach(d => d.open = expanded);
+  $("#expand").textContent = expanded ? "Collapse all" : "Expand all";
+};
+
+/* ---------- Repo sync ---------- */
+const FOLDERS12 = {1:"week01-toy-chain",2:"week02-bitcoin",3:"week03-consensus-sim",4:"week04-first-contracts",5:"week05-erc20",6:"week06-escrow-nft",7:"week07-dapp-and-security",8:"week08-audit",9:"week09-amm-and-capstone-spec",10:"week10-11-capstone",11:"week10-11-capstone",12:"week12-agent-wallet"};
+const TASK12 = {};
+flatten(TRACKS.t12).forEach(w => w.tasks.forEach((t, i) => { TASK12[t.id] = { week: w.n, num: i + 1, text: t.text }; }));
+const idOrder = (a, b) => { const A = TASK12[a], B = TASK12[b]; return A.week - B.week || A.num - B.num; };
+function repoRaw(){
+  const m = (state.repo || "").match(/github\.com\/([^\/\s]+)\/([^\/\s#?]+)/);
+  return m ? `https://raw.githubusercontent.com/${m[1]}/${m[2].replace(/\.git$/, "")}/main/progress.json` : "";
+}
+function renderSyncLink(){
+  const raw = repoRaw();
+  $("#syncLinkWrap").innerHTML = raw ? `Open <a href="${esc(raw)}" target="_blank" rel="noopener">your progress.json</a>, select all, copy, and paste it below.` : "Add your repo URL to get a direct link to progress.json.";
+  if (document.activeElement !== $("#syncRepo")) $("#syncRepo").value = state.repo || "";
+}
+function diffItem(id){
+  const t = TASK12[id];
+  return `<li><span class="id">${id}</span><span>Week ${t.week}, task ${t.num}: ${esc(t.text.length > 90 ? t.text.slice(0, 88) + "…" : t.text)}<span class="f">${FOLDERS12[t.week]}/README.md</span></span></li>`;
+}
+function renderSync(){
+  renderSyncLink();
+  const out = $("#syncOut"), raw = $("#syncIn").value.trim();
+  if (!raw){ out.innerHTML = `<p class="sub" style="margin:0">Paste your repo's progress.json and the comparison appears here.</p>`; return; }
+  let data;
+  try { data = JSON.parse(raw); } catch(e){ out.innerHTML = `<p class="formmsg">That isn't valid JSON. Copy the whole progress.json file, including the curly braces.</p>`; return; }
+  if (!data || !Array.isArray(data.checked)){ out.innerHTML = `<p class="formmsg">This JSON has no "checked" list. Make sure it's progress.json from your repo.</p>`; return; }
+  const repo = new Set(data.checked.filter(id => TASK12[id]));
+  const trk = new Set(Object.keys(state.checked).filter(id => TASK12[id] && state.checked[id]));
+  const repoOnly = [...repo].filter(id => !trk.has(id)).sort(idOrder);
+  const trkOnly = [...trk].filter(id => !repo.has(id)).sort(idOrder);
+  let pill;
+  if (!repoOnly.length && !trkOnly.length) pill = `<span class="pill ok">In sync</span><span class="sub" style="margin:0">${repo.size} tasks done on both sides</span>`;
+  else if (repoOnly.length && trkOnly.length) pill = `<span class="pill behind">Both sides have changes</span>`;
+  else if (repoOnly.length) pill = `<span class="pill behind">Tracker is behind by ${repoOnly.length}</span>`;
+  else pill = `<span class="pill behind">Repo is behind by ${trkOnly.length}</span>`;
+  let html = `<div class="syncstate">${pill}</div>`;
+  if (data.updated) html += `<p class="sub" style="margin:0">Repo snapshot from ${esc(String(data.updated))}. If you pushed since, refresh progress.json and paste again.</p>`;
+  if (TR.key !== "t12") html += `<p class="formmsg">The repo follows the 12-week plan. Switch to it at the top to compare.</p>`;
+  if (repoOnly.length){
+    html += `<div class="synchead">Done in the repo, not ticked here</div><ul class="difflist">${repoOnly.map(diffItem).join("")}</ul>
+      <div><button type="button" class="btn primary" id="syncTick" ${canWrite ? "" : "disabled"}>Tick ${repoOnly.length} in tracker</button></div>`;
+  }
+  if (trkOnly.length){
+    const cmd = "python scripts/apply_tracker.py " + trkOnly.join(" ");
+    html += `<div class="synchead">Ticked here, not yet in the repo</div><ul class="difflist">${trkOnly.map(diffItem).join("")}</ul>
+      <p class="sub" style="margin:0">In your repo folder, run this command, then commit and push. It ticks these boxes and rebuilds the progress table.</p>
+      <div class="codebox"><button type="button" class="btn" data-copy="syncCmd">Copy</button><pre id="syncCmd">${esc(cmd)}</pre></div>`;
+  }
+  out.innerHTML = html;
+  const b = $("#syncTick");
+  if (b) b.onclick = () => { repoOnly.forEach(id => { state.checked[id] = true; }); update(); schedule(); renderSync(); };
+}
+$("#syncIn").addEventListener("input", renderSync);
+let repoTimer = null;
+$("#syncRepo").addEventListener("input", e => {
+  if (!canWrite) return;
+  state.repo = e.target.value.trim(); renderSyncLink();
+  clearTimeout(repoTimer); repoTimer = setTimeout(schedule, 800);
+});
+
+/* ---------- Saving ---------- */
+let saveTimer = null, saving = false, dirty = false;
+function setSave(msg){ $("#saveState").textContent = msg; }
+function schedule(){
+  lsWrite();
+  if (mode !== "db"){ setSave("Saved in this browser"); return; }
+  dirty = true; setSave("Saving…");
+  clearTimeout(saveTimer); saveTimer = setTimeout(flush, 700);
+}
+async function flush(){
+  if (saving || !dirty) return;
+  saving = true; dirty = false;
+  try { await docRef.set(JSON.parse(JSON.stringify(state))); setSave("Saved to your account"); }
+  catch(e){
+    if (e && e.code === "invalid_argument"){ canWrite = false; setSave("View only"); update(); }
+    else if (e && e.code === "unavailable"){ dirty = true; setTimeout(flush, 1500 + Math.random() * 1000); setSave("Retrying save…"); }
+    else setSave("Couldn't save to your account; kept in this browser");
+  }
+  saving = false;
+  if (dirty) flush();
+}
+
+document.addEventListener("change", e => {
+  const id = e.target.dataset && e.target.dataset.task;
+  if (id && canWrite){
+    if (e.target.checked) state.checked[id] = true; else delete state.checked[id];
+    update(); schedule();
+  }
+  if (e.target.name === "capstone" && canWrite){ state.capstone = e.target.value; renderCapNote(); schedule(); }
+  if (e.target.id === "startDate" && e.target.value && canWrite){ state.start = e.target.value; update(); schedule(); }
+});
+let weekTouched = false;
+$("#lgWeek").addEventListener("change", () => { weekTouched = true; });
+$("#lgDate").value = iso(new Date());
+$("#logform").addEventListener("submit", e => {
+  e.preventDefault();
+  if (!canWrite) return;
+  const d = $("#lgDate").value, m = Number($("#lgMin").value), w = $("#lgWeek").value;
+  if (!d){ $("#lgMsg").textContent = "Pick the date you studied."; return; }
+  state.sessions.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), d, m, w, n: $("#lgNote").value.trim().slice(0, 200) });
+  $("#lgNote").value = ""; $("#lgMsg").textContent = "";
+  update(); schedule();
+});
+document.addEventListener("click", e => {
+  const del = e.target.closest && e.target.closest("[data-del]");
+  if (del && canWrite){ state.sessions = state.sessions.filter(x => x.id !== del.dataset.del); update(); schedule(); return; }
+  const cp = e.target.closest && e.target.closest("[data-copy]");
+  if (cp){
+    const pre = document.getElementById(cp.dataset.copy), txt = pre.textContent;
+    const done = () => { cp.textContent = "Copied"; setTimeout(() => cp.textContent = "Copy", 1500); };
+    const fallback = () => { const r = document.createRange(); r.selectNodeContents(pre); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); cp.textContent = "Selected, press Ctrl+C"; setTimeout(() => cp.textContent = "Copy", 2500); };
+    try { navigator.clipboard.writeText(txt).then(done, fallback); } catch(err){ fallback(); }
+  }
+});
+let proofTimer = null;
+document.addEventListener("input", e => {
+  const id = e.target.dataset && e.target.dataset.proofIn;
+  if (!id || !canWrite) return;
+  const v = e.target.value.trim();
+  if (v) state.proofs[id] = v; else delete state.proofs[id];
+  document.getElementById(id).querySelector("[data-pub]").hidden = !v;
+  $("#sProof").textContent = `${WEEKS.filter(w => state.proofs[w.id]).length} / ${WEEKS.length}`;
+  clearTimeout(proofTimer); proofTimer = setTimeout(schedule, 800);
+});
+let noteTimer = null;
+document.addEventListener("input", e => {
+  const id = e.target.dataset && e.target.dataset.note;
+  if (!id || !canWrite) return;
+  const v = e.target.value;
+  if (v) state.notes[id] = v; else delete state.notes[id];
+  clearTimeout(noteTimer); noteTimer = setTimeout(schedule, 800);
+});
+
+/* ---------- Boot ---------- */
+const local = lsRead();
+if (local) state = normalize(local);
+setTrack(state.track, false);
+setSave("Saved in this browser");
+
+(async () => {
+  if (!window.claude || !claude.use) return;
+  try {
+    db = await claude.use("db");
+    const user = await claude.use("user");
+    if (!db) return;
+    if (user){ const ce = await user.canEdit(); if (ce === false) canWrite = false; }
+    docRef = db.doc("progress/main");
+    mode = "db";
+    const snap = await docRef.get();
+    if (snap.exists){ state = normalize(JSON.parse(JSON.stringify(snap.data()))); }
+    else if (local && canWrite && (Object.keys(local.checked || {}).length || Object.keys(local.notes || {}).length || (local.sessions || []).length)){ dirty = true; flush(); }
+    setSave(canWrite ? "Saved to your account" : "View only");
+    setTrack(state.track, false);
+    docRef.onSnapshot(s => {
+      if (!s.exists || s.metadata.hasPendingWrites || saving || dirty) return;
+      const next = normalize(JSON.parse(JSON.stringify(s.data())));
+      const trackChanged = next.track !== TR.key;
+      state = next;
+      if (trackChanged) setTrack(state.track, false); else update();
+    }, () => {});
+  } catch(e){ mode = "local"; setSave("Saved in this browser"); }
+})();
+</script>
+
+
+</body></html>

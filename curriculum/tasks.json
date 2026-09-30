@@ -1,0 +1,2492 @@
+{
+  "plan": "Genesis to Capstone, 12 weeks x 10 h",
+  "start": "2026-09-28",
+  "schedule": {
+    "Tue": 120,
+    "Thu": 120,
+    "Fri": 90,
+    "Sat": 270
+  },
+  "weeks": [
+    {
+      "id": "x1",
+      "n": 1,
+      "title": "The mental model, keys and signatures → Project 0",
+      "goal": "Understand why hash-linking plus proof-of-work makes history expensive to rewrite, then add real ownership with ECDSA signatures and Merkle roots.",
+      "deliver": "pow_demo.py and Project 0 (toy_chain.py with a tamper test)",
+      "start": "2026-09-28",
+      "hours": 10,
+      "section": "Foundations: cryptography, Bitcoin and consensus",
+      "tasks": [
+        {
+          "id": "x1t1",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 30,
+          "text": "Watch 3Blue1Brown's bitcoin video end to end",
+          "due": "2026-09-29",
+          "output": false,
+          "links": [
+            {
+              "type": "video",
+              "label": "But how does bitcoin actually work?",
+              "url": "https://www.youtube.com/watch?v=bBC-nXj3Ng4"
+            }
+          ]
+        },
+        {
+          "id": "x1t2",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 45,
+          "text": "Click through all five pages of the blockchain demo: hash, block, blockchain, distributed, tokens",
+          "due": "2026-09-29",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "andersbrownworth.com/blockchain",
+              "url": "https://andersbrownworth.com/blockchain/"
+            }
+          ]
+        },
+        {
+          "id": "x1t3",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 45,
+          "text": "Read the Bitcoin whitepaper, sections 1–6. Don't worry about the math yet",
+          "due": "2026-09-29",
+          "output": false,
+          "links": [
+            {
+              "type": "paper",
+              "label": "bitcoin.pdf",
+              "url": "https://bitcoin.org/bitcoin.pdf"
+            }
+          ]
+        },
+        {
+          "id": "x1t4",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 30,
+          "text": "Create the blockchain-learning repo with a README and a /week01 folder",
+          "due": "2026-10-02",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x1t5",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 90,
+          "text": "Using Python's hashlib, find a nonce that gives 4 leading hex zeros, then time 5 and 6 zeros",
+          "due": "2026-10-03",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "hashlib docs",
+              "url": "https://docs.python.org/3/library/hashlib.html"
+            }
+          ]
+        },
+        {
+          "id": "x1t6",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 30,
+          "text": "Log: explain in five sentences why editing one block invalidates every block after it",
+          "due": "2026-10-03",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x1t7",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 45,
+          "text": "Read Cloudflare's primer on elliptic-curve cryptography",
+          "due": "2026-10-01",
+          "output": false,
+          "links": [
+            {
+              "type": "article",
+              "label": "A (relatively easy to understand) primer on ECC",
+              "url": "https://blog.cloudflare.com/a-relatively-easy-to-understand-primer-on-elliptic-curve-cryptography/"
+            }
+          ]
+        },
+        {
+          "id": "x1t8",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 45,
+          "text": "Princeton textbook, chapter 1: hash pointers, Merkle trees, digital signatures",
+          "due": "2026-10-01",
+          "output": false,
+          "links": [
+            {
+              "type": "book",
+              "label": "Princeton book PDF",
+              "url": "https://d28rh4a8wq0iu5.cloudfront.net/bitcointech/readings/princeton_bitcoin_book.pdf"
+            }
+          ]
+        },
+        {
+          "id": "x1t9",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 150,
+          "text": "Build Project 0: Block class, SHA-256 linking, adjustable-difficulty PoW, transactions signed with the ecdsa library (SECP256k1), a Merkle root per block, and validate_chain()",
+          "due": "2026-10-03",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "python-ecdsa",
+              "url": "https://pypi.org/project/ecdsa/"
+            }
+          ]
+        },
+        {
+          "id": "x1t10",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 30,
+          "text": "Tamper test: change one transaction in block 2 and confirm validation fails at the right block",
+          "due": "2026-10-03",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x1t11",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 15,
+          "text": "Log: what a signature proves, and what it does not",
+          "due": "2026-10-03",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x1t12",
+          "kind": "C",
+          "kindName": "Crypto",
+          "min": 30,
+          "text": "The three security properties of hash functions (preimage, second-preimage and collision resistance), and which one proof-of-work relies on",
+          "due": "2026-10-01",
+          "output": false,
+          "links": [
+            {
+              "type": "book",
+              "label": "A Graduate Course in Applied Cryptography (Boneh & Shoup, free)",
+              "url": "https://toc.cryptobook.us/"
+            },
+            {
+              "type": "course",
+              "label": "Cryptography I (Dan Boneh, Coursera)",
+              "url": "https://www.coursera.org/learn/crypto"
+            }
+          ]
+        },
+        {
+          "id": "x1t13",
+          "kind": "A",
+          "kindName": "AI",
+          "min": 15,
+          "text": "Ask an LLM to explain proof-of-work, then use the whitepaper to find one thing it got wrong or oversimplified. Note it in your log",
+          "due": "2026-10-02",
+          "output": false,
+          "links": []
+        }
+      ]
+    },
+    {
+      "id": "x2",
+      "n": 2,
+      "title": "Bitcoin: UTXOs, raw transactions and mining",
+      "goal": "Run your own node, see that Bitcoin has no balances, and build and decode a transaction by hand.",
+      "deliver": "A regtest node, a UTXO version of your toy chain, and raw_tx.py with a decoded transaction",
+      "start": "2026-10-05",
+      "hours": 10,
+      "section": "Foundations: cryptography, Bitcoin and consensus",
+      "tasks": [
+        {
+          "id": "x2t1",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 60,
+          "text": "Mastering Bitcoin: the 'Introduction' and 'How Bitcoin Works' chapters",
+          "due": "2026-10-06",
+          "output": false,
+          "links": [
+            {
+              "type": "book",
+              "label": "bitcoinbook on GitHub",
+              "url": "https://github.com/bitcoinbook/bitcoinbook"
+            }
+          ]
+        },
+        {
+          "id": "x2t2",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 45,
+          "text": "learnmeabitcoin: the transaction and UTXO pages",
+          "due": "2026-10-06",
+          "output": false,
+          "links": [
+            {
+              "type": "article",
+              "label": "learnmeabitcoin technical",
+              "url": "https://learnmeabitcoin.com/technical/"
+            }
+          ]
+        },
+        {
+          "id": "x2t3",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 60,
+          "text": "Install Bitcoin Core, start it with -regtest, mine 101 blocks, send coins to a second address with bitcoin-cli",
+          "due": "2026-10-10",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "Bitcoin Core download",
+              "url": "https://bitcoincore.org/en/download/"
+            },
+            {
+              "type": "docs",
+              "label": "Bitcoin developer examples (regtest)",
+              "url": "https://developer.bitcoin.org/examples/testing.html"
+            }
+          ]
+        },
+        {
+          "id": "x2t4",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 60,
+          "text": "Change your toy chain to UTXOs: inputs reference earlier outputs, and double spends are rejected",
+          "due": "2026-10-10",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x2t5",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 45,
+          "text": "Mastering Bitcoin: the 'Keys and Addresses' and 'Transactions' chapters",
+          "due": "2026-10-08",
+          "output": false,
+          "links": [
+            {
+              "type": "book",
+              "label": "bitcoinbook on GitHub",
+              "url": "https://github.com/bitcoinbook/bitcoinbook"
+            }
+          ]
+        },
+        {
+          "id": "x2t6",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 30,
+          "text": "learnmeabitcoin: Script, P2PKH and P2WPKH",
+          "due": "2026-10-08",
+          "output": false,
+          "links": [
+            {
+              "type": "article",
+              "label": "learnmeabitcoin technical",
+              "url": "https://learnmeabitcoin.com/technical/"
+            }
+          ]
+        },
+        {
+          "id": "x2t7",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 105,
+          "text": "With python-bitcoinlib, build, sign and broadcast a raw transaction on regtest, then run decoderawtransaction on it",
+          "due": "2026-10-10",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "python-bitcoinlib",
+              "url": "https://github.com/petertodd/python-bitcoinlib"
+            }
+          ]
+        },
+        {
+          "id": "x2t8",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 45,
+          "text": "Mastering Bitcoin: the mining and consensus chapter",
+          "due": "2026-10-08",
+          "output": false,
+          "links": [
+            {
+              "type": "book",
+              "label": "bitcoinbook on GitHub",
+              "url": "https://github.com/bitcoinbook/bitcoinbook"
+            }
+          ]
+        },
+        {
+          "id": "x2t9",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 30,
+          "text": "Re-read the whitepaper, sections 7–11, including the attacker probability calculation",
+          "due": "2026-10-09",
+          "output": false,
+          "links": [
+            {
+              "type": "paper",
+              "label": "bitcoin.pdf",
+              "url": "https://bitcoin.org/bitcoin.pdf"
+            }
+          ]
+        },
+        {
+          "id": "x2t10",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 15,
+          "text": "Log: what the locking and unlocking scripts did in your transaction, and why a 51% attacker still can't steal coins",
+          "due": "2026-10-10",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x2t11",
+          "kind": "C",
+          "kindName": "Crypto",
+          "min": 30,
+          "text": "Schnorr signatures and Taproot. Why Bitcoin added them alongside ECDSA (linearity, key aggregation)",
+          "due": "2026-10-09",
+          "output": false,
+          "links": [
+            {
+              "type": "spec",
+              "label": "BIP-340: Schnorr signatures",
+              "url": "https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki"
+            },
+            {
+              "type": "article",
+              "label": "learnmeabitcoin: technical guide",
+              "url": "https://learnmeabitcoin.com/technical/"
+            }
+          ]
+        },
+        {
+          "id": "x2t12",
+          "kind": "E",
+          "kindName": "Explain",
+          "min": 45,
+          "text": "Explainer #1: write \"I built a blockchain from scratch\" in blog/ (600–900 words, weeks 1–2). Optional: record a 5-minute video teaching it and link it in the post",
+          "due": "2026-10-10",
+          "output": true,
+          "links": []
+        },
+        {
+          "id": "x2t13",
+          "kind": "P",
+          "kindName": "Apps",
+          "min": 30,
+          "text": "Cryptocurrencies as money: Bitcoin's fixed supply and halvings, why stablecoins exist, and what a CBDC is. Look up the eNaira and one other CBDC on the tracker and note why adoption differed",
+          "due": "2026-10-09",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "ethereum.org: stablecoins",
+              "url": "https://ethereum.org/en/stablecoins/"
+            },
+            {
+              "type": "tool",
+              "label": "Atlantic Council CBDC tracker",
+              "url": "https://www.atlanticcouncil.org/cbdctracker/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "x3",
+      "n": 3,
+      "title": "Consensus, attacks and proof-of-stake → Project 2",
+      "goal": "Learn the problem blockchains solve, then watch forks, partitions and reorgs happen in your own network simulation.",
+      "deliver": "Project 2: a multi-node simulation with gossip, fork resolution, a partition that heals, and stake-weighted proposers",
+      "start": "2026-10-12",
+      "hours": 10,
+      "section": "Foundations: cryptography, Bitcoin and consensus",
+      "tasks": [
+        {
+          "id": "x3t1",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 75,
+          "text": "Roughgarden: Lecture 1 (overview, state machine replication, consistency and liveness)",
+          "due": "2026-10-13",
+          "output": false,
+          "links": [
+            {
+              "type": "video",
+              "label": "Foundations of Blockchains playlist",
+              "url": "https://www.youtube.com/playlist?list=PLEGCF-WLh2RLOHv_xUGLqRts_9JxrckiA"
+            }
+          ]
+        },
+        {
+          "id": "x3t2",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 30,
+          "text": "Decentralized Thoughts on Nakamoto consensus",
+          "due": "2026-10-13",
+          "output": false,
+          "links": [
+            {
+              "type": "article",
+              "label": "Nakamoto's longest-chain-wins protocol",
+              "url": "https://decentralizedthoughts.github.io/2021-10-15-Nakamoto-Consensus/"
+            }
+          ]
+        },
+        {
+          "id": "x3t3",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 45,
+          "text": "Lamport, Shostak and Pease: The Byzantine Generals Problem, sections 1–3",
+          "due": "2026-10-15",
+          "output": false,
+          "links": [
+            {
+              "type": "paper",
+              "label": "byz.pdf",
+              "url": "https://lamport.azurewebsites.net/pubs/byz.pdf"
+            }
+          ]
+        },
+        {
+          "id": "x3t4",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 95,
+          "text": "Build a simulation of 4 nodes that mine and gossip blocks with random network delays and resolve forks by the longest chain",
+          "due": "2026-10-17",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x3t5",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 30,
+          "text": "Log: how often did forks happen, and how did delay change that?",
+          "due": "2026-10-17",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x3t6",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 60,
+          "text": "Roughgarden: the lectures on selfish mining and proof-of-stake sybil resistance",
+          "due": "2026-10-15",
+          "output": false,
+          "links": [
+            {
+              "type": "video",
+              "label": "Foundations of Blockchains playlist",
+              "url": "https://www.youtube.com/playlist?list=PLEGCF-WLh2RLOHv_xUGLqRts_9JxrckiA"
+            }
+          ]
+        },
+        {
+          "id": "x3t7",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 45,
+          "text": "ethereum.org: proof-of-stake and Gasper",
+          "due": "2026-10-16",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "Proof-of-stake",
+              "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
+            },
+            {
+              "type": "docs",
+              "label": "Gasper",
+              "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/gasper/"
+            }
+          ]
+        },
+        {
+          "id": "x3t8",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 30,
+          "text": "Skim Eyal and Sirer, Majority is not Enough (selfish mining)",
+          "due": "2026-10-16",
+          "output": false,
+          "links": [
+            {
+              "type": "paper",
+              "label": "Selfish mining paper",
+              "url": "https://www.cs.cornell.edu/~ie53/publications/btcProcFC.pdf"
+            }
+          ]
+        },
+        {
+          "id": "x3t9",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 110,
+          "text": "Split your network into two halves for 20 blocks, heal it, and log the reorg. Then add stake-weighted proposer selection",
+          "due": "2026-10-17",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x3t10",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 30,
+          "text": "Log: a table comparing PoW and PoS on security, finality, energy and who can participate",
+          "due": "2026-10-17",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x3t11",
+          "kind": "C",
+          "kindName": "Crypto",
+          "min": 30,
+          "text": "BLS signature aggregation and VRFs. How proof-of-stake compresses thousands of validator votes and picks proposers fairly",
+          "due": "2026-10-16",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "ethereum.org: proof-of-stake keys (BLS)",
+              "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/keys/"
+            },
+            {
+              "type": "book",
+              "label": "A Graduate Course in Applied Cryptography (Boneh & Shoup, free)",
+              "url": "https://toc.cryptobook.us/"
+            }
+          ]
+        },
+        {
+          "id": "x3t12",
+          "kind": "P",
+          "kindName": "Apps",
+          "min": 20,
+          "text": "How cryptocurrencies change their rules: read about Bitcoin's block-size dispute and Ethereum's DAO fork. Who decided, and what happened to people who disagreed?",
+          "due": "2026-10-17",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "ethereum.org: history of Ethereum",
+              "url": "https://ethereum.org/en/history/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "x4",
+      "n": 4,
+      "title": "The Ethereum model and Solidity fluency",
+      "goal": "Understand accounts, gas and the EVM, deploy your first contract to Sepolia, and get comfortable writing Solidity.",
+      "deliver": "SimpleStorage on Sepolia and five small contracts in /week04",
+      "start": "2026-10-19",
+      "hours": 10,
+      "section": "Building on Ethereum",
+      "tasks": [
+        {
+          "id": "x4t1",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 45,
+          "text": "Read the Ethereum whitepaper",
+          "due": "2026-10-20",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "ethereum.org/whitepaper",
+              "url": "https://ethereum.org/en/whitepaper/"
+            }
+          ]
+        },
+        {
+          "id": "x4t2",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 60,
+          "text": "ethereum.org docs: accounts, transactions, gas and fees, the EVM",
+          "due": "2026-10-20",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "Ethereum developer docs",
+              "url": "https://ethereum.org/en/developers/docs/"
+            }
+          ]
+        },
+        {
+          "id": "x4t3",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 90,
+          "text": "Cyfrin Updraft: Blockchain Basics, then the first Remix lessons of Solidity Smart Contract Development",
+          "due": "2026-10-24",
+          "output": false,
+          "links": [
+            {
+              "type": "course",
+              "label": "Blockchain Basics",
+              "url": "https://updraft.cyfrin.io/courses/blockchain-basics"
+            },
+            {
+              "type": "course",
+              "label": "Updraft course list",
+              "url": "https://updraft.cyfrin.io/courses"
+            },
+            {
+              "type": "tool",
+              "label": "Remix IDE",
+              "url": "https://remix.ethereum.org/"
+            }
+          ]
+        },
+        {
+          "id": "x4t4",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 30,
+          "text": "Set up a wallet in a separate browser profile, get Sepolia ETH from a faucet, deploy SimpleStorage",
+          "due": "2026-10-24",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "Google Cloud Sepolia faucet",
+              "url": "https://cloud.google.com/application/web3/faucet/ethereum/sepolia"
+            }
+          ]
+        },
+        {
+          "id": "x4t5",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 30,
+          "text": "Log: the difference between a Bitcoin UTXO and an Ethereum account",
+          "due": "2026-10-24",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x4t6",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 75,
+          "text": "Work through the first ~25 Solidity by Example pages, running each in Remix",
+          "due": "2026-10-22",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "solidity-by-example.org",
+              "url": "https://solidity-by-example.org/"
+            }
+          ]
+        },
+        {
+          "id": "x4t7",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 70,
+          "text": "Updraft: continue the Solidity course (the FundMe section)",
+          "due": "2026-10-23",
+          "output": false,
+          "links": [
+            {
+              "type": "course",
+              "label": "Updraft courses",
+              "url": "https://updraft.cyfrin.io/courses"
+            }
+          ]
+        },
+        {
+          "id": "x4t8",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 75,
+          "text": "Write 5 small contracts without looking: a counter, a whitelist, a vault, a voting contract, a timelock",
+          "due": "2026-10-24",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x4t9",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 30,
+          "text": "Log: what surprised you about gas costs",
+          "due": "2026-10-24",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x4t10",
+          "kind": "C",
+          "kindName": "Crypto",
+          "min": 20,
+          "text": "Keccak-256 vs. SHA-3, and how an Ethereum address is derived from a public key. Derive one yourself in Python",
+          "due": "2026-10-23",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "ethereum.org: accounts",
+              "url": "https://ethereum.org/en/developers/docs/accounts/"
+            }
+          ]
+        },
+        {
+          "id": "x4t11",
+          "kind": "E",
+          "kindName": "Explain",
+          "min": 45,
+          "text": "Explainer #2: write \"How strangers agree: consensus in plain words\" in blog/ (600–900 words, weeks 3–4). Optional: record a 5-minute video teaching it and link it in the post",
+          "due": "2026-10-24",
+          "output": true,
+          "links": []
+        },
+        {
+          "id": "x4t12",
+          "kind": "P",
+          "kindName": "Apps",
+          "min": 30,
+          "text": "Exchanges and wallets: custodial vs. self-custody, centralised exchanges vs. DEXs, and what the FTX collapse showed about 'not your keys, not your coins'",
+          "due": "2026-10-23",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "ethereum.org: wallets",
+              "url": "https://ethereum.org/en/wallets/"
+            },
+            {
+              "type": "docs",
+              "label": "ethereum.org: DeFi",
+              "url": "https://ethereum.org/en/defi/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "x5",
+      "n": 5,
+      "title": "Foundry and your ERC-20 → Project 3a",
+      "goal": "Move to a real toolchain, write a token from the spec, fuzz it, deploy it and verify it.",
+      "deliver": "Project 3a: an ERC-20 with unit and fuzz tests, verified on Sepolia Etherscan",
+      "start": "2026-10-26",
+      "hours": 10.75,
+      "section": "Building on Ethereum",
+      "tasks": [
+        {
+          "id": "x5t1",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 45,
+          "text": "Foundry: getting started, then forge test basics. Install the pinned version the repo uses: foundryup --install v1.5.1 (see toolchain.env)",
+          "due": "2026-10-27",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "Foundry getting started",
+              "url": "https://www.getfoundry.sh/introduction/getting-started"
+            }
+          ]
+        },
+        {
+          "id": "x5t2",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 60,
+          "text": "Updraft Foundry Fundamentals: the first section",
+          "due": "2026-10-27",
+          "output": false,
+          "links": [
+            {
+              "type": "course",
+              "label": "Foundry Fundamentals",
+              "url": "https://updraft.cyfrin.io/courses/foundry"
+            }
+          ]
+        },
+        {
+          "id": "x5t3",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 120,
+          "text": "Write an ERC-20 by reading the spec only. Test transfer, approve, transferFrom and the failure cases",
+          "due": "2026-10-31",
+          "output": false,
+          "links": [
+            {
+              "type": "spec",
+              "label": "EIP-20",
+              "url": "https://eips.ethereum.org/EIPS/eip-20"
+            }
+          ]
+        },
+        {
+          "id": "x5t4",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 30,
+          "text": "Log: what the allowance pattern protects, and its known approval race",
+          "due": "2026-10-31",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x5t5",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 20,
+          "text": "Compare your token with OpenZeppelin's ERC20 source",
+          "due": "2026-10-29",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "OpenZeppelin Contracts",
+              "url": "https://docs.openzeppelin.com/contracts/"
+            },
+            {
+              "type": "tool",
+              "label": "OpenZeppelin Wizard",
+              "url": "https://wizard.openzeppelin.com/"
+            }
+          ]
+        },
+        {
+          "id": "x5t6",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 20,
+          "text": "Foundry docs: fuzz testing and forge scripts",
+          "due": "2026-10-29",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "Foundry guides",
+              "url": "https://www.getfoundry.sh/guides"
+            }
+          ]
+        },
+        {
+          "id": "x5t7",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 150,
+          "text": "Add fuzz tests, deploy with forge script to Sepolia, verify the contract on Etherscan",
+          "due": "2026-10-31",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "Sepolia Etherscan",
+              "url": "https://sepolia.etherscan.io/"
+            }
+          ]
+        },
+        {
+          "id": "x5t8",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 15,
+          "text": "Updraft Foundry Fundamentals: continue",
+          "due": "2026-10-29",
+          "output": false,
+          "links": [
+            {
+              "type": "course",
+              "label": "Foundry Fundamentals",
+              "url": "https://updraft.cyfrin.io/courses/foundry"
+            }
+          ]
+        },
+        {
+          "id": "x5t9",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 30,
+          "text": "Log: one bug the fuzzer found, or why it found none",
+          "due": "2026-10-31",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x5t10",
+          "kind": "A",
+          "kindName": "AI",
+          "min": 30,
+          "text": "Have an LLM write fuzz tests for your ERC-20, then check which ones actually test something. Keep the good ones and note the useless ones in your log",
+          "due": "2026-10-29",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x5t11",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 30,
+          "text": "Capstone C: turn your ERC-20 into TestUSD, the stablecoin for the payment rail. Use 6 decimals, add a capped faucet mint for testers, write tests, and keep it in trust-stack/ (the shared capstone project)",
+          "due": "2026-10-31",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x5t12",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 20,
+          "text": "Demo stage 1: add forge-std as a submodule (see trust-stack/README.md), write script/demo/01_TestUSD.s.sol from the template in script/demo/README.md, run make demo, push, and check the Trust stack run on GitHub shows stage 01 passed",
+          "due": "2026-10-31",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "Foundry: scripting",
+              "url": "https://www.getfoundry.sh/guides"
+            }
+          ]
+        },
+        {
+          "id": "x5t13",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 15,
+          "text": "Testing setup: run python scripts/set_github_user.py <your-username>, open TESTING.md, and start the rules-to-tests table with TestUSD's tests. Check coverage and Slither pass in CI",
+          "due": "2026-10-31",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "Slither",
+              "url": "https://github.com/crytic/slither"
+            }
+          ]
+        },
+        {
+          "id": "x5t14",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 15,
+          "text": "Docker check (optional, see DOCKER.md): install Docker Desktop, then from trust-stack/ run make docker-test and make docker-demo. They should match your normal run, and the docker job in the Trust stack run on GitHub should be green",
+          "due": "2026-10-31",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "Docker: get started",
+              "url": "https://docs.docker.com/get-started/get-docker/"
+            }
+          ]
+        },
+        {
+          "id": "x5t15",
+          "kind": "P",
+          "kindName": "Apps",
+          "min": 45,
+          "text": "Stablecoins I, how they hold $1: fiat-backed (USDC, USDT) and what their reserve reports actually show; crypto-collateralised (DAI); algorithmic. Then two failures: TerraUST's collapse (May 2022) and USDC's brief depeg when Silicon Valley Bank failed (March 2023). Note in your log which design TestUSD copies, and what would have to back it for real",
+          "due": "2026-10-29",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "ethereum.org: stablecoins",
+              "url": "https://ethereum.org/en/stablecoins/"
+            },
+            {
+              "type": "docs",
+              "label": "Circle: USDC transparency",
+              "url": "https://www.circle.com/transparency"
+            },
+            {
+              "type": "docs",
+              "label": "Tether: transparency",
+              "url": "https://tether.to/en/transparency/"
+            },
+            {
+              "type": "article",
+              "label": "Terra (blockchain) and the UST collapse",
+              "url": "https://en.wikipedia.org/wiki/Terra_(blockchain)"
+            },
+            {
+              "type": "paper",
+              "label": "Federal Reserve: SVB's failure and its impact on stablecoins",
+              "url": "https://www.federalreserve.gov/econres/notes/feds-notes/in-the-shadow-of-bank-run-lessons-from-the-silicon-valley-bank-failure-and-its-impact-on-stablecoins-20251217.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "x6",
+      "n": 6,
+      "title": "Escrow and an on-chain NFT → Projects 3b and 3c",
+      "goal": "Write your first contract that holds value, then an NFT whose image lives entirely on-chain. End with frontend prep for next week.",
+      "deliver": "Project 3b (Escrow.sol) and Project 3c (on-chain SVG NFT)",
+      "start": "2026-11-02",
+      "hours": 10,
+      "section": "Building on Ethereum",
+      "tasks": [
+        {
+          "id": "x6t1",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 20,
+          "text": "Solidity docs: Security Considerations (read before writing code that holds money)",
+          "due": "2026-11-03",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "Security considerations",
+              "url": "https://docs.soliditylang.org/en/latest/security-considerations.html"
+            }
+          ]
+        },
+        {
+          "id": "x6t2",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 20,
+          "text": "Solidity by Example: Sending Ether, Payable, and the Re-entrancy hack",
+          "due": "2026-11-03",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "solidity-by-example.org",
+              "url": "https://solidity-by-example.org/"
+            }
+          ]
+        },
+        {
+          "id": "x6t3",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 135,
+          "text": "Build Escrow: deposit, release by buyer or arbiter, refund after a deadline, dispute. Emit events, use checks-effects-interactions",
+          "due": "2026-11-06",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x6t4",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 30,
+          "text": "Log: every state the escrow can be in, as a small state diagram",
+          "due": "2026-11-07",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x6t5",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 20,
+          "text": "Read EIP-721",
+          "due": "2026-11-03",
+          "output": false,
+          "links": [
+            {
+              "type": "spec",
+              "label": "EIP-721",
+              "url": "https://eips.ethereum.org/EIPS/eip-721"
+            }
+          ]
+        },
+        {
+          "id": "x6t6",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 15,
+          "text": "OpenZeppelin ERC-721 docs and the Wizard",
+          "due": "2026-11-03",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "OpenZeppelin Contracts",
+              "url": "https://docs.openzeppelin.com/contracts/"
+            },
+            {
+              "type": "tool",
+              "label": "Wizard",
+              "url": "https://wizard.openzeppelin.com/"
+            }
+          ]
+        },
+        {
+          "id": "x6t7",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 80,
+          "text": "Build an NFT whose tokenURI returns base64 JSON with an SVG generated in Solidity",
+          "due": "2026-11-07",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x6t8",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 20,
+          "text": "Log: what an NFT actually owns, and what lives off-chain in most NFTs",
+          "due": "2026-11-07",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x6t9",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 20,
+          "text": "viem: getting started, reading and writing contracts",
+          "due": "2026-11-03",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "viem.sh",
+              "url": "https://viem.sh/"
+            }
+          ]
+        },
+        {
+          "id": "x6t10",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 10,
+          "text": "Scaffold-ETH 2 docs: hooks and deploying",
+          "due": "2026-11-03",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "docs.scaffoldeth.io",
+              "url": "https://docs.scaffoldeth.io/"
+            },
+            {
+              "type": "docs",
+              "label": "wagmi",
+              "url": "https://wagmi.sh/"
+            }
+          ]
+        },
+        {
+          "id": "x6t11",
+          "kind": "C",
+          "kindName": "Crypto",
+          "min": 30,
+          "text": "EIP-712 typed-data signatures and replay protection. Sign an escrow release off-chain and verify it in Solidity",
+          "due": "2026-11-05",
+          "output": false,
+          "links": [
+            {
+              "type": "spec",
+              "label": "EIP-712",
+              "url": "https://eips.ethereum.org/EIPS/eip-712"
+            },
+            {
+              "type": "docs",
+              "label": "OpenZeppelin EIP712 utilities",
+              "url": "https://docs.openzeppelin.com/contracts/5.x/api/utils#EIP712"
+            }
+          ]
+        },
+        {
+          "id": "x6t12",
+          "kind": "E",
+          "kindName": "Explain",
+          "min": 45,
+          "text": "Explainer #3: write \"Replacing a middleman with an escrow contract, and what it can't replace\" in blog/ (600–900 words, weeks 5–6). Optional: record a 5-minute video teaching it and link it in the post",
+          "due": "2026-11-07",
+          "output": true,
+          "links": []
+        },
+        {
+          "id": "x6t13",
+          "kind": "P",
+          "kindName": "Apps",
+          "min": 30,
+          "text": "Marketplaces: how on-chain marketplaces work (listings, signed orders, escrow, royalties, disputes). Skim the Seaport contracts and sketch how your escrow and NFT could become a small marketplace",
+          "due": "2026-11-05",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "Seaport (OpenSea's marketplace protocol)",
+              "url": "https://github.com/ProjectOpenSea/seaport"
+            }
+          ]
+        },
+        {
+          "id": "x6t14",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 15,
+          "text": "Write trust-stack/README.md: the four parts (A provenance, B marketplace, C payment rail, D credentials) in your own words, how they connect, and what 'working and tested' means for each",
+          "due": "2026-11-07",
+          "output": true,
+          "links": []
+        },
+        {
+          "id": "x6t15",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 30,
+          "text": "Capstone B: copy your escrow into trust-stack/ as Marketplace.sol. list(batchId, price) is allowed only for sellers with a valid credential (check the mock for now), buyers pay in TestUSD into escrow, and completed trades count as reputation. Test it against the mocks",
+          "due": "2026-11-07",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x6t16",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 30,
+          "text": "Integration design: write trust-stack/INTERFACES.md and the Solidity interfaces the parts talk through (ICredentialRegistry.isValid(account, role), IProvenance.batchStatus(batchId), IMarketplace.list(batchId, price)), plus mock versions of D and A so the marketplace can be tested against them now",
+          "due": "2026-11-07",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x6t17",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 15,
+          "text": "Traceability design: in trust-stack/POLICY.md, define a batch's journey (harvested → packed → shipped → received), which role may sign each step (farmer, cooperative, transporter, inspector, buyer), and one product policy, e.g. tomatoes: 2–8 °C, at most 48 h in transit, inspection required",
+          "due": "2026-11-07",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x6t18",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 20,
+          "text": "Rules to tests: for every rule in your POLICY.md, add a row to TESTING.md with a named test (e.g. test_RevertWhen_TransporterSignsInspection) and write the empty test so CI shows what's still missing",
+          "due": "2026-11-07",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x6t19",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 15,
+          "text": "Demo stages 2–3 with the mocks: issue roles and list batch 1, so make demo now runs stages 01–03",
+          "due": "2026-11-07",
+          "output": false,
+          "links": []
+        }
+      ]
+    },
+    {
+      "id": "x7",
+      "n": 7,
+      "title": "A dApp frontend, then start breaking contracts → Project 3d",
+      "goal": "Ship a usable escrow frontend, then learn the common vulnerability classes by exploiting them.",
+      "deliver": "Project 3d (escrow dApp with a 2-minute demo) and Ethernaut levels 0–5",
+      "start": "2026-11-09",
+      "hours": 10,
+      "section": "Frontend and security",
+      "tasks": [
+        {
+          "id": "x7t1",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 150,
+          "text": "Build the frontend: connect wallet, create an escrow, release or refund, and list events",
+          "due": "2026-11-13",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x7t2",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 30,
+          "text": "Record a 2-minute demo and write the log",
+          "due": "2026-11-14",
+          "output": true,
+          "links": []
+        },
+        {
+          "id": "x7t3",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 45,
+          "text": "Updraft Smart Contract Security: the introduction section",
+          "due": "2026-11-10",
+          "output": false,
+          "links": [
+            {
+              "type": "course",
+              "label": "Smart Contract Security",
+              "url": "https://updraft.cyfrin.io/courses/security"
+            }
+          ]
+        },
+        {
+          "id": "x7t4",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 20,
+          "text": "Read two rekt.news post-mortems: one re-entrancy, one oracle manipulation",
+          "due": "2026-11-10",
+          "output": false,
+          "links": [
+            {
+              "type": "article",
+              "label": "rekt.news",
+              "url": "https://rekt.news/"
+            }
+          ]
+        },
+        {
+          "id": "x7t5",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 105,
+          "text": "Ethernaut levels 0–5",
+          "due": "2026-11-14",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "ethernaut.openzeppelin.com",
+              "url": "https://ethernaut.openzeppelin.com/"
+            }
+          ]
+        },
+        {
+          "id": "x7t6",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 30,
+          "text": "Log: for each level, the bug in one line",
+          "due": "2026-11-14",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x7t7",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 60,
+          "text": "Install Slither and run it on your ERC-20, Escrow and NFT",
+          "due": "2026-11-14",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "Slither",
+              "url": "https://github.com/crytic/slither"
+            }
+          ]
+        },
+        {
+          "id": "x7t8",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 30,
+          "text": "Foundry docs: invariant testing",
+          "due": "2026-11-10",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "Foundry guides",
+              "url": "https://www.getfoundry.sh/guides"
+            }
+          ]
+        },
+        {
+          "id": "x7t9",
+          "kind": "A",
+          "kindName": "AI",
+          "min": 30,
+          "text": "Give an LLM one vulnerable Ethernaut contract without the hint. Compare its answer with what you found yourself",
+          "due": "2026-11-12",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "Ethernaut",
+              "url": "https://ethernaut.openzeppelin.com/"
+            }
+          ]
+        },
+        {
+          "id": "x7t10",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 30,
+          "text": "Capstone B: point your escrow frontend at Marketplace.sol so you can list, buy and release from the browser",
+          "due": "2026-11-14",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x7t11",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 30,
+          "text": "Integration test v1 (test/Integration.t.sol): mock credential → list → pay in TestUSD → release, passing in CI alongside the demo",
+          "due": "2026-11-14",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x7t12",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 20,
+          "text": "Demo stage 4 (payment into escrow). Then open your repo in GitHub Codespaces from the README badge and run make demo there, to confirm a stranger can run it with no setup",
+          "due": "2026-11-14",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x7t13",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 20,
+          "text": "Invariant tests: escrow always holds what it owes, and TestUSD's total supply equals the sum of balances (invariant_EscrowSolvent, invariant_SupplyEqualsBalances)",
+          "due": "2026-11-14",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "Foundry guides (invariant testing)",
+              "url": "https://www.getfoundry.sh/guides"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "x8",
+      "n": 8,
+      "title": "Deeper exploits and your own audit → Project 4",
+      "goal": "Solve harder levels, then treat your earlier contracts as someone else's and write a real findings report.",
+      "deliver": "Project 4: AUDIT.md with severity-ranked findings, invariant tests and fixes",
+      "start": "2026-11-16",
+      "hours": 10,
+      "section": "Frontend and security",
+      "tasks": [
+        {
+          "id": "x8t1",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 135,
+          "text": "Ethernaut: Re-entrancy, Elevator, Privacy and one more level of your choice",
+          "due": "2026-11-19",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "Ethernaut",
+              "url": "https://ethernaut.openzeppelin.com/"
+            }
+          ]
+        },
+        {
+          "id": "x8t2",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 45,
+          "text": "ConsenSys best practices: the attacks section",
+          "due": "2026-11-17",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "Smart contract best practices",
+              "url": "https://consensys.github.io/smart-contract-best-practices/"
+            }
+          ]
+        },
+        {
+          "id": "x8t3",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 30,
+          "text": "Log: which Slither findings were real and which were noise",
+          "due": "2026-11-21",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x8t4",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 60,
+          "text": "Damn Vulnerable DeFi: challenge 1 (Unstoppable)",
+          "due": "2026-11-20",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "damnvulnerabledefi.xyz",
+              "url": "https://www.damnvulnerabledefi.xyz/"
+            }
+          ]
+        },
+        {
+          "id": "x8t5",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 165,
+          "text": "Audit your Escrow, ERC-20 and NFT: write each finding (severity, description, fix), add invariant tests, and fix the code",
+          "due": "2026-11-21",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x8t6",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 30,
+          "text": "Log: the one mistake you'll never make again",
+          "due": "2026-11-21",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x8t7",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 15,
+          "text": "Read one more rekt.news post-mortem and match it to a bug class you now know",
+          "due": "2026-11-17",
+          "output": false,
+          "links": [
+            {
+              "type": "article",
+              "label": "rekt.news",
+              "url": "https://rekt.news/"
+            }
+          ]
+        },
+        {
+          "id": "x8t8",
+          "kind": "A",
+          "kindName": "AI",
+          "min": 30,
+          "text": "AI-assisted audit: run an LLM over your escrow and compare its findings with Slither's and your own. Count true and false positives in AUDIT.md",
+          "due": "2026-11-17",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x8t9",
+          "kind": "E",
+          "kindName": "Explain",
+          "min": 45,
+          "text": "Explainer #4: write \"What I learned auditing my own smart contracts\" in blog/ (600–900 words, weeks 7–8). Optional: record a 5-minute video teaching it and link it in the post",
+          "due": "2026-11-21",
+          "output": true,
+          "links": []
+        },
+        {
+          "id": "x8t10",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 15,
+          "text": "Add the integration to your audit: what breaks if a mock is swapped for a malicious contract, or a batch id is reused? Note findings in AUDIT.md",
+          "due": "2026-11-21",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x8t11",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 30,
+          "text": "Attack tests in test/Attacks.t.sol: replayed signature, reused batch id, re-entrancy on release, a stranger releasing escrow. Each must fail the way TESTING.md says",
+          "due": "2026-11-21",
+          "output": false,
+          "links": []
+        }
+      ]
+    },
+    {
+      "id": "x9",
+      "n": 9,
+      "title": "AMMs, oracles, rollups → Project 5, and the capstone spec",
+      "goal": "Build x·y=k, see why a spot price is a dangerous oracle, compare rollups by their real risks, and decide exactly what your capstone puts on-chain.",
+      "deliver": "Project 5 (AMM with a fuzz test), the 'do you need a blockchain?' memo, and SPEC.md for the capstone",
+      "start": "2026-11-23",
+      "hours": 11.5,
+      "section": "Applications and capstone design",
+      "tasks": [
+        {
+          "id": "x9t1",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 30,
+          "text": "Finematics: the AMM and Uniswap explainers",
+          "due": "2026-11-24",
+          "output": false,
+          "links": [
+            {
+              "type": "video",
+              "label": "Finematics channel",
+              "url": "https://www.youtube.com/@Finematics"
+            }
+          ]
+        },
+        {
+          "id": "x9t2",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 30,
+          "text": "Uniswap v2 whitepaper, sections 1–3",
+          "due": "2026-11-24",
+          "output": false,
+          "links": [
+            {
+              "type": "paper",
+              "label": "Uniswap v2 whitepaper",
+              "url": "https://uniswap.org/whitepaper.pdf"
+            }
+          ]
+        },
+        {
+          "id": "x9t3",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 75,
+          "text": "Build an AMM with addLiquidity, removeLiquidity and swap with a 0.3% fee. Fuzz-test that k never decreases",
+          "due": "2026-11-28",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x9t4",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 60,
+          "text": "DeFi MOOC lecture: Oracles (Ari Juels)",
+          "due": "2026-11-24",
+          "output": false,
+          "links": [
+            {
+              "type": "video",
+              "label": "Oracles lecture",
+              "url": "https://www.youtube.com/watch?v=vFcW18ZpPZ4"
+            }
+          ]
+        },
+        {
+          "id": "x9t5",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 30,
+          "text": "Chainlink: Data Feeds overview",
+          "due": "2026-11-26",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "docs.chain.link",
+              "url": "https://docs.chain.link/"
+            }
+          ]
+        },
+        {
+          "id": "x9t6",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 30,
+          "text": "Vitalik Buterin: An incomplete guide to rollups",
+          "due": "2026-11-26",
+          "output": false,
+          "links": [
+            {
+              "type": "article",
+              "label": "vitalik.eth.limo",
+              "url": "https://vitalik.eth.limo/general/2021/01/05/rollup.html"
+            }
+          ]
+        },
+        {
+          "id": "x9t7",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 30,
+          "text": "L2BEAT: read the FAQ, then compare two rollups on its risk dashboard",
+          "due": "2026-11-26",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "L2BEAT",
+              "url": "https://l2beat.com/"
+            },
+            {
+              "type": "docs",
+              "label": "L2BEAT FAQ",
+              "url": "https://l2beat.com/faq"
+            }
+          ]
+        },
+        {
+          "id": "x9t8",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 60,
+          "text": "Write a 'do you need a blockchain?' memo for remittances, land registry and cold-chain provenance",
+          "due": "2026-11-28",
+          "output": true,
+          "links": []
+        },
+        {
+          "id": "x9t9",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 90,
+          "text": "Capstone SPEC.md for the whole trust stack: actors, trust assumptions, what is on-chain vs. off-chain for each part, the threat model, and the end-to-end test you'll write in week 11",
+          "due": "2026-11-28",
+          "output": true,
+          "links": []
+        },
+        {
+          "id": "x9t10",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 30,
+          "text": "Log: slippage on a small pool vs. a large one, with numbers from your tests",
+          "due": "2026-11-28",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x9t11",
+          "kind": "C",
+          "kindName": "Crypto",
+          "min": 30,
+          "text": "Commitments and Merkle proofs. Write a Merkle proof verifier in Solidity and test it (you'll reuse it in the capstone)",
+          "due": "2026-11-26",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "OpenZeppelin MerkleProof",
+              "url": "https://docs.openzeppelin.com/contracts/5.x/api/utils#MerkleProof"
+            }
+          ]
+        },
+        {
+          "id": "x9t12",
+          "kind": "P",
+          "kindName": "Apps",
+          "min": 30,
+          "text": "Payments and remittances in Africa: compare the cost of sending $200 to Nigeria or Rwanda by bank, mobile money and a stablecoin. Add the numbers to your 'do you need a blockchain?' memo",
+          "due": "2026-11-27",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "World Bank: Remittance Prices Worldwide",
+              "url": "https://remittanceprices.worldbank.org/"
+            }
+          ]
+        },
+        {
+          "id": "x9t13",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 60,
+          "text": "Capstone D: CredentialRegistry.sol with roles (farmer, cooperative, transporter, inspector, buyer). An issuer signs EIP-712 credentials, each cohort is Merkle-rooted on-chain, and isValid(account, role) replaces the mock in the integration test",
+          "due": "2026-11-28",
+          "output": false,
+          "links": [
+            {
+              "type": "spec",
+              "label": "EIP-712",
+              "url": "https://eips.ethereum.org/EIPS/eip-712"
+            }
+          ]
+        },
+        {
+          "id": "x9t14",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 15,
+          "text": "Credential tests: a revoked credential can't sign or list (test_RevertWhen_RevokedCredential). Switch demo stage 2 from the mock to the real registry",
+          "due": "2026-11-28",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x9t15",
+          "kind": "P",
+          "kindName": "Apps",
+          "min": 45,
+          "text": "Stablecoins II, why they matter and why regulators worry: how people in Sub-Saharan Africa use them (remittances, saving against inflation, trade), the BIS argument that they fail as money, and the rules: EU MiCA, the US GENIUS Act, and what the National Bank of Rwanda and Central Bank of Nigeria currently say. Check the latest; these rules change",
+          "due": "2026-11-27",
+          "output": false,
+          "links": [
+            {
+              "type": "article",
+              "label": "Chainalysis: Sub-Saharan Africa crypto adoption 2025",
+              "url": "https://www.chainalysis.com/blog/subsaharan-africa-crypto-adoption-2025/"
+            },
+            {
+              "type": "paper",
+              "label": "BIS Annual Economic Report 2025, ch. III",
+              "url": "https://www.bis.org/publ/arpdf/ar2025e3.htm"
+            },
+            {
+              "type": "docs",
+              "label": "EU MiCA (ESMA)",
+              "url": "https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica"
+            },
+            {
+              "type": "docs",
+              "label": "GENIUS Act resource center (Arnold & Porter)",
+              "url": "https://www.arnoldporter.com/en/perspectives/topics/the-genius-act-and-stablecoin-regulation-resource-center"
+            }
+          ]
+        },
+        {
+          "id": "x9t16",
+          "kind": "E",
+          "kindName": "Explain",
+          "min": 45,
+          "text": "Stablecoin write-up: \"Digital dollars for Africa? What stablecoins could fix and what they risk\" in blog/ (600–900 words). Cover how they hold their peg, one failure, one real use case with numbers from your remittance comparison, the rules, and your honest verdict. Optional: a 5-minute video",
+          "due": "2026-11-28",
+          "output": true,
+          "links": []
+        }
+      ]
+    },
+    {
+      "id": "x10",
+      "n": 10,
+      "title": "Capstone I: the device signs, the contract verifies",
+      "goal": "Make an ESP32 hold its own key and sign batched readings, and write the contract that accepts only signatures from registered devices.",
+      "deliver": "ESP32 firmware that signs Merkle roots of readings, and a tested SensorRegistry contract",
+      "start": "2026-11-30",
+      "hours": 10,
+      "section": "Capstone: a four-part trust stack",
+      "tasks": [
+        {
+          "id": "x10t1",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 15,
+          "text": "Browse the Trezor firmware repo: the crypto folder and the security docs",
+          "due": "2026-12-01",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "trezor-firmware",
+              "url": "https://github.com/trezor/trezor-firmware"
+            }
+          ]
+        },
+        {
+          "id": "x10t2",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 15,
+          "text": "SGX.Fail: skim the list of TEE attacks",
+          "due": "2026-12-01",
+          "output": false,
+          "links": [
+            {
+              "type": "article",
+              "label": "sgx.fail",
+              "url": "https://sgx.fail/"
+            }
+          ]
+        },
+        {
+          "id": "x10t3",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 15,
+          "text": "OpenZeppelin ECDSA and MessageHashUtils docs",
+          "due": "2026-12-01",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "OZ ECDSA",
+              "url": "https://docs.openzeppelin.com/contracts/5.x/api/utils#ECDSA"
+            }
+          ]
+        },
+        {
+          "id": "x10t4",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 15,
+          "text": "Study how OpenTimestamps anchors many hashes with one transaction",
+          "due": "2026-12-01",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "opentimestamps.org",
+              "url": "https://opentimestamps.org/"
+            }
+          ]
+        },
+        {
+          "id": "x10t5",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 150,
+          "text": "Capstone A: on an ESP32, generate a key with micro-ecc or trezor-crypto, hash a sensor reading with keccak256, and print r, s, v and the address. If the board fights you, start with a Python device simulator and swap the board in later",
+          "due": "2026-12-03",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "micro-ecc",
+              "url": "https://github.com/kmackay/micro-ecc"
+            },
+            {
+              "type": "docs",
+              "label": "ESP-IDF",
+              "url": "https://docs.espressif.com/projects/esp-idf/en/latest/esp32/"
+            }
+          ]
+        },
+        {
+          "id": "x10t6",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 90,
+          "text": "Batch readings on the device or a gateway: build a Merkle tree and sign the root instead of each reading",
+          "due": "2026-12-04",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "OZ MerkleProof",
+              "url": "https://docs.openzeppelin.com/contracts/5.x/api/utils#MerkleProof"
+            }
+          ]
+        },
+        {
+          "id": "x10t7",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 165,
+          "text": "Capstone A: ProvenanceAnchor.sol as a trace registry. createBatch(product, policyId); recordEvent(batchId, stage, dataRoot) only by an actor with the right role credential and in the right order; accept sensor Merkle roots only from registered devices (ecrecover). Test with vm.sign, then with a real ESP32 signature",
+          "due": "2026-12-05",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x10t8",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 30,
+          "text": "Log: what this proves (the device signed it) and what it doesn't (the reading is true)",
+          "due": "2026-12-05",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x10t9",
+          "kind": "E",
+          "kindName": "Explain",
+          "min": 45,
+          "text": "Explainer #5: write \"Teaching a sensor to sign its own data\" in blog/ (600–900 words, weeks 9–10). Optional: record a 5-minute video teaching it and link it in the post",
+          "due": "2026-12-05",
+          "output": true,
+          "links": []
+        },
+        {
+          "id": "x10t10",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 30,
+          "text": "Replace the provenance mock in the integration test: create a batch, record its events and a signed sensor root, list it, pay, release. Update demo.sh",
+          "due": "2026-12-05",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x10t11",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 30,
+          "text": "Firmware checks: run make vectors, make your ESP32 reproduce test_vectors.json byte for byte, and add firmware/tools/Vectors.t.sol.example to test/ so CI proves tampered and unregistered readings are rejected. Demo stage 5 uses sample_readings.json, so it runs without hardware",
+          "due": "2026-12-05",
+          "output": false,
+          "links": []
+        }
+      ]
+    },
+    {
+      "id": "x11",
+      "n": 11,
+      "title": "Capstone II: connect all four parts and ship",
+      "goal": "Deploy the whole trust stack to an L2 testnet, prove it works end to end with one test, and publish it.",
+      "deliver": "All four parts on an L2 testnet, one end-to-end test passing, and a README with an architecture diagram, demo video and post",
+      "start": "2026-12-07",
+      "hours": 10,
+      "section": "Capstone: a four-part trust stack",
+      "tasks": [
+        {
+          "id": "x11t1",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 90,
+          "text": "Deploy all four parts to an L2 testnet such as Base Sepolia: TestUSD, Marketplace, CredentialRegistry and ProvenanceAnchor. Verify each contract on the explorer",
+          "due": "2026-12-08",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "Base docs (Base Sepolia testnet)",
+              "url": "https://docs.base.org/"
+            }
+          ]
+        },
+        {
+          "id": "x11t2",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 150,
+          "text": "End-to-end flow in the integration test and demo.sh: a credentialed farmer creates a batch, a transporter records pickup and delivery with the ESP32's signed readings, the batch is checked against its policy, and the buyer's TestUSD in escrow is released only if the batch is compliant; otherwise the buyer is refunded",
+          "due": "2026-12-11",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x11t3",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 15,
+          "text": "Capstone C demo: a script that sends a TestUSD payment with a receipt event and prints its cost and time next to the bank and mobile-money figures from week 9",
+          "due": "2026-12-11",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x11t4",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 45,
+          "text": "Security pass on all four contracts: Slither, your Project 4 checklist, and invariant tests",
+          "due": "2026-12-11",
+          "output": false,
+          "links": [
+            {
+              "type": "tool",
+              "label": "Slither",
+              "url": "https://github.com/crytic/slither"
+            }
+          ]
+        },
+        {
+          "id": "x11t5",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 45,
+          "text": "For each of the four parts, argue honestly whether a blockchain beats a shared database, and say so where it doesn't",
+          "due": "2026-12-12",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x11t6",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 90,
+          "text": "README with an architecture diagram, a 5-minute demo video of the full flow, and the capstone post",
+          "due": "2026-12-12",
+          "output": true,
+          "links": []
+        },
+        {
+          "id": "x11t7",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 30,
+          "text": "Log: what you'd change with another month",
+          "due": "2026-12-12",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x11t8",
+          "kind": "A",
+          "kindName": "AI",
+          "min": 15,
+          "text": "GenAI provenance: read the C2PA overview, then add a paragraph to your capstone README on how the same sign-and-anchor pattern could prove where a photo or AI-generated output came from",
+          "due": "2026-12-08",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "C2PA",
+              "url": "https://c2pa.org/"
+            }
+          ]
+        },
+        {
+          "id": "x11t9",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 45,
+          "text": "Compliance check: anyone can mark a batch non-compliant by submitting a signed reading outside the policy range with its Merkle proof, and a missing step or wrong role also fails. Test one compliant batch and one failing batch",
+          "due": "2026-12-12",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x11t10",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 30,
+          "text": "Demo site v1, open to everyone with no login: Explore (sample batches), Market (listings) and Trace (enter a batch id or scan its QR code to see the journey, who signed each step, the readings summary and compliance status), reading from your deployed contracts. Build it in trust-stack/app/site/ following trust-stack/app/README.md",
+          "due": "2026-12-12",
+          "output": true,
+          "links": []
+        },
+        {
+          "id": "x11t11",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 30,
+          "text": "Deploy for real: forge script with your keystore account to Base Sepolia, verify on Basescan, record addresses and read-only checks in deployments/base-sepolia.json (copy the example), and run make smoke until every check is green",
+          "due": "2026-12-12",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "Base docs",
+              "url": "https://docs.base.org/"
+            }
+          ]
+        },
+        {
+          "id": "x11t12",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 15,
+          "text": "Make it public: put the trace page in trust-stack/app/site/ so it publishes to GitHub Pages, then check the README's Trust stack badge, Codespaces button and DEMO.md all work from a logged-out browser",
+          "due": "2026-12-12",
+          "output": true,
+          "links": []
+        }
+      ]
+    },
+    {
+      "id": "x12",
+      "n": 12,
+      "title": "Agents with wallets, verifiable AI, and a retrospective → Project 7",
+      "goal": "Give an LLM agent spending power that a contract limits, try to break it, and learn what zkML can and can't prove.",
+      "deliver": "Project 7 (guarded agent wallet with a red-team report), an implications memo, and your retrospective",
+      "start": "2026-12-14",
+      "hours": 10,
+      "section": "AI × blockchain, and buffer",
+      "tasks": [
+        {
+          "id": "x12t1",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 30,
+          "text": "Vitalik Buterin: The promise and challenges of crypto + AI applications",
+          "due": "2026-12-15",
+          "output": false,
+          "links": [
+            {
+              "type": "article",
+              "label": "vitalik.eth.limo",
+              "url": "https://vitalik.eth.limo/general/2024/01/30/cryptoai.html"
+            }
+          ]
+        },
+        {
+          "id": "x12t2",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 30,
+          "text": "ERC-4337 motivation, then EIP-7702",
+          "due": "2026-12-15",
+          "output": false,
+          "links": [
+            {
+              "type": "spec",
+              "label": "ERC-4337",
+              "url": "https://eips.ethereum.org/EIPS/eip-4337"
+            },
+            {
+              "type": "spec",
+              "label": "EIP-7702",
+              "url": "https://eips.ethereum.org/EIPS/eip-7702"
+            }
+          ]
+        },
+        {
+          "id": "x12t3",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 30,
+          "text": "x402 docs: the quickstart",
+          "due": "2026-12-15",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "docs.x402.org",
+              "url": "https://docs.x402.org/"
+            },
+            {
+              "type": "tool",
+              "label": "x402 on GitHub",
+              "url": "https://github.com/x402-foundation/x402"
+            }
+          ]
+        },
+        {
+          "id": "x12t4",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 20,
+          "text": "ERC-8004 abstract and motivation",
+          "due": "2026-12-15",
+          "output": false,
+          "links": [
+            {
+              "type": "spec",
+              "label": "ERC-8004",
+              "url": "https://eips.ethereum.org/EIPS/eip-8004"
+            }
+          ]
+        },
+        {
+          "id": "x12t5",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 20,
+          "text": "Simon Willison on prompt injection: two posts",
+          "due": "2026-12-17",
+          "output": false,
+          "links": [
+            {
+              "type": "article",
+              "label": "Prompt injection series",
+              "url": "https://simonwillison.net/series/prompt-injection/"
+            }
+          ]
+        },
+        {
+          "id": "x12t6",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 105,
+          "text": "Build a guarded agent wallet that pays through your TestUSD rail: a contract wallet with a daily cap and a recipient allowlist, and an LLM with a single 'pay' tool. Try five injection prompts and record what the contract blocked",
+          "due": "2026-12-19",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x12t7",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 30,
+          "text": "Log: which defences held in the model and which only held in the contract",
+          "due": "2026-12-19",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x12t8",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 30,
+          "text": "Vitalik Buterin: an approximate introduction to how zk-SNARKs are possible",
+          "due": "2026-12-17",
+          "output": false,
+          "links": [
+            {
+              "type": "article",
+              "label": "vitalik.eth.limo",
+              "url": "https://vitalik.eth.limo/general/2021/01/26/snarks.html"
+            }
+          ]
+        },
+        {
+          "id": "x12t9",
+          "kind": "L",
+          "kindName": "Learn",
+          "min": 30,
+          "text": "EZKL: read the getting-started guide and run its example (the full build is optional)",
+          "due": "2026-12-17",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "EZKL docs",
+              "url": "https://docs.ezkl.xyz/getting-started/"
+            },
+            {
+              "type": "tool",
+              "label": "ezkl on GitHub",
+              "url": "https://github.com/zkonduit/ezkl"
+            }
+          ]
+        },
+        {
+          "id": "x12t10",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 45,
+          "text": "Memo: custody for autonomous agents, accountability, energy, and the current rules in Rwanda, Nigeria and the EU (check these; they change)",
+          "due": "2026-12-19",
+          "output": true,
+          "links": [
+            {
+              "type": "docs",
+              "label": "EU MiCA (ESMA)",
+              "url": "https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica"
+            }
+          ]
+        },
+        {
+          "id": "x12t11",
+          "kind": "W",
+          "kindName": "Write",
+          "min": 60,
+          "text": "Retrospective: pick the next direction (ZK, auditing, DePIN, or agent payments)",
+          "due": "2026-12-19",
+          "output": true,
+          "links": []
+        },
+        {
+          "id": "x12t12",
+          "kind": "B",
+          "kindName": "Build",
+          "min": 20,
+          "text": "Proof of learning (Capstone D): issue yourself a credential for each finished week, with that week's folder commit hash as evidence, and verify one on the testnet",
+          "due": "2026-12-19",
+          "output": false,
+          "links": []
+        },
+        {
+          "id": "x12t13",
+          "kind": "C",
+          "kindName": "Crypto",
+          "min": 30,
+          "text": "Zero-knowledge in practice. Read the first chapters of the RareSkills ZK Book, then revisit what your EZKL proof actually proved",
+          "due": "2026-12-17",
+          "output": false,
+          "links": [
+            {
+              "type": "book",
+              "label": "RareSkills ZK Book (free)",
+              "url": "https://www.rareskills.io/zk-book"
+            }
+          ]
+        },
+        {
+          "id": "x12t14",
+          "kind": "P",
+          "kindName": "Apps",
+          "min": 30,
+          "text": "Other applications, one paragraph each on who has to trust whom: tokenised real-world assets, DAOs and on-chain governance, prediction markets, and DePIN networks",
+          "due": "2026-12-18",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "ethereum.org: DAOs",
+              "url": "https://ethereum.org/en/dao/"
+            },
+            {
+              "type": "docs",
+              "label": "Helium docs (DePIN example)",
+              "url": "https://docs.helium.com/"
+            }
+          ]
+        },
+        {
+          "id": "x12t15",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 30,
+          "text": "Seed the live demo: put throwaway actor keys in trust-stack/.env (never your real wallet), run make seed so the sample batches, listings and one failing batch exist on Base Sepolia, then make smoke. Rerun make seed any time to top it up",
+          "due": "2026-12-19",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "Foundry: keystores (cast wallet)",
+              "url": "https://getfoundry.sh/cast/reference/cast-wallet-import"
+            }
+          ]
+        },
+        {
+          "id": "x12t16",
+          "kind": "K",
+          "kindName": "Capstone",
+          "min": 60,
+          "text": "Admin console: an Admin tab that appears only when the connected wallet holds the issuer role on-chain. From it, issue a credential, create a batch, record a step and anchor readings, so you can show something new live. The contracts enforce the role; the page only hides the buttons",
+          "due": "2026-12-19",
+          "output": false,
+          "links": [
+            {
+              "type": "docs",
+              "label": "viem: writing to contracts",
+              "url": "https://viem.sh/docs/contract/writeContract"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
